@@ -1,0 +1,25 @@
+{
+  "route": "net",
+
+  "envelopes": [
+    {
+      "file": "src/test/resources/cases/sources/lipsum.eml",
+
+      "mail": "tony@example.com",
+      "rcpt": [
+        "pepper@example.com",
+        "happy@example.com"
+      ],
+
+      "mailEjf": "{$mail}",
+      "rcptEjf": "{$rcpt}"
+    },
+    {
+      "subject": "lost in space",
+      "message": "Rescue me",
+
+      "mailEjf": "{$blnk}",
+      "rcptEjf": "{$blank}"
+    }
+  ]
+}

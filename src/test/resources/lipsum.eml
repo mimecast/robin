@@ -1,0 +1,65 @@
+MIME-Version: 1.0
+From: <{$MAILFROM}>
+To: <{$RCPTTO}>
+Date: {$DATE}
+Message-ID: <{$MSGID}{$MAILFROM}>
+Subject: Lipsum
+Content-Type: multipart/alternative;
+	boundary="MCBoundary11505141140170031"
+
+--MCBoundary11505141140170031
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+Aliquam in quam id orci finibus luctus.
+Integer at finibus orci.
+Vestibulum nunc massa, porttitor vel justo vitae, dictum fermentum augue.
+Integer ut lorem consectetur, feugiat lectus quis, mattis sem.
+Phasellus quis eros eget felis ornare accumsan. Suspendisse potenti.
+Proin ornare vestibulum purus, a pharetra enim tempor at.
+Vestibulum a augue rutrum purus bibendum rutrum.
+Aliquam nec lacus dui.
+Sed et nisi vel sem tristique finibus sit amet nec tortor.
+Ut finibus, eros id mollis maximus, felis ante imperdiet mauris, sit amet vehicula justo lectus id ipsum.
+Donec vitae dapibus lacus.
+Curabitur eu orci iaculis, pretium augue aliquam, vestibulum nulla.
+Sed ultricies justo nec justo tempor viverra.
+
+--MCBoundary11505141140170031
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<!-- Facebook sharing information tags -->
+<meta property="og:title" content="Lorem Ipsum" />
+<title>Lorem Ipsum</title>
+<style type="text/css">
+    body{-webkit-text-size-adjust:none;} /* Prevent Webkit platforms from changing default text sizes. */
+    img{border:0; height:auto; line-height:100%; outline:none; text-decoration:none;}
+    table td{border-collapse:collapse;}
+    body{background-color:#FAFAFA;}
+</style>
+</head>
+<body>
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+<br>Aliquam in quam id orci finibus luctus.
+<br>Integer at finibus orci.
+<br>Vestibulum nunc massa, porttitor vel justo vitae, dictum fermentum augue.
+<br>Integer ut lorem consectetur, feugiat lectus quis, mattis sem.
+<br>Phasellus quis eros eget felis ornare accumsan. Suspendisse potenti.
+<br>Proin ornare vestibulum purus, a pharetra enim tempor at.
+<br>Vestibulum a augue rutrum purus bibendum rutrum.
+<br>Aliquam nec lacus dui.
+<br>Sed et nisi vel sem tristique finibus sit amet nec tortor.
+<br>Ut finibus, eros id mollis maximus, felis ante imperdiet mauris, sit amet vehicula justo lectus id ipsum.
+<br>Donec vitae dapibus lacus.
+<br>Curabitur eu orci iaculis, pretium augue aliquam, vestibulum nulla.
+<br>Sed ultricies justo nec justo tempor viverra.
+</body>
+</html>
+
+--MCBoundary11505141140170031--

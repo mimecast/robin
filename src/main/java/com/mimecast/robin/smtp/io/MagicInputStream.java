@@ -1,0 +1,222 @@
+package com.mimecast.robin.smtp.io;
+
+import com.mimecast.robin.smtp.MessageEnvelope;
+import com.mimecast.robin.util.Random;
+import org.apache.commons.lang3.StringUtils;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+/**
+ * Magic input stream.
+ * <p>This implements line reading InputStream.
+ * <p>It finds and replaces magic tags in lines read given MessageEnvelope provided.
+ * <p>It uses LineInputStream to do the actual line reading.
+ *
+ * @see InputStream
+ * @see LineInputStream
+ * @author "Vlad Marian" <vmarian@mimecast.com>
+ * @link http://mimecast.com Mimecast
+ */
+public class MagicInputStream implements InputStream {
+
+    /**
+     * LineInputStream instance.
+     */
+    private LineInputStream lineInputStream;
+
+    /**
+     * MessageEnvelope instance.
+     */
+    MessageEnvelope envelope;
+
+    /**
+     * Smart magic tags patterns.
+     */
+    private static final Pattern patternRandCh = Pattern.compile("\\{\\$randch([0-9]*)}", Pattern.CASE_INSENSITIVE);
+    private static final Pattern patternRandNo = Pattern.compile("\\{\\$randno([0-9]*)}", Pattern.CASE_INSENSITIVE);
+
+    /**
+     * Simple magic tags patterns.
+     */
+    private static final Map<String, Pattern> simpleTags = new HashMap<>();
+    static {
+        simpleTags.put("{$msgid}", Pattern.compile("\\{\\$msgid}", Pattern.CASE_INSENSITIVE));
+        simpleTags.put("{$date}", Pattern.compile("\\{\\$date}", Pattern.CASE_INSENSITIVE));
+        simpleTags.put("{$mailfrom}", Pattern.compile("\\{\\$mailfrom}", Pattern.CASE_INSENSITIVE));
+        simpleTags.put("{$mailejffrom}", Pattern.compile("\\{\\$mailejffrom}", Pattern.CASE_INSENSITIVE));
+        simpleTags.put("{$rcptto}", Pattern.compile("\\{\\$rcptto}", Pattern.CASE_INSENSITIVE));
+        simpleTags.put("{$rcptejfto}", Pattern.compile("\\{\\$rcptejfto}", Pattern.CASE_INSENSITIVE));
+    }
+
+    /**
+     * Constructs a new MagicInputStream instance with given MessageEnvelope.
+     *
+     * @param in              InputStream instance.
+     * @param envelope MessageEnvelope instance.
+     */
+    public MagicInputStream(java.io.InputStream in, MessageEnvelope envelope) {
+        this(in);
+        this.envelope = envelope;
+    }
+
+    /**
+     * Constructs a new MagicInputStream instance.
+     *
+     * @param in InputStream instance.
+     */
+    MagicInputStream(java.io.InputStream in) {
+        lineInputStream = new LineInputStream(in);
+    }
+
+    /**
+     * Read line as byte array.
+     *
+     * @return Byte array.
+     * @throws IOException Unable to read.
+     */
+    public byte[] readLine() throws IOException {
+        return doMagic(lineInputStream.readLine());
+    }
+
+    /**
+     * Replace magic variables in line bytes.
+     *
+     * @param lineBytes Byte array.
+     * @return Byte array.
+     */
+    public byte[] doMagic(byte[] lineBytes) {
+        if (lineBytes != null && envelope != null) {
+            boolean changed = false;
+            String tag = new String(lineBytes).toLowerCase();
+            String line = new String(lineBytes);
+
+            if(tag.contains("{$randch")) {
+                String random = randCh(line);
+                changed = !randCh(line).equals(line);
+                line = random;
+            }
+
+            if(tag.contains("{$randno")) {
+                String random = randNo(line);
+                changed = !randNo(line).equals(line);
+                line = random;
+            }
+
+            String magic = doSimpleMagic(tag, line);
+            if (!line.equals(magic)) {
+                changed = true;
+                line = magic;
+            }
+
+            if (changed) {
+                lineBytes = line.getBytes();
+            }
+        }
+
+        return lineBytes;
+    }
+
+    /**
+     * Replace simple magic tags in line string.
+     *
+     * @param tag  Magic tag.
+     * @param line Line string.
+     * @return Line string.
+     */
+    public String doSimpleMagic(String tag, String line) {
+        for (Map.Entry<String, Pattern> entry : simpleTags.entrySet()) {
+            if (tag.contains(entry.getKey())) {
+
+                String replacement = getReplacement(entry.getKey());
+                if (!replacement.isEmpty()) {
+                    line = entry.getValue().matcher(line).replaceAll(replacement);
+                }
+            }
+        }
+
+        return line;
+    }
+
+    /**
+     * Gets replacement for simple magic tags.
+     *
+     * @param key Tag key.
+     * @return Value string.
+     */
+    public String getReplacement(String key) {
+        if (envelope != null) {
+            switch (key) {
+                case "{$msgid}":
+                    return envelope.getMessageId();
+
+                case "{$date}":
+                    return envelope.getDate();
+
+                case "{$mailfrom}":
+                    return envelope.getMailFrom();
+
+                case "{$mailejffrom}":
+                    return envelope.getMailEjfFrom();
+
+                case "{$rcptto}":
+                    return envelope.getRcptTo();
+
+                case "{$rcptejfto}":
+                    return envelope.getRcptEjfTo();
+
+                default:
+                    return "";
+            }
+        }
+
+        return "";
+    }
+
+    /**
+     * Random character string.
+     *
+     * @param line Line string.
+     * @return Value string.
+     */
+    public String randCh(String line) {
+        Matcher matcher = patternRandCh.matcher(line);
+        int rnd = 20;
+
+        if (matcher.find()) {
+            String len = matcher.group(1);
+            if (StringUtils.isNotBlank(len)) {
+                rnd = Integer.parseInt(matcher.group(1));
+            }
+
+            return matcher.replaceAll(Random.ch(rnd));
+        }
+
+        return line;
+    }
+
+    /**
+     * Random number string.
+     *
+     * @param line Line string.
+     * @return Value string.
+     */
+    public String randNo(String line) {
+        Matcher matcher = patternRandNo.matcher(line);
+        int rnd = 10;
+
+        if (matcher.find()) {
+            String len = matcher.group(1);
+            if (StringUtils.isNotBlank(len)) {
+                rnd = Integer.parseInt(matcher.group(1));
+            }
+
+            return matcher.replaceAll(Integer.toString(Random.no(rnd)));
+        }
+
+        return line;
+    }
+}

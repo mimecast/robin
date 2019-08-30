@@ -1,0 +1,174 @@
+package com.mimecast.robin.assertion;
+
+import com.mimecast.robin.assertion.mta.AssertMta;
+import com.mimecast.robin.assertion.mta.client.LogsClient;
+import com.mimecast.robin.main.Factories;
+import com.mimecast.robin.smtp.MessageEnvelope;
+import com.mimecast.robin.smtp.connection.Connection;
+import com.mimecast.robin.smtp.transaction.EnvelopeTransactionList;
+import com.mimecast.robin.smtp.transaction.Transaction;
+import com.mimecast.robin.smtp.transaction.TransactionList;
+
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+/**
+ * Assertion engine.
+ * <p>This gets called at the end of a client delivery.
+ * <p>It will read the assertions from the configuration and try to assert them against SMTP transactions and MTA logs.
+ * <p>MTA logs are only assertable given a client that can provide the logs.
+ * <p>The SMTP transactions are organized in two lists:
+ * <ul>
+ *     <li><b>Session transactions</b>
+ *         <br>They will track all commands exchanged outside the envelope ones.
+ *     <li><b>Envelope transactions</b><i>(MAIL, RCPT, DATA/BDAT)</i>
+ *         <br>Having a repeating pattern they are grouped for each envelope within the session list.
+ * </ul>
+ *
+ * @see Connection
+ * @see LogsClient
+ * @author "Vlad Marian" <vmarian@mimecast.com>
+ * @link http://mimecast.com Mimecast
+ */
+public class Assert {
+
+    /**
+     * Session instance.
+     */
+    private final Connection connection;
+
+    /**
+     * Client instance.
+     */
+    private final LogsClient client;
+
+    /**
+     * Constructs a new Assert instance with given Connection.
+     *
+     * @param connection Connection instance.
+     */
+    public Assert(Connection connection) {
+        this(connection, null);
+    }
+
+    /**
+     * Constructs a new Assert instance with given Connection and LogsClient.
+     *
+     * @param connection Session instance.
+     * @param client     LogsClient instance.
+     */
+    public Assert(Connection connection, LogsClient client) {
+        this.connection = connection;
+        this.client = client != null ? client : getClient();
+    }
+
+    /**
+     * Gets client from factories.
+     *
+     * @return LogsClient instance.
+     */
+    private LogsClient getClient() {
+        LogsClient logsClient = Factories.getLogsClient();
+        if (logsClient != null) {
+            logsClient.setServer(connection.getSession().getMx());
+        }
+        return logsClient;
+    }
+
+    /**
+     * Run assertions.
+     *
+     * @throws AssertException Assertion exception.
+     */
+    public void run() throws AssertException {
+        if (!connection.getSession().getAssertions().isEmpty()) {
+            assertSmtp(connection.getSession().getAssertions().getSmtp(), connection.getSessionTransactionList());
+        }
+        assertEnvelopes();
+    }
+
+    /**
+     * Assert against transactions.
+     *
+     * @param list            SMTP assertions as a list in list.
+     * @param transactionList TransactionList instance.
+     * @throws AssertException Assertion exception.
+     */
+    private void assertSmtp(List<List<String>> list, TransactionList transactionList) throws AssertException {
+        if (list != null && !list.isEmpty()) {
+            for (List<String> assertion : list) {
+                if (assertion.size() == 2) {
+                    List<Transaction> transactions = transactionList.getTransactions(assertion.get(0));
+                    if (transactions.isEmpty()) throw new AssertException("Unable to find transaction for [" + assertion.get(0) + "]");
+                    assertTransactions(transactions, assertion.get(1));
+                }
+            }
+        }
+    }
+
+    /**
+     * Run regex assertions against transaction.
+     *
+     * @param transactions Transactions list.
+     * @param regex        Assertion regex.
+     * @throws AssertException Assertion exception.
+     */
+    private void assertTransactions(List<Transaction> transactions, String regex) throws AssertException {
+        // No need to precompile patters as they are transaction specific.
+        Pattern p = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+
+        boolean matched = false;
+        for (Transaction transaction : transactions) {
+            String response = transaction.getResponse();
+            Matcher m = p.matcher(response);
+
+            if (m.find()) {
+                matched = true;
+                break;
+            }
+        }
+
+        if (!matched) throw new AssertException("Unable to match [" + regex + "]");
+    }
+
+    /**
+     * Assert against session envelopes.
+     *
+     * @throws AssertException Assertion exception.
+     */
+    private void assertEnvelopes() throws AssertException {
+        if (!connection.getSession().getEnvelopes().isEmpty() && !connection.getSessionTransactionList().getEnvelopes().isEmpty()) {
+            for (int i = 0; i < connection.getSession().getEnvelopes().size(); i++) {
+                MessageEnvelope envelope = connection.getSession().getEnvelopes().get(i);
+                EnvelopeTransactionList envelopeTransactionList = connection.getSessionTransactionList().getEnvelopes().get(i);
+
+                if (envelope.getAssertions() != null) {
+                    if (!envelope.getAssertions().getSmtp().isEmpty()) {
+                        assertSmtp(envelope.getAssertions().getSmtp(), envelopeTransactionList);
+                    }
+
+                    // MTA.
+                    if (!envelope.getAssertions().getMta().isEmpty()) {
+                        assertEnvelopeMta(envelope, envelopeTransactionList);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Assert against MTA logs if a logs client was given.
+     *
+     * @param envelope         MessageEnvelope instance.
+     * @param list EnvelopeTransactionList instance.
+     * @throws AssertException Assertion exception.
+     */
+    private void assertEnvelopeMta(MessageEnvelope envelope, EnvelopeTransactionList list) throws AssertException {
+        if (client != null) {
+            new AssertMta(client, envelope.getAssertions().getMta(), list);
+        } else {
+            throw new AssertException("No client given");
+        }
+    }
+}

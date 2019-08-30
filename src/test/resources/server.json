@@ -1,0 +1,34 @@
+{
+  "bind": "::",
+  "port": 25,
+  "backlog": 20,
+  "errorLimit": 3,
+
+  "auth": true,
+  "starttls": true,
+  "chunking": true,
+
+  "keystore": "src/test/resources/keystore.jks",
+  "keystorepassword": "avengers",
+
+  "users": [
+    {
+      "name": "tony@example.com",
+      "pass": "giveHerTheRing"
+    }
+  ],
+
+  "scenarios": {
+    "reject.com": {
+      "ehlo": "501 Not talking to you",
+      "mail": "451 I'm not listening to you",
+      "rcpt": [
+        {
+          "value": "ultron@reject.com",
+          "response": "501 Heart not found"
+        }
+      ],
+      "data": "554 Your data is corrupted"
+    }
+  }
+}

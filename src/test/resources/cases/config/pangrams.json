@@ -1,0 +1,10 @@
+{
+  "envelopes": [
+    {
+      "chunkSize": 2048,
+      "chunkBdat": true,
+
+      "file": "src/test/resources/cases/sources/pangrams.eml"
+    }
+  ]
+}

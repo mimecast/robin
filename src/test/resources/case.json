@@ -1,0 +1,37 @@
+{
+  "route": "net",
+
+  "auth": true,
+  "authTls": true,
+  "user": "tony@example.com",
+  "pass": "giveHerTheRing",
+
+  "envelopes": [
+    {
+      "chunkSize": 2048,
+      "chunkBdat": true,
+      "chunkWrite": true,
+
+      "file": "src/test/resources/lipsum.eml",
+
+      "mail": "tony@example.com",
+      "rcpt": [
+        "pepper@example.com",
+        "happy@example.com"
+      ],
+      "mailEjf": "{$mail}",
+      "rcptEjf": "{$rcpt}"
+    },
+    {
+      "subject": "Lost in space",
+      "message": "Rescue me!",
+
+      "mail": "",
+      "rcpt": [
+        "journalling@example.com"
+      ],
+      "mailEjf": "tony@example.com",
+      "rcptEjf": "pepper@example.com"
+    }
+  ]
+}

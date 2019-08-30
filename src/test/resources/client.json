@@ -1,0 +1,38 @@
+{
+  "mx": "example.com",
+  "port": 25,
+
+  "tls": true,
+  "protocols": [
+    "TLSv1.1", "TLSv1.2"
+  ],
+  "ciphers": [
+    "TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384",
+    "TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384",
+    "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+    "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384"
+  ],
+
+  "ehlo": "example.com",
+  "mail": "tony@example.com",
+  "rcpt": [
+    "pepper@example.com"
+  ],
+
+  "routes": [
+    {
+      "name": "com",
+      "mx": "example.com",
+      "port": 25
+    },
+
+    {
+      "name": "net",
+      "mx": "example.net",
+      "port": 465,
+      "auth": true,
+      "user": "tony@example.com",
+      "pass": "giveHerTheRing"
+    }
+  ]
+}

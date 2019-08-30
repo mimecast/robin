@@ -1,0 +1,7 @@
+{
+  "mta.uid": {
+    "command": "MAIL",
+    "pattern": "250\\sSender\\sOK\\s\\[([a-z0-9\\-_]+)\\.([a-z]+)([0-9]+)?]"
+  },
+  "digestmd5.random": "64"
+}

@@ -1,0 +1,34 @@
+{
+  "bind": "::",
+  "port": 2025,
+  "backlog": 25,
+  "errorLimit": 3,
+
+  "auth": true,
+  "starttls": true,
+  "chunking": true,
+
+  "keystore": "/usr/local/mimecast/keystore",
+  "keystorepassword": "changeit",
+
+  "users": [
+    {
+      "name": "vmarian@mimecast.com",
+      "pass": "notMyPassword"
+    }
+  ],
+
+  "scenarios": {
+    "reject.com": {
+      "ehlo": "501 Argument not allowed.",
+      "mail": "451 Unable to process email at this time",
+      "rcpt": [
+        {
+          "value": "john@reject.com",
+          "response": "501 Invalid address"
+        }
+      ],
+      "data": "554 Email rejected due to security policies"
+    }
+  }
+}
