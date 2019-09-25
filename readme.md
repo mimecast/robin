@@ -31,12 +31,20 @@ This however does not mean they will be given priority or ever be done.
 Any merge request made should align to existing coding style and naming convention.
 Before submitting a merge request please run a comprehensive code quality analysis (IntelliJ, SonarQube).
 
+Read more [here](contributing.md).
 
-How to:
------------
+
+More...
+-------
+- [CLI usage](doc/cli.md)
 - [Client usage](doc/client.md)
 - [Server configuration](doc/server.md)
+
+
 - [Test Cases](doc/case.md)
 - [Magic variables](doc/magic.md)
 - [Plugins](doc/plugin.md)
-- [CLI usage](doc/cli.md)
+
+
+- [Contributing](contributing.md)
+- [Code of conduct](code_of_conduct.md)
