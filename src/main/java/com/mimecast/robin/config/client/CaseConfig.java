@@ -73,91 +73,93 @@ public class CaseConfig extends ConfigFoundation {
 
     /**
      * Gets MX.
-     * <p>Route supersedes MX.
+     * <p>Route mx supersedes case mx.
      *
      * @return MX string.
      */
     public String getMx() {
-        RouteConfig routeConfig = hasProperty(ROUTE) ?
-                Config.getClient().getRoute(getStringProperty(ROUTE)) :
-                null;
-        return routeConfig != null ? routeConfig.getMx() : getStringProperty("mx");
+        RouteConfig routeConfig = getRoute();
+        return routeConfig != null && routeConfig.getMx() != null ? routeConfig.getMx() : getStringProperty("mx");
     }
 
     /**
      * Gets port.
-     * <p>Route supersedes port.
+     * <p>Route port supersedes case port.
      *
      * @return Port number.
      */
     public int getPort() {
-        RouteConfig routeConfig = hasProperty(ROUTE) ?
-                Config.getClient().getRoute(getStringProperty(ROUTE)) :
-                null;
-        return routeConfig != null ? routeConfig.getPort() : Math.toIntExact(getLongProperty("port"));
+        RouteConfig routeConfig = getRoute();
+        return routeConfig != null && routeConfig.getPort() > 0 ? routeConfig.getPort() : Math.toIntExact(getLongProperty("port"));
     }
 
     /**
      * Is authentication enabled.
+     * <p>Route auth supersedes case auth.
      *
      * @return Boolean.
      */
     public boolean isAuth() {
-        RouteConfig routeConfig = hasProperty(ROUTE) ?
-                Config.getClient().getRoute(getStringProperty(ROUTE)) :
-                null;
-        return routeConfig != null ? routeConfig.isAuth() : getBooleanProperty("auth");
+        RouteConfig routeConfig = getRoute();
+        return routeConfig != null && routeConfig.isAuth() ? true : getBooleanProperty("auth");
     }
 
     /**
      * Is AUTH LOGIN combined username and password login enabled.
      * <p>Some services do not support this syntax.
+     * <p>Route authLoginCombined supersedes case authLoginCombined.
      *
      * @return Boolean.
      */
     public boolean isAuthLoginCombined() {
-        RouteConfig routeConfig = hasProperty(ROUTE) ?
-                Config.getClient().getRoute(getStringProperty(ROUTE)) :
-                null;
-        return routeConfig != null ? routeConfig.isAuthLoginCombined() : getBooleanProperty("authLoginCombined");
+        RouteConfig routeConfig = getRoute();
+        return routeConfig != null && routeConfig.isAuthLoginCombined() ? true : getBooleanProperty("authLoginCombined");
     }
 
     /**
      * Is AUTH LOGIN retry enabled.
      * <p>Retry disabled combined login.
      * <p>Will only work if the server has not severed the connection after first failure.
+     * <p>Route authLoginRetry supersedes case authLoginRetry.
      *
      * @return Boolean.
      */
     public boolean isAuthLoginRetry() {
-        RouteConfig routeConfig = hasProperty(ROUTE) ?
-                Config.getClient().getRoute(getStringProperty(ROUTE)) :
-                null;
-        return routeConfig != null ? routeConfig.isAuthLoginRetry() : getBooleanProperty("authLoginRetry");
+        RouteConfig routeConfig = getRoute();
+        return routeConfig != null && routeConfig.isAuthLoginRetry() ? true : getBooleanProperty("authLoginRetry");
     }
 
     /**
      * Gets username for authentication.
+     * <p>Route user supersedes case user.
      *
      * @return Username.
      */
     public String getUser() {
-        RouteConfig routeConfig = hasProperty(ROUTE) ?
-                Config.getClient().getRoute(getStringProperty(ROUTE)) :
-                null;
-        return routeConfig != null ? routeConfig.getUser() : getStringProperty("user");
+        RouteConfig routeConfig = getRoute();
+        return routeConfig != null && routeConfig.getUser() != null ? routeConfig.getUser() : getStringProperty("user");
     }
 
     /**
      * Gets password for authentication.
+     * <p>Route pass supersedes case pass.
      *
      * @return Password.
      */
     public String getPass() {
-        RouteConfig routeConfig = hasProperty(ROUTE) ?
+        RouteConfig routeConfig = getRoute();
+        return routeConfig != null && routeConfig.getPass() != null ? routeConfig.getPass() : getStringProperty("pass");
+    }
+
+    /**
+     * Gets route config if defined.
+     *
+     * @return RouteConfig instance.
+     */
+    private RouteConfig getRoute() {
+        return hasProperty(ROUTE) ?
                 Config.getClient().getRoute(getStringProperty(ROUTE)) :
                 null;
-        return routeConfig != null ? routeConfig.getPass() : getStringProperty("pass");
     }
 
     /**
