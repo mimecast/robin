@@ -61,13 +61,15 @@ public class ClientData extends ClientProcessor {
      * @throws IOException Unable to communicate.
      */
     private boolean processData() throws IOException {
-        // Send.
         String write = "DATA";
         connection.write(write);
 
         String read;
         read = connection.read("354");
-        if (!read.startsWith("354")) return false;
+        if (!read.startsWith("354")) {
+            envelopeTransactions.addTransaction(write, write, read, true);
+            return false;
+        }
 
         if (envelope.getFile() != null) {
             log.debug("Sending email from file: {}", envelope.getFile());
@@ -104,7 +106,6 @@ public class ClientData extends ClientProcessor {
      * @throws IOException Unable to communicate.
      */
     private boolean processBdat() throws IOException {
-        // Send.
         String write;
         String read;
 
