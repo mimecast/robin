@@ -41,7 +41,7 @@ public class MessageEnvelope {
     private boolean chunkBdat = false;
     private boolean chunkWrite = false;
 
-    private int slowBytes = 0;
+    private int slowBytes = 1;
     private int slowWait = 0;
 
     // Assertions to be made against transaction.

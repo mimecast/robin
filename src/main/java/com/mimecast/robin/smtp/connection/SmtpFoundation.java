@@ -2,6 +2,7 @@ package com.mimecast.robin.smtp.connection;
 
 import com.mimecast.robin.main.Factories;
 import com.mimecast.robin.smtp.io.LineInputStream;
+import com.mimecast.robin.smtp.io.SlowOutputStream;
 import com.mimecast.robin.util.Random;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -11,6 +12,7 @@ import javax.net.ssl.SSLSocket;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.Socket;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -273,6 +275,22 @@ public abstract class SmtpFoundation {
      * @throws IOException Unable to communicate.
      */
     public void write(byte[] bytes, boolean chunkWrite) throws IOException {
+        write(bytes, chunkWrite, 1, 0);
+    }
+
+    /**
+     * Write to a socket via the instance DataOutputStream.
+     * <p>Used for BDAT deliveries.
+     *
+     * @param bytes      String to write to socket.
+     * @param chunkWrite True to chunk string into multiple uneven writes.
+     * @param slowBytes  Size of bytes.
+     * @param slowWait   Time out miliseconds.
+     * @throws IOException Unable to communicate.
+     */
+    public void write(byte[] bytes, boolean chunkWrite, int slowBytes, int slowWait) throws IOException {
+        OutputStream outStream = slowBytes >= 1 && slowWait >= 100 ? new SlowOutputStream(out, slowBytes, slowWait) : out;
+
         try {
             int totalBytes = bytes.length;
 
@@ -299,11 +317,11 @@ public abstract class SmtpFoundation {
                     to = from + chunk;
                     write = Arrays.copyOfRange(bytes, from, to);
                     from = to;
-                    out.write(write);
+                    outStream.write(write);
                     log.trace(LOG_WRITE, StringUtils.stripEnd(new String(write, UTF_8), null));
                 }
             } else {
-                out.write(bytes);
+                outStream.write(bytes);
                 log.trace(LOG_WRITE, StringUtils.stripEnd(new String(bytes, UTF_8), null));
             }
         } catch (IOException e) {
@@ -322,6 +340,21 @@ public abstract class SmtpFoundation {
      * @throws IOException Unable to communicate.
      */
     public void stream(LineInputStream inputStream) throws IOException {
+        stream(inputStream, 1, 0);
+    }
+
+    /**
+     * Write from given InputStream.
+     * <p>Implements slow delivery.
+     *
+     * @param inputStream Input stream.
+     * @param slowBytes   Size of bytes.
+     * @param slowWait    Time out miliseconds.
+     * @throws IOException Unable to communicate.
+     */
+    public void stream(LineInputStream inputStream, int slowBytes, int slowWait) throws IOException {
+        OutputStream outStream = slowBytes >= 1 && slowWait >= 100 ? new SlowOutputStream(out, slowBytes, slowWait) : out;
+
         String string;
         byte[] bytes;
         while ((bytes = inputStream.readLine()) != null) {
@@ -329,13 +362,13 @@ public abstract class SmtpFoundation {
 
             // Dot stuffing.
             if (string.equals(".")) {
-                out.write(".".getBytes(UTF_8));
+                outStream.write(".".getBytes(UTF_8));
             }
 
-            out.write(bytes);
+            outStream.write(bytes);
             log.trace(LOG_WRITE, StringUtils.stripEnd(new String(bytes, UTF_8).replaceAll("\\s+$",""), null));
         }
-        out.write("\r\n".getBytes(UTF_8));
+        outStream.write("\r\n".getBytes(UTF_8));
     }
 
     /**

@@ -57,6 +57,7 @@ public class ClientData extends ClientProcessor {
 
     /**
      * DATA processor.
+     * TODO Implement slow from headers and body.
      *
      * @return Boolean.
      * @throws IOException Unable to communicate.
@@ -74,30 +75,20 @@ public class ClientData extends ClientProcessor {
 
         if (envelope.getFile() != null) {
             log.debug("Sending email from file: {}", envelope.getFile());
-            connection.stream(new MagicInputStream(
-                    new SlowInputStream(
-                            new FileInputStream(
-                                    new File(envelope.getFile())
-                            ), envelope.getSlowBytes(), envelope.getSlowWait()
-                    ), envelope)
-            );
+            connection.stream(new MagicInputStream(new FileInputStream(new File(envelope.getFile())), envelope),
+                    envelope.getSlowBytes(), envelope.getSlowWait());
         }
 
         else if (envelope.getStream() != null) {
             log.debug("Sending email from stream");
-            connection.stream(new MagicInputStream(
-                    new SlowInputStream(
-                            envelope.getStream(), envelope.getSlowBytes(), envelope.getSlowWait()
-                    ), envelope)
-            );
+            connection.stream(new MagicInputStream(envelope.getStream(), envelope),
+                    envelope.getSlowBytes(), envelope.getSlowWait());
         }
 
         else if (envelope.getMessage() != null) {
             log.debug("Sending email from headers and body");
             connection.write(envelope.getHeaders());
-            if (envelope.getMessage() != null) {
-                connection.write(envelope.getMessage());
-            }
+            connection.write(envelope.getMessage());
         }
 
         log.debug("Sending [CRLF].[CRLF]");
@@ -112,6 +103,7 @@ public class ClientData extends ClientProcessor {
     /**
      * BDAT processor.
      * TODO Implement CHUNKING from stream.
+     * TODO Implement slow from headers and body.
      *
      * @return Boolean.
      * @throws IOException Unable to communicate.
@@ -122,10 +114,8 @@ public class ClientData extends ClientProcessor {
 
         if (envelope.getFile() != null) {
             try(ChunkedInputStream chunks = new ChunkedInputStream(
-                    new SlowInputStream(
-                            new FileInputStream(new File(envelope.getFile())), envelope.getSlowBytes(), envelope.getSlowWait()
-                    ), envelope)
-            ) {
+                    new FileInputStream(new File(envelope.getFile())), envelope)) {
+
                 int length;
                 byte[] bdat;
                 String sdat;
@@ -149,7 +139,7 @@ public class ClientData extends ClientProcessor {
                         payload = chunk.toByteArray();
                     }
 
-                    connection.write(payload, envelope.isChunkWrite());
+                    connection.write(payload, envelope.isChunkWrite(), envelope.getSlowBytes(), envelope.getSlowWait());
 
                     read = connection.read("250");
 

@@ -15,7 +15,7 @@ import java.io.InputStream;
  * @link http://mimecast.com Mimecast
  */
 public class SlowInputStream extends InputStream {
-    private static final Logger log = LogManager.getLogger(LineInputStream.class);
+    private static final Logger log = LogManager.getLogger(SlowInputStream.class);
 
     /**
      * Input stream instance.
@@ -52,14 +52,14 @@ public class SlowInputStream extends InputStream {
 
     @Override
     public int read() throws IOException {
-        if (bytes >= 128 && wait >= 100) {
+        if (bytes >= 1 && wait >= 100) {
             byte[] buff = new byte[bytes];
             int read = in.read();
 
             count++;
             if (count == bytes) {
                 count = 0;
-                log.info("Waiting {} after {} bytes", wait, bytes);
+                log.info("Waiting after {} bytes read", bytes);
                 Sleep.nap(wait);
             }
 
