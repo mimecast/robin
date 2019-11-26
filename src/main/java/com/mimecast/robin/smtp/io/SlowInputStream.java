@@ -1,6 +1,8 @@
 package com.mimecast.robin.smtp.io;
 
 import com.mimecast.robin.util.Sleep;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,6 +15,7 @@ import java.io.InputStream;
  * @link http://mimecast.com Mimecast
  */
 public class SlowInputStream extends InputStream {
+    private static final Logger log = LogManager.getLogger(LineInputStream.class);
 
     /**
      * Input stream instance.
@@ -30,6 +33,11 @@ public class SlowInputStream extends InputStream {
     private final int wait;
 
     /**
+     * Bytes read counter.
+     */
+    private int count = 0;
+
+    /**
      * Constructs a new SlowInputStream instance with given bytes and wait.
      *
      * @param in   InputStream instance.
@@ -44,10 +52,17 @@ public class SlowInputStream extends InputStream {
 
     @Override
     public int read() throws IOException {
-        if (bytes >= 128 && wait > 100) {
+        if (bytes >= 128 && wait >= 100) {
             byte[] buff = new byte[bytes];
-            int read = in.read(buff);
-            Sleep.nap(wait);
+            int read = in.read();
+
+            count++;
+            if (count == bytes) {
+                count = 0;
+                log.info("Waiting {} after {} bytes", wait, bytes);
+                Sleep.nap(wait);
+            }
+
             return read;
         } else {
             return in.read();
