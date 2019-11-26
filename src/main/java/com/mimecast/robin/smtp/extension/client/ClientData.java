@@ -4,6 +4,7 @@ import com.mimecast.robin.smtp.MessageEnvelope;
 import com.mimecast.robin.smtp.connection.Connection;
 import com.mimecast.robin.smtp.io.ChunkedInputStream;
 import com.mimecast.robin.smtp.io.MagicInputStream;
+import com.mimecast.robin.smtp.io.SlowInputStream;
 import com.mimecast.robin.smtp.transaction.EnvelopeTransactionList;
 
 import java.io.ByteArrayOutputStream;
@@ -73,12 +74,22 @@ public class ClientData extends ClientProcessor {
 
         if (envelope.getFile() != null) {
             log.debug("Sending email from file: {}", envelope.getFile());
-            connection.stream(new MagicInputStream(new FileInputStream(new File(envelope.getFile())), envelope));
+            connection.stream(new MagicInputStream(
+                    new SlowInputStream(
+                            new FileInputStream(
+                                    new File(envelope.getFile())
+                            ), envelope.getSlowBytes(), envelope.getSlowWait()
+                    ), envelope)
+            );
         }
 
         else if (envelope.getStream() != null) {
             log.debug("Sending email from stream");
-            connection.stream(new MagicInputStream(envelope.getStream(), envelope));
+            connection.stream(new MagicInputStream(
+                    new SlowInputStream(
+                            envelope.getStream(), envelope.getSlowBytes(), envelope.getSlowWait()
+                    ), envelope)
+            );
         }
 
         else if (envelope.getMessage() != null) {
@@ -110,39 +121,46 @@ public class ClientData extends ClientProcessor {
         String read;
 
         if (envelope.getFile() != null) {
-            int length;
-            byte[] bdat;
-            String sdat;
-            ByteArrayOutputStream chunk;
-            ChunkedInputStream chunks = new ChunkedInputStream(new FileInputStream(new File(envelope.getFile())), envelope);
-            while(chunks.hasChunks()) {
-                byte[] payload;
+            try(ChunkedInputStream chunks = new ChunkedInputStream(
+                    new SlowInputStream(
+                            new FileInputStream(new File(envelope.getFile())), envelope.getSlowBytes(), envelope.getSlowWait()
+                    ), envelope)
+            ) {
+                int length;
+                byte[] bdat;
+                String sdat;
+                ByteArrayOutputStream chunk;
 
-                chunk = chunks.getChunk();
-                length = chunk.size();
-                sdat = ("BDAT " + length + (!chunks.hasChunks() ? " LAST" : ""));
-                bdat = (sdat + "\r\n").getBytes();
+                while(chunks.hasChunks()) {
+                    byte[] payload;
 
-                // Merge bdat to first chunk.
-                if (envelope.isChunkBdat()) {
-                    payload = new byte[bdat.length + chunk.size()];
-                    System.arraycopy(bdat, 0, payload, 0, bdat.length);
-                    System.arraycopy(chunk.toByteArray(), 0, payload, bdat.length, chunk.size());
-                } else {
-                    connection.write(sdat);
-                    payload = chunk.toByteArray();
+                    chunk = chunks.getChunk();
+                    length = chunk.size();
+                    sdat = ("BDAT " + length + (!chunks.hasChunks() ? " LAST" : ""));
+                    bdat = (sdat + "\r\n").getBytes();
+
+                    // Merge bdat to first chunk.
+                    if (envelope.isChunkBdat()) {
+                        payload = new byte[bdat.length + chunk.size()];
+                        System.arraycopy(bdat, 0, payload, 0, bdat.length);
+                        System.arraycopy(chunk.toByteArray(), 0, payload, bdat.length, chunk.size());
+                    } else {
+                        connection.write(sdat);
+                        payload = chunk.toByteArray();
+                    }
+
+                    connection.write(payload, envelope.isChunkWrite());
+
+                    read = connection.read("250");
+
+                    envelopeTransactions.addTransaction("BDAT", new String(bdat), read, !read.startsWith("250"));
+                    if(!read.startsWith("250")) return false;
                 }
-
-                connection.write(payload, envelope.isChunkWrite());
-
-                read = connection.read("250");
-
-                envelopeTransactions.addTransaction("BDAT", new String(bdat), read, !read.startsWith("250"));
-                if(!read.startsWith("250")) return false;
             }
         }
 
         else if (envelope.getMessage() != null) {
+            // TODO Write headers and message separatly.
             write = "BDAT " + (envelope.getHeaders().getBytes().length + 2 + envelope.getMessage().getBytes().length + 2) + " LAST";
             connection.write(write);
             connection.write(envelope.getHeaders());

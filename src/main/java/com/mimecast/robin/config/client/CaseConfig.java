@@ -101,7 +101,7 @@ public class CaseConfig extends ConfigFoundation {
      */
     public boolean isAuth() {
         RouteConfig routeConfig = getRoute();
-        return routeConfig != null && routeConfig.isAuth() ? true : getBooleanProperty("auth");
+        return routeConfig != null && routeConfig.isAuth() || getBooleanProperty("auth");
     }
 
     /**
@@ -113,7 +113,7 @@ public class CaseConfig extends ConfigFoundation {
      */
     public boolean isAuthLoginCombined() {
         RouteConfig routeConfig = getRoute();
-        return routeConfig != null && routeConfig.isAuthLoginCombined() ? true : getBooleanProperty("authLoginCombined");
+        return routeConfig != null && routeConfig.isAuthLoginCombined() || getBooleanProperty("authLoginCombined");
     }
 
     /**
@@ -126,7 +126,7 @@ public class CaseConfig extends ConfigFoundation {
      */
     public boolean isAuthLoginRetry() {
         RouteConfig routeConfig = getRoute();
-        return routeConfig != null && routeConfig.isAuthLoginRetry() ? true : getBooleanProperty("authLoginRetry");
+        return routeConfig != null && routeConfig.isAuthLoginRetry() || getBooleanProperty("authLoginRetry");
     }
 
     /**

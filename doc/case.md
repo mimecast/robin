@@ -38,6 +38,8 @@ Glossary
 - **chunkSize** - (default: 1400 bytes) Enables CHUNKING when set at minimum 128.
 - **chunkBdat**  - (default: false) Includes the BDAT command along with the first chunk.
 - **chunkWrite** - (default: false) Writes email data to socket in uneven chunks between 1024 and 2048 bytes if chunkSize greater than 2048.
+- **slowBytes** - (default: 0) Adds a write delay every given number of bytes if value is greater of equal to 128.
+- **slowWait** - (default: 0) Wait time in miliseconds if grater or equal to 100.
 
 
 #### Message

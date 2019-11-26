@@ -89,13 +89,32 @@ public class EnvelopeConfig extends ConfigFoundation {
 
     /**
      * Is chunk write randomly.
-     * <p>This will ignore chunk size and just write random size chunks.
-     * <p>The chunks are limited to in between 1024 and 2048 bytes.
+     * <p>This will write random size chunks from chunk size chunks.
+     * <p>The chunks are limited to in between 1024 and 2048 bytes so chunk size must be >= to 2048.
      *
      * @return Boolean.
      */
     public boolean isChunkWrite() {
         return getBooleanProperty("chunkWrite");
+    }
+
+    /**
+     * Gets slow bytes.
+     * <p>This adds a write delay every given number of bytes.
+     *
+     * @return Size in bytes.
+     */
+    public int getSlowBytes() {
+        return Math.toIntExact(getLongProperty("slowBytes"));
+    }
+
+    /**
+     * Gets slow wait.
+     *
+     * @return Time in miliseconds.
+     */
+    public int getSlowWait() {
+        return Math.toIntExact(getLongProperty("slowWait"));
     }
 
     /**

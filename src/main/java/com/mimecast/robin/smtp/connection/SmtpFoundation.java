@@ -1,7 +1,6 @@
 package com.mimecast.robin.smtp.connection;
 
 import com.mimecast.robin.main.Factories;
-import com.mimecast.robin.smtp.io.InputStream;
 import com.mimecast.robin.smtp.io.LineInputStream;
 import com.mimecast.robin.util.Random;
 import org.apache.commons.lang3.StringUtils;
@@ -320,7 +319,7 @@ public abstract class SmtpFoundation {
      * @param inputStream Input stream.
      * @throws IOException Unable to communicate.
      */
-    public void stream(InputStream inputStream) throws IOException {
+    public void stream(LineInputStream inputStream) throws IOException {
         String string;
         byte[] bytes;
         while ((bytes = inputStream.readLine()) != null) {

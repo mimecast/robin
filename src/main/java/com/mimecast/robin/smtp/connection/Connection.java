@@ -114,7 +114,7 @@ public class Connection extends SmtpFoundation {
                     throw e;
                 }
                 log.debug("Failed: {}", e.getMessage());
-                Sleep.nap(session.getDelay());
+                Sleep.nap(session.getDelay() * 1000);
             }
         }
 

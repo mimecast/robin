@@ -5,6 +5,7 @@ import com.mimecast.robin.util.Random;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -16,17 +17,12 @@ import java.util.regex.Pattern;
  * <p>It finds and replaces magic tags in lines read given MessageEnvelope provided.
  * <p>It uses LineInputStream to do the actual line reading.
  *
- * @see InputStream
  * @see LineInputStream
  * @author "Vlad Marian" <vmarian@mimecast.com>
  * @link http://mimecast.com Mimecast
  */
-public class MagicInputStream implements InputStream {
-
-    /**
-     * LineInputStream instance.
-     */
-    private LineInputStream lineInputStream;
+@SuppressWarnings("squid:MaximumInheritanceDepth")
+public class MagicInputStream extends LineInputStream {
 
     /**
      * MessageEnvelope instance.
@@ -58,7 +54,7 @@ public class MagicInputStream implements InputStream {
      * @param in              InputStream instance.
      * @param envelope MessageEnvelope instance.
      */
-    public MagicInputStream(java.io.InputStream in, MessageEnvelope envelope) {
+    public MagicInputStream(InputStream in, MessageEnvelope envelope) {
         this(in);
         this.envelope = envelope;
     }
@@ -68,8 +64,8 @@ public class MagicInputStream implements InputStream {
      *
      * @param in InputStream instance.
      */
-    MagicInputStream(java.io.InputStream in) {
-        lineInputStream = new LineInputStream(in);
+    MagicInputStream(InputStream in) {
+        super(in);
     }
 
     /**
@@ -78,8 +74,9 @@ public class MagicInputStream implements InputStream {
      * @return Byte array.
      * @throws IOException Unable to read.
      */
+    @Override
     public byte[] readLine() throws IOException {
-        return doMagic(lineInputStream.readLine());
+        return doMagic(super.readLine());
     }
 
     /**
@@ -88,7 +85,7 @@ public class MagicInputStream implements InputStream {
      * @param lineBytes Byte array.
      * @return Byte array.
      */
-    public byte[] doMagic(byte[] lineBytes) {
+    byte[] doMagic(byte[] lineBytes) {
         if (lineBytes != null && envelope != null) {
             boolean changed = false;
             String tag = new String(lineBytes).toLowerCase();
@@ -127,7 +124,7 @@ public class MagicInputStream implements InputStream {
      * @param line Line string.
      * @return Line string.
      */
-    public String doSimpleMagic(String tag, String line) {
+    String doSimpleMagic(String tag, String line) {
         for (Map.Entry<String, Pattern> entry : simpleTags.entrySet()) {
             if (tag.contains(entry.getKey())) {
 
@@ -147,7 +144,7 @@ public class MagicInputStream implements InputStream {
      * @param key Tag key.
      * @return Value string.
      */
-    public String getReplacement(String key) {
+    String getReplacement(String key) {
         if (envelope != null) {
             switch (key) {
                 case "{$msgid}":
@@ -182,7 +179,7 @@ public class MagicInputStream implements InputStream {
      * @param line Line string.
      * @return Value string.
      */
-    public String randCh(String line) {
+    String randCh(String line) {
         Matcher matcher = patternRandCh.matcher(line);
         int rnd = 20;
 
@@ -204,7 +201,7 @@ public class MagicInputStream implements InputStream {
      * @param line Line string.
      * @return Value string.
      */
-    public String randNo(String line) {
+    String randNo(String line) {
         Matcher matcher = patternRandNo.matcher(line);
         int rnd = 10;
 

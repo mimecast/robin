@@ -41,6 +41,9 @@ public class MessageEnvelope {
     private boolean chunkBdat = false;
     private boolean chunkWrite = false;
 
+    private int slowBytes = 0;
+    private int slowWait = 0;
+
     // Assertions to be made against transaction.
     private AssertConfig assertConfig;
 
@@ -367,6 +370,47 @@ public class MessageEnvelope {
      */
     public void setChunkWrite(boolean chunkWrite) {
         this.chunkWrite = chunkWrite;
+    }
+
+    /**
+     * Gets slow bytes.
+     * <p>This adds a write delay every given number of bytes.
+     * <p>Must be >= 128 or the functionality will be disabled.
+     * <p>Works only with file and stream not with headers and message.
+     *
+     * @return Size in bytes.
+     */
+    public int getSlowBytes() {
+        return slowBytes;
+    }
+
+    /**
+     * Sets slow bytes.
+     *
+     * @param slowBytes Chunk size.
+     */
+    public void setSlowBytes(int slowBytes) {
+        this.slowBytes = slowBytes;
+    }
+
+    /**
+     * Gets slow wait.
+     * <p>Wait time in miliseconds.
+     * <p>Must be >= 100 or the functionality will be disabled.
+     *
+     * @return Chunk size in bytes.
+     */
+    public int getSlowWait() {
+        return slowWait;
+    }
+
+    /**
+     * Sets slow wait.
+     *
+     * @param slowWait Slow wait.
+     */
+    public void setSlowWait(int slowWait) {
+        this.slowWait = slowWait;
     }
 
     /**

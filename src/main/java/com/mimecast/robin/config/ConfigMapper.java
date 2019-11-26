@@ -98,6 +98,9 @@ public class ConfigMapper {
         envelope.setChunkBdat(envelopeConfig.isChunkBdat());
         envelope.setChunkWrite(envelopeConfig.isChunkWrite());
 
+        envelope.setSlowBytes(envelopeConfig.getSlowBytes());
+        envelope.setSlowWait(envelopeConfig.getSlowWait());
+
         // Set EML file.
         if (StringUtils.isNotBlank(envelopeConfig.getFile())) {
             envelope.setFile(envelopeConfig.getFile());

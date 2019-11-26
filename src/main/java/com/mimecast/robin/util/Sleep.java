@@ -22,11 +22,13 @@ public class Sleep {
 
     /**
      * Take a nap.
+     *
+     * @param delay Time in miliseconds.
      */
     public static void nap(int delay) {
         try {
-            log.debug("Waiting {} seconds.", delay);
-            Thread.sleep(delay * 1000L); // Take a nap.
+            log.debug("Waiting {} miliseconds.", delay);
+            Thread.sleep(delay); // Take a nap.
         } catch (InterruptedException e) {
             log.info("Interrupted.");
             Thread.currentThread().interrupt();

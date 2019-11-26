@@ -17,6 +17,7 @@ import java.util.Arrays;
  * @author "Vlad Marian" <vmarian@mimecast.com>
  * @link http://mimecast.com Mimecast
  */
+@SuppressWarnings("squid:MaximumInheritanceDepth")
 public class ChunkedInputStream extends MagicInputStream {
 
     /**
