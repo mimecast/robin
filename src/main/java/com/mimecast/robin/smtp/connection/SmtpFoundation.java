@@ -186,8 +186,9 @@ public abstract class SmtpFoundation {
                 log.info("<< {}", StringUtils.stripEnd(new String(read, UTF_8), null));
 
                 if (multiline) {
-                    received.append(new String(read));
-                    stop = isFullStop(read);
+                    String str =new String(read);
+                    received.append(str);
+                    stop = isFullStop(str);
                 }
                 else {
                     receivedCode = new String(read).substring(0, expectedCode.length());
@@ -218,11 +219,12 @@ public abstract class SmtpFoundation {
     /**
      * Check for fullstop.
      *
-     * @param bytes Byte array.
+     * @param string String.
      * @return True if found.
      */
-    private boolean isFullStop(byte[] bytes) {
-        return bytes.length == 1 && bytes[0] == FULLSTOP;
+    private boolean isFullStop(String string) {
+        byte[] check = string.trim().getBytes();
+        return check.length == 1 && check[0] == FULLSTOP;
     }
 
     /**
