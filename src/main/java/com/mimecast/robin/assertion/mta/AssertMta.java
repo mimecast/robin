@@ -82,7 +82,8 @@ public class AssertMta {
     /**
      * Compiled patterns.
      */
-    private List<AssertGroup> patternGroups;
+    private List<AssertGroup> matchGroups = new ArrayList<>();
+    private List<AssertGroup> refuseGroups = new ArrayList<>();
 
     /**
      * Constructs a new AssertMta instance.
@@ -101,8 +102,10 @@ public class AssertMta {
             findUID(); // No point in doing anything if we can't get it.
             compileVerify(); // Precompile verify patterns for performance.
             findLogs(); // Get the logs for that UID and verify.
-            compilePatterns(); // Precompile match patterns for performance.
-            matchPatterns(); // Match patters to log lines.
+            compilePatterns(assertions.getMatch(), matchGroups); // Precompile match patterns for performance.
+            compilePatterns(assertions.getRefuse(), refuseGroups); // Precompile refuse patterns for performance.
+            checkPatterns(true); // Match patters to log lines.
+            checkPatterns(false); // Refuse patters to log lines.
             verifyMatches(); // Evaluate unmatched assertion and except.
         } catch (Exception e) {
             throw new AssertException(e);
@@ -227,33 +230,33 @@ public class AssertMta {
     }
 
     /**
-     * Precompile match patterns for performance.
+     * Precompile match and refuse patterns for performance.
      */
-    private void compilePatterns() {
-        this.patternGroups = new ArrayList<>();
-
+    private void compilePatterns(List<List<String>> groups, List<AssertGroup> container) {
         // Make new list of assertions with precompiled patterns for performance.
         // Additionally we need a result field to track matches.
-        for (List<String> list : assertions.getMatch()) {
+        for (List<String> list : groups) {
             List<Pattern> compiled = new ArrayList<>();
             for (String assertion : list) {
                 compiled.add(Pattern.compile(assertion, Pattern.CASE_INSENSITIVE));
             }
 
-            patternGroups.add(new AssertGroup().setRules(list).setPatterns(compiled));
+            container.add(new AssertGroup().setRules(list).setPatterns(compiled));
         }
     }
 
     /**
      * Match log lines to patterns.
+     *
+     * @param positive Success on match.
      */
-    private void matchPatterns() {
+    private void checkPatterns(boolean positive) throws AssertException {
         if (logsList != null) {
 
             // Loop log lines.
             for (Object line : logsList) {
                 if (line instanceof String) {
-                    matchLine((String) line);
+                    checkLine((String) line, positive);
                 }
             }
         }
@@ -263,25 +266,47 @@ public class AssertMta {
      * Match log line to patterns.
      *
      * @param line Log line.
+     * @param positive Success on match.
      */
-    private void matchLine(String line) {
-        for (AssertGroup group : patternGroups) {
+    private void checkLine(String line, boolean positive) throws AssertException {
+        // Choose positive or negative matching groups
+        List<AssertGroup> groups = positive ? matchGroups : refuseGroups;
+
+        for (AssertGroup group : groups) {
 
             // Skip matched.
             if (!group.hasMatched()) {
 
                 // Loop and match.
-                for (Pattern pattern : group.getPatterns()) {
-                    Matcher m = pattern.matcher(line);
-                    if (m.find()) {
-                        group.addMatched(pattern);
-                    }
-                }
+                matchLine(group, line, positive);
 
-                // Evaluate if all patterns matched.
-                if (group.getMatched().size() == group.getPatterns().size()) {
+                // Evaluate if all positive patterns matched.
+                if (positive && group.getMatched().size() == group.getPatterns().size()) {
                     log.debug("LOG: {}", line);
                     log.debug("MATCH: {}", group.getMatched().toString());
+                }
+            }
+        }
+    }
+
+    /**
+     * Match log line to pattern group.
+     *
+     * @param group AssertGroup instance.
+     * @param line Log line.
+     * @param positive Success on match.
+     */
+    private void matchLine(AssertGroup group, String line, boolean positive) throws AssertException {
+        for (Pattern pattern : group.getPatterns()) {
+            Matcher m = pattern.matcher(line);
+            if (m.find()) {
+                group.addMatched(pattern);
+
+                // Break on first negative match
+                if (!positive) {
+                    log.debug("LOG: {}", line);
+                    log.debug("MATCH: {}", group.getMatched().toString());
+                    throw new AssertException("Found refuse pattern " + group.getMatched() + " in logs");
                 }
             }
         }
@@ -291,7 +316,7 @@ public class AssertMta {
      * Check all matches matched.
      */
     private void verifyMatches() throws AssertException {
-        for (AssertGroup group : patternGroups) {
+        for (AssertGroup group : matchGroups) {
             if (!group.hasMatched()) {
                 throw new AssertException("Unable to find pattern " + group.getUnmatched() + " in logs");
             }

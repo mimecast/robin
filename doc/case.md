@@ -101,7 +101,8 @@ LogsClient.java interface.
 - **retry** - Retry attempts if empty logs list (default: 0).
 - **delay** - Delay between subsequent retries (default: 2, min: 2).
 - **verify** - List of regex matches to verify complete logs received. Provides stability when MTA takes more time to process.
-- **match** - Regex assertions to run against log lines. Multiple expressions can run on the same line.
+- **match** - Regex assertions to run against log lines. Multiple expressions can run on the same line. All must match.
+- **refuse** - The opposite of match. Will stop and error on first match.
 
         "wait": 10,
         "retry": 2,
@@ -112,6 +113,9 @@ LogsClient.java interface.
             [ "250", "Recipient OK" ]
             [ "MAPREDUCE:RCPT", "Custody=true", "Storage=check" ]
             [ "250", "Received OK" ]
+        ],
+        "refuse": [
+            [ "java.lang.NullPointerException" ]
         ]
 
 

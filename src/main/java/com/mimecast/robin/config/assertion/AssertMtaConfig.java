@@ -80,4 +80,13 @@ public class AssertMtaConfig extends ConfigFoundation {
     public List<List<String>> getMatch() {
         return getListProperty("match");
     }
+
+    /**
+     * Gets regex rules to NOT match against.
+     *
+     * @return List in list.
+     */
+    public List<List<String>> getRefuse() {
+        return getListProperty("refuse");
+    }
 }
