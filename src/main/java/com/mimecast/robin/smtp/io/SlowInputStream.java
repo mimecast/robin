@@ -53,7 +53,6 @@ public class SlowInputStream extends InputStream {
     @Override
     public int read() throws IOException {
         if (bytes >= 1 && wait >= 100) {
-            byte[] buff = new byte[bytes];
             int read = in.read();
 
             count++;

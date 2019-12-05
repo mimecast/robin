@@ -4,7 +4,6 @@ import com.mimecast.robin.smtp.MessageEnvelope;
 import com.mimecast.robin.smtp.connection.Connection;
 import com.mimecast.robin.smtp.io.ChunkedInputStream;
 import com.mimecast.robin.smtp.io.MagicInputStream;
-import com.mimecast.robin.smtp.io.SlowInputStream;
 import com.mimecast.robin.smtp.transaction.EnvelopeTransactionList;
 
 import java.io.ByteArrayOutputStream;
