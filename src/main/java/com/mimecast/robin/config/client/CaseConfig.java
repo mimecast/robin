@@ -75,11 +75,11 @@ public class CaseConfig extends ConfigFoundation {
      * Gets MX.
      * <p>Route mx supersedes case mx.
      *
-     * @return MX string.
+     * @return MX list of string.
      */
-    public String getMx() {
+    public List<String> getMx() {
         RouteConfig routeConfig = getRoute();
-        return routeConfig != null && routeConfig.getMx() != null ? routeConfig.getMx() : getStringProperty("mx");
+        return routeConfig != null && routeConfig.getMx() != null ? routeConfig.getMx() : getListProperty("mx");
     }
 
     /**

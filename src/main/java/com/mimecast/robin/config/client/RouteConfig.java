@@ -2,6 +2,7 @@ package com.mimecast.robin.config.client;
 
 import com.mimecast.robin.config.ConfigFoundation;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -14,6 +15,7 @@ import java.util.Map;
  * @author "Vlad Marian" <vmarian@mimecast.com>
  * @link http://mimecast.com Mimecast
  */
+@SuppressWarnings("unchecked")
 public class RouteConfig extends ConfigFoundation {
 
     /**
@@ -37,10 +39,10 @@ public class RouteConfig extends ConfigFoundation {
     /**
      * Gets MX.
      *
-     * @return MX string.
+     * @return MX list of string.
      */
-    public String getMx() {
-        return getStringProperty("mx");
+    public List<String> getMx() {
+        return getListProperty("mx");
     }
 
     /**

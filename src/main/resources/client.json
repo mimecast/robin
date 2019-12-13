@@ -1,5 +1,7 @@
 {
-  "mx": "127.0.0.1",
+  "mx": [
+    "127.0.0.1"
+  ],
   "port": 2025,
 
   "tls": true,
@@ -31,13 +33,17 @@
   "routes": [
     {
       "name": "com",
-      "mx": "example.com",
+      "mx": [
+        "example.com"
+      ],
       "port": 25
     },
 
     {
       "name": "net",
-      "mx": "example.net",
+      "mx": [
+        "example.net"
+      ],
       "port": 465,
       "auth": true,
       "user": "tony@example.com",

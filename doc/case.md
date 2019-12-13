@@ -9,7 +9,7 @@ Glossary
 ### Session
 - **retry** - Retry connection.
 - **delay** - Delay between retries.
-- **mx** - MTA sever (default: 127.0.0.1).
+- **mx** - MTA server list (default: 127.0.0.1).
 - **port** - MTA port (default: 25).
 - **auth** - SMTP authentication (default: false).
 - **user** - Authentication username.
@@ -123,7 +123,9 @@ Case
 ----
 
     {
-        "mx": "example.com",
+        "mx": [
+            "example.com"
+        ],
         "port": 25,
 
         "tls": true,
@@ -188,7 +190,9 @@ Configuration
 *client.json*
 
     {
-        "mx": "example.com",
+        "mx": [
+            "example.com"
+        ],
         "port": 25,
         
         "tls": true,
@@ -212,13 +216,17 @@ Configuration
         "routes": [
             {
                 "name": "com",
-                "mx": "example.com",
+                "mx": [
+                    "example.com"
+                ],
                 "port": 25
             },
             
             {
                 "name": "net",
-                "mx": "example.net",
+                "mx": [
+                    "example.net"
+                ],
                 "port": 465,
                 "auth": true,
                 "user": "tony@example.com",

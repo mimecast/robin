@@ -31,9 +31,9 @@ class RouteConfigTest {
 
     @Test
     void getMx() {
-        assertEquals("example.com", routeConfig1.getMx());
+        assertEquals("example.com", routeConfig1.getMx().get(0));
 
-        assertEquals("example.net", routeConfig2.getMx());
+        assertEquals("example.net", routeConfig2.getMx().get(0));
     }
 
     @Test

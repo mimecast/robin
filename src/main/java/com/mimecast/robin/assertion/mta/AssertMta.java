@@ -82,8 +82,8 @@ public class AssertMta {
     /**
      * Compiled patterns.
      */
-    private List<AssertGroup> matchGroups = new ArrayList<>();
-    private List<AssertGroup> refuseGroups = new ArrayList<>();
+    private final List<AssertGroup> matchGroups = new ArrayList<>();
+    private final List<AssertGroup> refuseGroups = new ArrayList<>();
 
     /**
      * Constructs a new AssertMta instance.

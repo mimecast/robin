@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.naming.ConfigurationException;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
@@ -80,7 +81,7 @@ public class ClientCLI {
                 CaseConfig caseConfig = new CaseConfig();
                 Map<String, Object> map = caseConfig.getMap();
                 map.put("file", cmd.getOptionValue("file"));
-                map.put("mx", cmd.getOptionValue("mx"));
+                map.put("mx", Collections.singletonList(cmd.getOptionValue("mx")));
                 map.put("mail", cmd.getOptionValue("mail"));
                 map.put("rcpt", cmd.getOptionValue("rcpt"));
                 if (StringUtils.isNotBlank(cmd.getOptionValue("port"))) {

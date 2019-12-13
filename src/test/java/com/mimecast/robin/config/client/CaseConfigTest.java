@@ -22,7 +22,7 @@ class CaseConfigTest {
 
     @Test
     void getMx() {
-        assertEquals("example.net", caseConfig.getMx());
+        assertEquals("example.net", caseConfig.getMx().get(0));
     }
 
     @Test

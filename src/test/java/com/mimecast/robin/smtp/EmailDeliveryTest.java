@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import javax.naming.ConfigurationException;
 import java.io.IOException;
+import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,7 +22,7 @@ class EmailDeliveryTest {
     private ConnectionMock getConnection(StringBuilder stringBuilder) {
         ConnectionMock connection = new ConnectionMock(stringBuilder);
         connection.getSession().setEhlo("example.com");
-        connection.getSession().setMx("example.com");
+        connection.getSession().setMx(Collections.singletonList("example.com"));
         connection.getSession().setPort(25);
 
         MessageEnvelope envelope = new MessageEnvelope();

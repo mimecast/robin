@@ -70,8 +70,8 @@ public class Assert {
      */
     private LogsClient getClient() {
         LogsClient logsClient = Factories.getLogsClient();
-        if (logsClient != null) {
-            logsClient.setServer(connection.getSession().getMx());
+        if (logsClient != null && connection.getSession().getMx() != null && !connection.getSession().getMx().isEmpty()) {
+            logsClient.setServer(connection.getSession().getMx().get(0));
         }
         return logsClient;
     }

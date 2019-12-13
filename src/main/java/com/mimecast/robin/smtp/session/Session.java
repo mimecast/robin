@@ -52,7 +52,7 @@ public class Session {
     /**
      * [Client] Destination MX.
      */
-    private String mx;
+    private List<String> mx;
 
     /**
      * [Client] Destination port.
@@ -316,19 +316,19 @@ public class Session {
     /**
      * Gets server MX.
      *
-     * @return Address or IP.
+     * @return Address or IP list of string.
      */
-    public String getMx() {
+    public List<String> getMx() {
         return mx;
     }
 
     /**
      * Sets server MX.
      *
-     * @param mx MX string.
+     * @param mx MX list of string.
      * @return Self.
      */
-    public Session setMx(String mx) {
+    public Session setMx(List<String> mx) {
         this.mx = mx;
         return this;
     }

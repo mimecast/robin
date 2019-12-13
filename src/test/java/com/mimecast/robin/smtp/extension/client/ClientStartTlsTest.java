@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import javax.naming.ConfigurationException;
 import java.io.IOException;
+import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -52,7 +53,7 @@ class ClientStartTlsTest {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("220 Go\r\n");
         ConnectionMock connection = new ConnectionMock(stringBuilder);
-        connection.getSession().setMx("localhost");
+        connection.getSession().setMx(Collections.singletonList("localhost"));
         connection.getSession().setPort(10025);
         connection.getSession().setTls(true);
         connection.getSession().setEhloTls(true);

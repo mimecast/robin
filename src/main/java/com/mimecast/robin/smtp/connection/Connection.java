@@ -107,7 +107,7 @@ public class Connection extends SmtpFoundation {
             try {
                 log.info("Connecting to: {}:{}", session.getMx(), session.getPort());
                 socket = new Socket();
-                socket.connect(new InetSocketAddress(session.getMx(), session.getPort()));
+                socket.connect(new InetSocketAddress(session.getMx().get(i % session.getMx().size()), session.getPort()));
                 break;
             } catch (IOException e) {
                 if (i == retry - 1) {

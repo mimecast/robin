@@ -259,29 +259,6 @@ public abstract class SmtpFoundation {
      * Write to a socket via the instance DataOutputStream.
      * <p>Used for BDAT deliveries.
      *
-     * @param bytes String to write to socket.
-     * @throws IOException Unable to communicate.
-     */
-    public void write(byte[] bytes) throws IOException {
-        write(bytes, false);
-    }
-
-    /**
-     * Write to a socket via the instance DataOutputStream.
-     * <p>Used for BDAT deliveries.
-     *
-     * @param bytes      String to write to socket.
-     * @param chunkWrite True to chunk string into multiple uneven writes.
-     * @throws IOException Unable to communicate.
-     */
-    public void write(byte[] bytes, boolean chunkWrite) throws IOException {
-        write(bytes, chunkWrite, 1, 0);
-    }
-
-    /**
-     * Write to a socket via the instance DataOutputStream.
-     * <p>Used for BDAT deliveries.
-     *
      * @param bytes      String to write to socket.
      * @param chunkWrite True to chunk string into multiple uneven writes.
      * @param slowBytes  Size of bytes.
