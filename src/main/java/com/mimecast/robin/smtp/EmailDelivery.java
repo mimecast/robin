@@ -58,7 +58,7 @@ public class EmailDelivery {
         try {
             connection.connect();
 
-            log.info("Connected to: {}:{}", connection.getSession().getMx(), connection.getSession().getPort());
+            log.info("Connected to: {}:{}", connection.getServer(), connection.getSession().getPort());
 
             String read = connection.read("220");
             connection.getSessionTransactionList().addTransaction("SMTP", read, !read.startsWith("220"));

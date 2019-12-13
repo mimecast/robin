@@ -14,6 +14,7 @@ import java.io.OutputStream;
  * @author "Vlad Marian" <vmarian@mimecast.com>
  * @link http://mimecast.com Mimecast
  */
+@SuppressWarnings("squid:S4349")
 public class SlowOutputStream extends OutputStream {
     private static final Logger log = LogManager.getLogger(SlowOutputStream.class);
 

@@ -44,6 +44,11 @@ public class Connection extends SmtpFoundation {
     private SessionTransactionList sessionTransactionList = new SessionTransactionList();
 
     /**
+     * Connection server.
+     */
+    private String server = null;
+
+    /**
      * [Client] Constructs a new Connection instance with given Session.
      * <p>This is primarly here for unit testing.
      *
@@ -104,10 +109,11 @@ public class Connection extends SmtpFoundation {
         int retry = session.getRetry() > 0 ? session.getRetry() : 1;
 
         for (int i = 0; i < retry; i++) {
+            server = session.getMx().get(i % session.getMx().size());
             try {
-                log.info("Connecting to: {}:{}", session.getMx(), session.getPort());
+                log.info("Connecting to: {}:{}", server, session.getPort());
                 socket = new Socket();
-                socket.connect(new InetSocketAddress(session.getMx().get(i % session.getMx().size()), session.getPort()));
+                socket.connect(new InetSocketAddress(server, session.getPort()));
                 break;
             } catch (IOException e) {
                 if (i == retry - 1) {
@@ -150,10 +156,19 @@ public class Connection extends SmtpFoundation {
     }
 
     /**
+     * Gets connection server.
+     *
+     * @return Server string.
+     */
+    public String getServer() {
+        return server;
+    }
+
+    /**
      * [Server] Gets server username.
      *
      * @param username Username string.
-     * @return UserConfig.
+     * @return Optional of UserConfig.
      */
     public Optional<UserConfig> getUser(String username) {
         return Config.getServer().getUser(username);
