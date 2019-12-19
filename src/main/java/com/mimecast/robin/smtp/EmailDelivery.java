@@ -58,11 +58,6 @@ public class EmailDelivery {
         try {
             connection.connect();
 
-            log.info("Connected to: {}:{}", connection.getServer(), connection.getSession().getPort());
-
-            String read = connection.read("220");
-            connection.getSessionTransactionList().addTransaction("SMTP", read, !read.startsWith("220"));
-            if (!read.startsWith("220")) throw new SmtpException("SMTP");
             log.debug("Remote ready and willing.");
 
             Behaviour behaviour = Factories.getBehaviour();

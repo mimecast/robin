@@ -114,7 +114,21 @@ public class Connection extends SmtpFoundation {
                 log.info("Connecting to: {}:{}", server, session.getPort());
                 socket = new Socket();
                 socket.connect(new InetSocketAddress(server, session.getPort()));
-                break;
+
+                buildStreams();
+
+                log.info("Connected to: {}:{}", server, session.getPort());
+
+                String read = read("220");
+                sessionTransactionList.addTransaction("SMTP", read, !read.startsWith("220"));
+
+                if (!read.startsWith("220")) {
+                    if (i == retry - 1) {
+                        throw new SmtpException("SMTP");
+                    } else {
+                        close();
+                    }
+                }
             } catch (IOException e) {
                 if (i == retry - 1) {
                     throw e;
@@ -123,8 +137,6 @@ public class Connection extends SmtpFoundation {
                 Sleep.nap(session.getDelay() * 1000);
             }
         }
-
-        buildStreams();
     }
 
     /**
