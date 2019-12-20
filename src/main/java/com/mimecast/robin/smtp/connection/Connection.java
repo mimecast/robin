@@ -128,6 +128,8 @@ public class Connection extends SmtpFoundation {
                     } else {
                         close();
                     }
+                } else {
+                    break;
                 }
             } catch (IOException e) {
                 if (i == retry - 1) {
