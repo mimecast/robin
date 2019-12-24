@@ -120,15 +120,15 @@ public class Connection extends SmtpFoundation {
                 log.info("Connected to: {}:{}", server, session.getPort());
 
                 String read = read("220");
-                sessionTransactionList.addTransaction("SMTP", read, !read.startsWith("220"));
-
                 if (!read.startsWith("220")) {
                     if (i == retry - 1) {
+                        sessionTransactionList.addTransaction("SMTP", read, true);
                         throw new SmtpException("SMTP");
                     } else {
-                        close();
+                        close(); // Retry
                     }
                 } else {
+                    sessionTransactionList.addTransaction("SMTP", read, false);
                     break;
                 }
             } catch (IOException e) {
