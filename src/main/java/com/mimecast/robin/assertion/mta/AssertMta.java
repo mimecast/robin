@@ -167,7 +167,7 @@ public class AssertMta {
     /**
      * Find logs by UID using given client if any.
      */
-    private void findLogs() {
+    private void findLogs() throws AssertException {
         long delay = assertions.getWait() > 0 ? assertions.getWait() * 1000L : 2000L; // Initial wait 2 seconds.
         for (int count = 0; count < assertions.getRetry(); count++) {
             Sleep.nap((int) delay);
@@ -181,6 +181,10 @@ public class AssertMta {
             }
 
             delay = assertions.getDelay(); // Retry delay.
+        }
+
+        if (logsList == null || logsList.isEmpty()) {
+            throw new AssertException("No logs found to assert against");
         }
     }
 
