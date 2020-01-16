@@ -113,6 +113,7 @@ public class Connection extends SmtpFoundation {
             try {
                 log.info("Connecting to: {}:{}", server, session.getPort());
                 socket = new Socket();
+                socket.setSoTimeout(Math.max(session.getTimeout(), 0));
                 socket.connect(new InetSocketAddress(server, session.getPort()));
 
                 buildStreams();

@@ -9,6 +9,7 @@ Glossary
 ### Session
 - **retry** - Retry connection.
 - **delay** - Delay between retries.
+- **timeout** - Socket timeout.
 - **mx** - MTA server list (default: 127.0.0.1).
 - **port** - MTA port (default: 25).
 - **auth** - SMTP authentication (default: false).

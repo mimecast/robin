@@ -1,5 +1,6 @@
 {
   "route": "net",
+  "timeout": 30,
 
   "envelopes": [
     {

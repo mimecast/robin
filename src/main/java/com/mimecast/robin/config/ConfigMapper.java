@@ -41,7 +41,7 @@ public class ConfigMapper {
         session.setMx(config.getMx())
                 .setRetry(config.getRetry())
                 .setDelay(config.getDelay())
-                .setPort(config.getPort())
+                .setTimeout(config.getTimeout())
                 .setPort(config.getPort())
                 .setTls(config.isTls())
                 .setAuthTls(config.isAuthTls())

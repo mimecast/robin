@@ -7,15 +7,20 @@ Usage
 -----
 *For detailed explaination of each setting please refference case.md.*
 
-    // Run once
+    // Run once.
     AnnotationLoader.load(); // Load XCLIENT plugin and others if any.
 
 
-    // Session
+    // Session.
     Session session = new Session(); // Use XclientSession for XCLIENT capabilities.
 
-    // Connection details
+    // Connection attempts.
+    session.setRetry(3)
+            .setDelay(5);
+
+    // Connection details.
     session.setMx("example.com")
+            .setTimeout(60)
             .setPort(25)
             .setTls(true)
             .setAuthTls(false) // Do AUTH before STRTTLS
@@ -24,24 +29,24 @@ Usage
             .setProtocols(new String[] { "TLS1.2" })
             .setCiphers(new String[] { "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384", "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384", });
 
-    // Hello
+    // Hello.
     session.setEhlo("example.com");
 
-    // Auth
+    // Auth.
     session.setAuth(true)
             .setUsername("tony@example.com")
             .setPassword("giveHerTheRing");
 
 
-    // Envelope
+    // Envelope.
     MessageEnvelope envelope = new MessageEnvelope();
 
-    // Parties
+    // Parties.
     envelope.setMail("tony@example.net");
     envelope.getRcpts().add("pepper@example.com");
     envelope.getRcpts().add("happy@example.com");
 
-    // Journal magic
+    // Journal magic.
     envelope.setMailEjf("jarvis@example.com");
     envelope.setRcptEjf("friday@example.com");
 
@@ -63,9 +68,9 @@ Usage
     envelope.setChunkWrite(true); // Send chunk in uneven TCP writes between 1024 and 2048 bytes.
 
 
-    // Add envelope to session
+    // Add envelope to session.
     session.addEnvelope(envelope);
 
 
-    // Send
+    // Send.
     new EmailDelivery(session).send();

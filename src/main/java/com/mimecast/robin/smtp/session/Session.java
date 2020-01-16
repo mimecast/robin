@@ -45,6 +45,11 @@ public class Session {
     private int delay;
 
     /**
+     * [Client] Socket timeout.
+     */
+    private int timeout = 0;
+
+    /**
      * [Server] Bind interface.
      */
     private String bind;
@@ -290,6 +295,27 @@ public class Session {
      */
     public Session setDelay(int delay) {
         this.delay = delay;
+        return this;
+    }
+
+    /**
+     * Gets socket timeout.
+     *
+     * @return Socket timeout.
+     */
+    public int getTimeout() {
+        return timeout;
+    }
+
+    /**
+     * Sets socket timeout.
+     * <p>In seconds.
+     *
+     * @param timeout Socket timeout.
+     * @return Self.
+     */
+    public Session setTimeout(int timeout) {
+        this.timeout = timeout;
         return this;
     }
 

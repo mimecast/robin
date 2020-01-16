@@ -21,6 +21,11 @@ class CaseConfigTest {
     }
 
     @Test
+    void getTimeout() {
+        assertEquals(30, caseConfig.getTimeout());
+    }
+
+    @Test
     void getMx() {
         assertEquals("example.net", caseConfig.getMx().get(0));
     }
