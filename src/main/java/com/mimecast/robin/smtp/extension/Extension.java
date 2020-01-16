@@ -47,7 +47,7 @@ public class Extension {
         try {
             return server.call();
         } catch (Exception e) {
-            log.error("Unable to execute server for extension: {}", e.getMessage());
+            log.error("Error calling server for extension: {}", e.getMessage());
         }
         return null;
     }
@@ -61,7 +61,7 @@ public class Extension {
         try {
             return client.call();
         } catch (Exception e) {
-            log.error("Unable to execute client for extension: {}", e.getMessage());
+            log.error("Error calling client for extension: {}", e.getMessage());
         }
         return null;
     }

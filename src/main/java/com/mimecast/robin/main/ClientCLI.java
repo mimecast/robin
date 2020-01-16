@@ -90,7 +90,7 @@ public class ClientCLI {
                 client.send(caseConfig);
             }
         } catch (IOException e) {
-            main.log("Unable to read: " + e.getMessage());
+            main.log("Error reading: " + e.getMessage());
         }
     }
 

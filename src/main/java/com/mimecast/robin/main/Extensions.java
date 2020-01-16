@@ -123,13 +123,7 @@ public class Extensions {
             throw new IllegalArgumentException("Key cannot be null");
         }
 
-        try {
-            return Optional.ofNullable(map.get(name.toLowerCase()));
-        } catch (Exception e) {
-            log.error("Unable to execute extension: {}", e.getMessage());
-        }
-
-        return Optional.empty();
+        return Optional.ofNullable(map.get(name.toLowerCase()));
     }
 
     /**

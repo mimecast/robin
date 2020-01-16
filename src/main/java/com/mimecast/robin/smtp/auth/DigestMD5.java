@@ -80,7 +80,7 @@ public abstract class DigestMD5 {
         try {
             this.digest = MessageDigest.getInstance("MD5");
         } catch (NoSuchAlgorithmException e) {
-            log.fatal("Could not find digest algorithm MD5");
+            log.fatal("Error getting digest algorithm MD5. This is very bad.");
         }
     }
 

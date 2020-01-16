@@ -66,7 +66,7 @@ public class ClientEhlo extends ClientProcessor {
                 write += InetAddress.getLocalHost().getHostName();
             } catch (UnknownHostException e) {
                 write += "localhost";
-                log.warn("Unable to get local hostname: {}", e.getMessage());
+                log.warn("Unable to get hostname for {} using localhost.", e.getMessage());
             }
         }
 

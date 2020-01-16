@@ -90,7 +90,7 @@ public class Factories {
             try {
                 return behaviour.call();
             } catch (Exception e) {
-                log.error("Unable to execute behaviour: {}", e.getMessage());
+                log.error("Error calling behaviour: {}", e.getMessage());
             }
         }
 
@@ -116,7 +116,7 @@ public class Factories {
             try {
                 return session.call();
             } catch (Exception e) {
-                log.error("Unable to execute session: {}", e.getMessage());
+                log.error("Error calling session: {}", e.getMessage());
             }
         }
 
@@ -142,7 +142,7 @@ public class Factories {
             try {
                 return tlsSocket.call();
             } catch (Exception e) {
-                log.error("Unable to execute TLS socket: {}", e.getMessage());
+                log.error("Error calling TLS socket: {}", e.getMessage());
             }
         }
 
@@ -168,7 +168,7 @@ public class Factories {
             try {
                 return trustManager.call();
             } catch (Exception e) {
-                log.error("Unable to execute trust manager: {}", e.getMessage());
+                log.error("Error calling trust manager: {}", e.getMessage());
             }
         }
 
@@ -194,7 +194,7 @@ public class Factories {
             try {
                 return database.call();
             } catch (Exception e) {
-                log.error("Unable to execute database: {}", e.getMessage());
+                log.error("Error calling database: {}", e.getMessage());
             }
         }
 
@@ -220,7 +220,7 @@ public class Factories {
             try {
                 return logsClient.call();
             } catch (Exception e) {
-                log.error("Unable to execute logs client: {}", e.getMessage());
+                log.error("Error calling logs client: {}", e.getMessage());
             }
         }
 

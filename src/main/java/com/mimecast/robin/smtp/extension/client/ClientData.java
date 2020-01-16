@@ -79,13 +79,13 @@ public class ClientData extends ClientProcessor {
         }
 
         else if (envelope.getStream() != null) {
-            log.debug("Sending email from stream");
+            log.debug("Sending email from stream.");
             connection.stream(new MagicInputStream(envelope.getStream(), envelope),
                     envelope.getSlowBytes(), envelope.getSlowWait());
         }
 
         else if (envelope.getMessage() != null) {
-            log.debug("Sending email from headers and body");
+            log.debug("Sending email from headers and body.");
             connection.write(envelope.getHeaders());
             connection.write(envelope.getMessage());
         }

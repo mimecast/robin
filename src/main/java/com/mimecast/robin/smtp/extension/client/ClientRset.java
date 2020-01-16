@@ -32,7 +32,7 @@ public class ClientRset extends ClientProcessor {
             String read = connection.read(code);
             connection.getSessionTransactionList().addTransaction(verb, verb, read);
         } catch (IOException e) {
-            log.warn("Failed to send {}.", verb);
+            log.error("Error reading/writing for {}: {}", verb, e.getMessage());
         }
 
         return true;

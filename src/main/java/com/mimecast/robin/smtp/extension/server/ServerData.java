@@ -97,7 +97,7 @@ public class ServerData extends ServerProcessor {
             scenarioResponse();
 
             if (bdatVerb.isLast()) {
-                log.debug("Last chunk received");
+                log.debug("Last chunk received.");
             }
         }
     }

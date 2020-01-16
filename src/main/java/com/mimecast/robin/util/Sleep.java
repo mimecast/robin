@@ -27,10 +27,10 @@ public class Sleep {
      */
     public static void nap(int delay) {
         try {
-            log.debug("Waiting {} miliseconds.", delay);
+            log.info("Napping {} miliseconds.", delay);
             Thread.sleep(delay); // Take a nap.
         } catch (InterruptedException e) {
-            log.info("Interrupted.");
+            log.info("Nap interrupted.");
             Thread.currentThread().interrupt();
         }
     }

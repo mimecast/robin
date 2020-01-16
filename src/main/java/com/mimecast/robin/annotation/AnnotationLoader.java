@@ -54,7 +54,7 @@ public abstract class AnnotationLoader {
                     log.debug("Plugin: {} priority={}", clazz.getName(), entry.getKey());
                     clazz.getDeclaredConstructor().newInstance();
                 } catch (IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
-                    log.error("Cannot construct instance for class: {}", e.getMessage());
+                    log.error("Error constructing instance for class: {}", e.getMessage());
                 }
             }
         }

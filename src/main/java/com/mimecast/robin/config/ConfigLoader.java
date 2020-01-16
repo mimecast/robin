@@ -51,28 +51,28 @@ public class ConfigLoader {
             log4jPath = PathUtils.validatePath(Paths.get(path, "log4j2.xml").toString(), "log4j2.xml");
             log.debug("Configuration directory: {}", path);
         } catch (IOException e) {
-            log.fatal("Missing configuration file: {}", e.getMessage());
-            throw new ConfigurationException("Missing configuration file: " + e.getMessage());
+            log.fatal("Error reading configuration file: {}", e.getMessage());
+            throw new ConfigurationException("Can't find configuration file: " + e.getMessage());
         }
 
         try {
             Config.initProperties(propertiesPath);
         } catch (IOException e) {
-            log.fatal("Can't read properties.json.");
+            log.fatal("Error reading properties.json.");
             throw new ConfigurationException("Can't read properties.json.");
         }
 
         try {
             Config.initServer(serverPath);
         } catch (IOException e) {
-            log.fatal("Can't read server.json.");
+            log.fatal("Error reading server.json.");
             throw new ConfigurationException("Can't read server.json.");
         }
 
         try {
             Config.initClient(clientPath);
         } catch (Exception e) {
-            log.fatal("Can't read client.json.");
+            log.fatal("Error reading client.json.");
             throw new ConfigurationException("Can't read client.json.");
         }
 
@@ -80,11 +80,11 @@ public class ConfigLoader {
             try {
                 LoggerContext.getContext().setConfigLocation(new URI(log4jPath));
             } catch (URISyntaxException e) {
-                log.fatal("Can't load log4j2.xml.");
+                log.fatal("Error loading log4j2.xml.");
                 throw new ConfigurationException("Can't load log4j.xml.");
             }
         } else {
-            log.fatal("Can't read log4j2.xml.");
+            log.fatal("Error reading log4j2.xml.");
             throw new ConfigurationException("Can't read log4j.xml.");
         }
     }

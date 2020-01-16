@@ -57,7 +57,7 @@ public class SlowOutputStream extends OutputStream {
             count++;
             if (count == bytes) {
                 count = 0;
-                log.info("Waiting after {} bytes wrote",  bytes);
+                log.info("Waiting after {} bytes wrote.",  bytes);
                 Sleep.nap(wait);
             }
         }

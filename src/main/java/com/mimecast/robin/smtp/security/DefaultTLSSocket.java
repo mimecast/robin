@@ -205,7 +205,7 @@ public class DefaultTLSSocket implements TLSSocket {
                 return new FileInputStream(path);
             }
         } catch (FileNotFoundException e) {
-            log.error("Keystore not found.");
+            log.error("Error getting keystore.");
         }
         return null;
     }

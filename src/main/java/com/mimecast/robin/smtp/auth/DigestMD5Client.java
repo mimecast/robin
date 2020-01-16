@@ -85,7 +85,7 @@ public class DigestMD5Client extends DigestMD5 {
 
             return token;
         } catch (UnsupportedEncodingException e) {
-            log.fatal("Could not encode token to {}: {}", ascii, e.getMessage());
+            log.fatal("Error encoding to {}: {}", ascii, e.getMessage());
         }
 
         return "";
@@ -143,7 +143,7 @@ public class DigestMD5Client extends DigestMD5 {
     private String buildResponse(Map<String, String> map, String cnonce) {
         String response = "";
         try {
-            log.debug("Building response");
+            log.debug("Building response.");
             digest.reset();
 
             // ID = Username:realm:password identity string.
@@ -177,7 +177,7 @@ public class DigestMD5Client extends DigestMD5 {
             response = new String(Hex.encode(digest.digest()), ascii);
             log.debug("Response built: {}", response);
         } catch (UnsupportedEncodingException e) {
-            log.fatal("Could not encode to {}: {}", ascii, e.getMessage());
+            log.fatal("Error encoding to {}: {}", ascii, e.getMessage());
         }
 
         return response;
@@ -214,7 +214,7 @@ public class DigestMD5Client extends DigestMD5 {
             // Return.
             return new String(Hex.encode(digest.digest()), ascii);
         } catch (UnsupportedEncodingException e) {
-            log.fatal("Could not encode to {}: {}", ascii, e.getMessage());
+            log.fatal("Error encoding to {}: {}", ascii, e.getMessage());
         }
         return "";
     }

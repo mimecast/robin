@@ -49,11 +49,11 @@ class Server extends Foundation {
     private static void registerShutdown() {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             if (port25 != null && port25.getListener() != null) {
-                log.info("Service is shutting down");
+                log.info("Service is shutting down.");
                 try {
                     port25.serverShutdown();
                 } catch (IOException e) {
-                    log.info("Shutdown in progress.. please wait");
+                    log.info("Shutdown in progress.. please wait.");
                 }
             }
         }));
@@ -67,7 +67,7 @@ class Server extends Foundation {
         try {
             Files.readAllBytes(Paths.get(Config.getServer().getKeyStore()));
         } catch (IOException e) {
-            log.error("Unable to read keystore file: {}", e.getMessage());
+            log.error("Error reading keystore file: {}", e.getMessage());
         }
         System.setProperty("javax.net.ssl.keyStore", Config.getServer().getKeyStore());
 
@@ -76,7 +76,7 @@ class Server extends Foundation {
         try {
             keyStorePassword = new String(Files.readAllBytes(Paths.get(Config.getServer().getKeyStorePassword())));
         } catch (IOException e) {
-            log.info("Keystore password treated as text.");
+            log.warn("Keystore password treated as text.");
             keyStorePassword = Config.getServer().getKeyStorePassword();
         }
         System.setProperty("javax.net.ssl.keyStorePassword", keyStorePassword);

@@ -57,24 +57,23 @@ public class EmailDelivery {
     public void send() throws AssertException {
         try {
             connection.connect();
-
             log.debug("Remote ready and willing.");
 
             Behaviour behaviour = Factories.getBehaviour();
             if (behaviour != null) {
                 behaviour.process(connection);
             }
-            else log.error("Cannot get client behaviour.");
+            else log.error("Error getting behaviour. This is bad.");
 
             log.debug("Terminating communication.");
             terminate();
 
         } catch (SmtpException e) {
-            log.error("Problem communicating.");
+            log.info("Error in SMTP exchange: {}", e.getMessage());
             terminate();
 
         } catch (IOException e) {
-            log.error("Unable to communicate.");
+            log.error("Error reading/writing: {}", e.getMessage());
             connection.getSessionTransactionList().addTransaction("SMTP", "101 Unable to communicate", true);
 
         } finally {
@@ -103,9 +102,9 @@ public class EmailDelivery {
      */
     private void logErrors(List<Transaction> errors) {
         if(!errors.isEmpty()) {
-            log.warn("Delivery had errors: {}", errors.size());
+            log.info("Errors in delivery: {}", errors.size());
             for (Transaction t : errors) {
-                log.error("Error: {}", t.getResponse());
+                log.info("Error: {}", t.getResponse());
             }
         }
     }

@@ -65,7 +65,7 @@ class DigestUtils {
                 }
             }
         } catch (ParseException e) {
-            DigestMD5.log.error("Problem parsing challenge: {}", e.getMessage());
+            DigestMD5.log.error("Error parsing challenge: {}", e.getMessage());
         }
 
         return new DigestData().setMap(map);

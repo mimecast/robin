@@ -44,7 +44,7 @@ public class EmailReceipt implements Runnable {
         try {
             connection = new Connection(socket);
         } catch (IOException e) {
-            log.error("Unable to initialize streams.");
+            log.error("Error initializing streams: {}", e.getMessage());
         }
     }
 
@@ -71,12 +71,12 @@ public class EmailReceipt implements Runnable {
 
                 // Break if error limit reached.
                 if (errorLimit <= 0) {
-                    log.warn("Received too many errors");
+                    log.warn("Error limit reached.");
                     break;
                 }
             }
         } catch (IOException e) {
-            log.error("Unable to exchange data.");
+            log.error("Error reading/writing: {}", e.getMessage());
         }
 
         connection.close();
@@ -116,7 +116,7 @@ public class EmailReceipt implements Runnable {
         else {
             errorLimit--;
             if (errorLimit == 0) {
-                log.warn("Received too many errors");
+                log.warn("Error limit reached.");
                 return false;
             }
 

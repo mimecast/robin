@@ -203,15 +203,15 @@ public abstract class SmtpFoundation {
                 }
             }
         } catch (IOException e) {
-            log.error("Failed to read from socket.");
+            log.error("Error reading: {}", e.getMessage());
             throw e;
         }
 
         if (expectedCode.length() == 3 && !expectedCode.equalsIgnoreCase(receivedCode)) {
             if (receivedCode.trim().length() == 0) {
-                log.warn("Got no response but expected {}", expectedCode);
+                log.warn("Error no response received but expected {}.", expectedCode);
             } else {
-                log.warn("Got response code {} but expected {}", receivedCode, expectedCode);
+                log.info("Error response code was {} but expected {}.", receivedCode, expectedCode);
             }
         }
 
@@ -250,7 +250,7 @@ public abstract class SmtpFoundation {
             out.write((string + "\r\n").getBytes(UTF_8));
             log.info(LOG_WRITE, string);
         } catch (IOException e) {
-            log.error("Failed to write to socket.");
+            log.error("Error writing: {}", e.getMessage());
             throw e;
         }
     }
@@ -302,7 +302,7 @@ public abstract class SmtpFoundation {
                 log.trace(LOG_WRITE, StringUtils.stripEnd(new String(bytes, UTF_8), null));
             }
         } catch (IOException e) {
-            log.error("Failed to write to socket.");
+            log.error("Error writing: {}", e.getMessage());
             throw e;
         }
     }
@@ -362,7 +362,7 @@ public abstract class SmtpFoundation {
                     .setCiphers(ciphers)
                     .startTLS(client);
         } catch (Exception e) {
-            log.error("Failed to start {} TLS: {}", (client ? "client" : "server"), e.getMessage());
+            log.error("Error in {} TLS negociation: {}", (client ? "client" : "server"), e.getMessage());
             close();
             throw new SmtpException(e);
         }
@@ -378,7 +378,7 @@ public abstract class SmtpFoundation {
                 log.info("Socket closed.");
             }
         } catch (IOException e) {
-            log.warn("Socket already closed.");
+            log.info("Socket already closed.");
         }
     }
 }

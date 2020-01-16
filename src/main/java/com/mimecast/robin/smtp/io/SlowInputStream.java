@@ -58,7 +58,7 @@ public class SlowInputStream extends InputStream {
             count++;
             if (count == bytes) {
                 count = 0;
-                log.info("Waiting after {} bytes read", bytes);
+                log.info("Waiting after {} bytes read.", bytes);
                 Sleep.nap(wait);
             }
 

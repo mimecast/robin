@@ -45,8 +45,10 @@ public class SmtpListener {
 
             log.info("Expecting connection.");
             acceptConnection();
+
         } catch (IOException e) {
-            log.error("Unable to start listener: {}", e.getMessage());
+            log.fatal("Error listening: {}", e.getMessage());
+
         } finally {
             try {
                 if (listener != null) {
@@ -54,7 +56,7 @@ public class SmtpListener {
                     log.info("Closed listener.");
                 }
             } catch (Exception e) {
-                log.error("Listener already closed.");
+                log.info("Listener already closed.");
             }
         }
     }
@@ -66,15 +68,15 @@ public class SmtpListener {
         try {
             do {
                 Socket sock = listener.accept();
-                log.info("Accepted connection from {}:{}", sock.getInetAddress().getHostAddress(), sock.getPort());
+                log.info("Accepted connection from {}:{}.", sock.getInetAddress().getHostAddress(), sock.getPort());
                 new Thread(new EmailReceipt(sock)).start();
             } while (!serverShutdown);
 
         } catch (SocketException e) {
-            log.error("Listener closed.");
+            log.error("Error in socket exchange: {}", e.getMessage());
 
         } catch (IOException e) {
-            log.error("Unable to accept connection.");
+            log.error("Error reading/writing: {}", e.getMessage());
         }
     }
 
