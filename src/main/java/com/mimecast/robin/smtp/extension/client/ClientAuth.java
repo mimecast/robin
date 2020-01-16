@@ -43,7 +43,7 @@ public class ClientAuth extends ClientProcessor {
         authLoginCombined = connection.getSession().isAuthLoginCombined();
         authLoginRetry = connection.getSession().isAuthLoginRetry();
 
-        // Select mechanism
+        // Select mechanism.
         if (connection.getSession().getEhloAuth().contains("digest-md5")) {
             return authDigestMD5();
         }

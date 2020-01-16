@@ -18,7 +18,7 @@ public class InstanceDigestCache extends DigestCache {
     private final LinkedHashMap<String, Map<String, String>> map = new LinkedHashMap<String, Map<String, String>>() {
         @Override
         protected boolean removeEldestEntry(Map.Entry<String, Map<String, String>> eldest) {
-            return this.size() > 100; // Limit
+            return this.size() > 100; // Limit,
         }
     };
 

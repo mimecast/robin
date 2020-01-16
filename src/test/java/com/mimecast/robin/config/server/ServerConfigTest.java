@@ -68,13 +68,13 @@ class ServerConfigTest {
 
     @Test
     void getUser() {
-        // Tested in UserConfigTest
+        // Tested in UserConfigTest.
         assertTrue(Config.getServer().getUser("tony@example.com").isPresent());
     }
 
     @Test
     void getScenarios() {
-        // Tested in ScenarioConfigTest
+        // Tested in ScenarioConfigTest.
         assertFalse(Config.getServer().getScenarios().isEmpty());
     }
 }

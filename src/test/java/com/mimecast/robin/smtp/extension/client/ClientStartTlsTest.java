@@ -6,8 +6,6 @@ import com.mimecast.robin.main.Factories;
 import com.mimecast.robin.main.Foundation;
 import com.mimecast.robin.smtp.SmtpListener;
 import com.mimecast.robin.smtp.connection.Connection;
-import com.mimecast.robin.smtp.connection.ConnectionMock;
-import com.mimecast.robin.smtp.io.LineInputStream;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

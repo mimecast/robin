@@ -57,7 +57,7 @@ public class ServerAuth extends ServerProcessor {
                     break;
             }
 
-            // Get available users for authentication
+            // Get available users for authentication.
             if (!connection.getSession().getUsername().isEmpty()) {
                 Optional<UserConfig> opt = connection.getUser(connection.getSession().getUsername());
                 if (opt.isPresent() && opt.get().getPass().equals(connection.getSession().getPassword())) {

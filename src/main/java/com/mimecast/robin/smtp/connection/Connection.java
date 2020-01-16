@@ -125,7 +125,7 @@ public class Connection extends SmtpFoundation {
                         sessionTransactionList.addTransaction("SMTP", read, true);
                         throw new SmtpException("SMTP");
                     } else {
-                        close(); // Retry
+                        close(); // Retry.
                     }
                 } else {
                     sessionTransactionList.addTransaction("SMTP", read, false);

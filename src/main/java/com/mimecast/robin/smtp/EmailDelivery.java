@@ -87,10 +87,10 @@ public class EmailDelivery {
      * Close connection.
      */
     private void terminate() {
-        // Session
+        // Session.
         logErrors(connection.getSessionTransactionList().getErrors());
 
-        // Envelope
+        // Envelope.
         for (EnvelopeTransactionList envelope : connection.getSessionTransactionList().getEnvelopes()) {
             logErrors(envelope.getErrors());
         }

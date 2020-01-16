@@ -32,7 +32,7 @@ class ServerStartTlsTest {
 
         Verb verb = new Verb("STARTTLS");
 
-        // Testing exception as the flow is covered by ClientStartTlsTest.java
+        // Testing exception as the flow is covered by ClientStartTlsTest.java.
         assertThrows(IOException.class, () -> new ServerStartTls().process(connection, verb));
     }
 }

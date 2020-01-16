@@ -90,10 +90,10 @@ class DigestMD5Test {
 
     @Test
     void parseChallengeException() {
-        // Triggers ParseException: Unbalanced quoted string
+        // Triggers ParseException: Unbalanced quoted string.
         DigestData data = DigestUtils.parsePayload("username=\"test@example.com");
 
-        // Asserts to empty list as the exception is caught
+        // Asserts to empty list as the exception is caught.
         assertEquals(0, data.getMap().size());
     }
 
@@ -158,21 +158,21 @@ class DigestMD5Test {
         String second = "dXNlcm5hbWU9InRvbnlAZXhhbXBsZS5jb20iLHJlYWxtPSIiLHFvcD1hdXRoLG5jPTAwMDAwMDAyLG5vbmNlPSJUSEVkQjQ2eGc2K0VkYVNVTVN1SDdnPT0iLGNub25jZT0iMWYyZGM4NmE3OWIxYmJiYmU0YTNkZjM0YTNlYmY4YmEyOGYxZjM1NTM0OTA2MTJkMzcyZTkwOGVlOGU0YzY2OT09IixkaWdlc3QtdXJpPSJzbXRwLyIscmVzcG9uc2U9Y2E0YmUyNDliODJlOWJhNzE3YThiNTc3MDU0OGYyYzU=";
         String server = "cnNwYXV0aD1iYjZhOGY3ZTI3NjMzN2FjNWQwMTk3OTQwYjUwZDE4Zg==";
 
-        // Initialize client
+        // Initialize client.
         DigestMD5Client client = new DigestMD5Client("", username,  password, "");
         client.setDigestDatabase(database);
         client.setRandom(cnonce);
 
-        // Original authentication
+        // Original authentication.
         String origAuth = client.authenticateClient(challenge);
         assertTrue(client.authenticateServer(server));
 
-        // Reinitialize client
+        // Reinitialize client.
         client = new DigestMD5Client("", username,  password, "");
         client.setDigestDatabase(database);
         client.setRandom(cnonce);
 
-        // Subsequent authentication
+        // Subsequent authentication.
         String subAuth = client.getSubsequentAuthentication();
 
         DigestData dataOrig = DigestUtils.parsePayload(origAuth);

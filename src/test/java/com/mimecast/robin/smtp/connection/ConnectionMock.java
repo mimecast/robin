@@ -39,13 +39,9 @@ public class ConnectionMock extends Connection {
         getSessionTransactionList().addTransaction("SMTP", read, !read.startsWith("220"));
     }
 
-    public void superConnect() throws IOException {
-        super.connect();
-    }
-
     @Override
     public void buildStreams() throws IOException {
-        // Do nothing
+        // Do nothing.
     }
 
     public void setSocket(Socket socket) {

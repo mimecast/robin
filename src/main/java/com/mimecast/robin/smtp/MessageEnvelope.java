@@ -55,7 +55,7 @@ public class MessageEnvelope {
         String now = String.valueOf(System.currentTimeMillis());
         String uid = UUID.randomUUID().toString() + "-" + now;
 
-        int size = 50 + 31 - date.length(); // Fixed length for unit tests stability
+        int size = 50 + 31 - date.length(); // Fixed length for unit tests stability.
         msgId = StringUtils.leftPad(uid, size, "0");
     }
 

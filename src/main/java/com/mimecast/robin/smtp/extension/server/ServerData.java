@@ -134,7 +134,7 @@ public class ServerData extends ServerProcessor {
             connection.write(opt.get().getData());
         }
 
-        // Accept all
+        // Accept all.
         else {
             connection.write("250 2.0.0 Chunk OK");
         }

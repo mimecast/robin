@@ -52,7 +52,7 @@ class ChunkedInputStreamTest {
 
     @Test
     void getChunkZero() throws IOException {
-        envelope.setChunkSize(0); // Defaults to 1400 as size has to be > 0
+        envelope.setChunkSize(0); // Defaults to 1400 as size has to be > 0.
 
         ChunkedInputStream stream = getStream();
         List<ByteArrayOutputStream> chunks = new ArrayList<>();
@@ -69,7 +69,7 @@ class ChunkedInputStreamTest {
 
     @Test
     void getChunkLess() throws IOException {
-        envelope.setChunkSize(100); // Defaults to 128 as size is under min viable limit of 128
+        envelope.setChunkSize(100); // Defaults to 128 as size is under min viable limit of 128.
 
         ChunkedInputStream stream = getStream();
         List<ByteArrayOutputStream> chunks = new ArrayList<>();

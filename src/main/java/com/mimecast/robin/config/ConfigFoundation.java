@@ -52,7 +52,7 @@ public abstract class ConfigFoundation {
      * Constructs a new ConfigFoundation instance.
      */
     protected ConfigFoundation() {
-        // Clean initialisation
+        // Clean initialisation.
     }
 
     /**
