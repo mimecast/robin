@@ -44,7 +44,7 @@ public class EmailReceipt implements Runnable {
         try {
             connection = new Connection(socket);
         } catch (IOException e) {
-            log.error("Error initializing streams: {}", e.getMessage());
+            log.info("Error initializing streams: {}", e.getMessage());
         }
     }
 
@@ -76,7 +76,7 @@ public class EmailReceipt implements Runnable {
                 }
             }
         } catch (IOException e) {
-            log.error("Error reading/writing: {}", e.getMessage());
+            log.info("Error reading/writing: {}", e.getMessage());
         }
 
         connection.close();

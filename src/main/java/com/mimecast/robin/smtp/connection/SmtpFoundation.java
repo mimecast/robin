@@ -203,7 +203,7 @@ public abstract class SmtpFoundation {
                 }
             }
         } catch (IOException e) {
-            log.error("Error reading: {}", e.getMessage());
+            log.info("Error reading: {}", e.getMessage());
             throw e;
         }
 
@@ -250,7 +250,7 @@ public abstract class SmtpFoundation {
             out.write((string + "\r\n").getBytes(UTF_8));
             log.info(LOG_WRITE, string);
         } catch (IOException e) {
-            log.error("Error writing: {}", e.getMessage());
+            log.info("Error writing: {}", e.getMessage());
             throw e;
         }
     }
@@ -302,7 +302,7 @@ public abstract class SmtpFoundation {
                 log.trace(LOG_WRITE, StringUtils.stripEnd(new String(bytes, UTF_8), null));
             }
         } catch (IOException e) {
-            log.error("Error writing: {}", e.getMessage());
+            log.info("Error writing: {}", e.getMessage());
             throw e;
         }
     }
@@ -362,7 +362,7 @@ public abstract class SmtpFoundation {
                     .setCiphers(ciphers)
                     .startTLS(client);
         } catch (Exception e) {
-            log.error("Error in {} TLS negociation: {}", (client ? "client" : "server"), e.getMessage());
+            log.info("Error in {} TLS negociation: {}", (client ? "client" : "server"), e.getMessage());
             close();
             throw new SmtpException(e);
         }

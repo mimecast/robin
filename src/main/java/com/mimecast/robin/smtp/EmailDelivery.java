@@ -73,7 +73,7 @@ public class EmailDelivery {
             terminate();
 
         } catch (IOException e) {
-            log.error("Error reading/writing: {}", e.getMessage());
+            log.info("Error reading/writing: {}", e.getMessage());
             connection.getSessionTransactionList().addTransaction("SMTP", "101 Unable to communicate", true);
 
         } finally {

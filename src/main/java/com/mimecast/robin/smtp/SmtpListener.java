@@ -73,10 +73,10 @@ public class SmtpListener {
             } while (!serverShutdown);
 
         } catch (SocketException e) {
-            log.error("Error in socket exchange: {}", e.getMessage());
+            log.info("Error in socket exchange: {}", e.getMessage());
 
         } catch (IOException e) {
-            log.error("Error reading/writing: {}", e.getMessage());
+            log.info("Error reading/writing: {}", e.getMessage());
         }
     }
 

@@ -136,7 +136,7 @@ public class Connection extends SmtpFoundation {
                 if (i == retry - 1) {
                     throw e;
                 }
-                log.warn("Error reading/writing: {}", e.getMessage());
+                log.info("Error reading/writing: {}", e.getMessage());
                 Sleep.nap(session.getDelay() * 1000);
             }
         }
