@@ -4,8 +4,6 @@ import com.mimecast.robin.smtp.extension.Extension;
 import com.mimecast.robin.smtp.extension.client.*;
 import com.mimecast.robin.smtp.extension.server.*;
 import com.mimecast.robin.smtp.verb.Verb;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,7 +24,6 @@ import java.util.Optional;
  * @link http://mimecast.com Mimecast
  */
 public class Extensions {
-    private static final Logger log = LogManager.getLogger(Extensions.class);
 
     /**
      * Extensions container.

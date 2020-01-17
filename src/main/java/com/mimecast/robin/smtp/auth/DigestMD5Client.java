@@ -17,6 +17,7 @@ import java.util.Map;
  * @author "Vlad Marian" <vmarian@mimecast.com>
  * @link http://mimecast.com Mimecast
  */
+@SuppressWarnings("squid:S1192")
 public class DigestMD5Client extends DigestMD5 {
     private static final Logger log = LogManager.getLogger(DigestMD5Client.class);
 
