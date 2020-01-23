@@ -34,6 +34,19 @@ Before submitting a merge request please run a comprehensive code quality analys
 Read more [here](contributing.md).
 
 
+Disclosure
+----------
+This project makes use of sample password as needed for testing and demonstration purposes.
+
+- changeit - Standard Java keystore password.
+- notMyPassword - It's not my password. It can't be as password length and complexity not met.
+- 1234 - Sample used in some unit tests.
+- giveHerTheRing - Another sample used in unit tests and documentation. (Tony Stark / Pepper Pots easter egg)
+- avengers - Test keystore password that contains a single entry issued to Tony Stark. (Another easter egg)
+
+**These passwords are not used in Mimecast production environments.**
+
+
 More...
 -------
 - [CLI usage](doc/cli.md)
