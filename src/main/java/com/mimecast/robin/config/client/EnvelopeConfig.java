@@ -26,6 +26,7 @@ public class EnvelopeConfig extends ConfigFoundation {
      *
      * @param map Envelope map.
      */
+    @SuppressWarnings("rawtypes")
     public EnvelopeConfig(Map map) {
         super(map);
     }

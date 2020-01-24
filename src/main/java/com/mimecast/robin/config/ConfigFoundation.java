@@ -27,7 +27,7 @@ import java.util.Map;
  * @author "Vlad Marian" <vmarian@mimecast.com>
  * @link http://mimecast.com Mimecast
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "rawtypes"})
 public abstract class ConfigFoundation {
     protected static final Logger log = LogManager.getLogger(ConfigFoundation.class);
 

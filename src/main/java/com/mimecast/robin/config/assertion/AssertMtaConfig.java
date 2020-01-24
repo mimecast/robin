@@ -30,6 +30,7 @@ public class AssertMtaConfig extends ConfigFoundation {
      *
      * @param map Configuration map.
      */
+    @SuppressWarnings("rawtypes")
     public AssertMtaConfig(Map map) {
         super(map);
     }

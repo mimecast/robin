@@ -68,6 +68,7 @@ class AssertTest {
         new Assert(new Connection(session, sessionTransactionList), new LogsClientMock()).run();
     }
 
+    @SuppressWarnings("rawtypes")
     @Test
     void message() throws AssertException {
         SessionTransactionList sessionTransactionList = new SessionTransactionList();

@@ -23,6 +23,7 @@ public class RouteConfig extends ConfigFoundation {
      *
      * @param map Properties map.
      */
+    @SuppressWarnings("rawtypes")
     public RouteConfig(Map map) {
         super(map);
     }

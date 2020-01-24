@@ -144,6 +144,7 @@ public class ServerConfig extends ConfigFoundation {
      *
      * @return Scenarios map.
      */
+    @SuppressWarnings("rawtypes")
     public Map<String, ScenarioConfig> getScenarios() {
         Map<String, ScenarioConfig> scenarios = new HashMap<>();
         for (Object object : getMapProperty("scenarios").entrySet()) {

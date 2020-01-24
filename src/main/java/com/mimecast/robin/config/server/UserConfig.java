@@ -22,6 +22,7 @@ public class UserConfig extends ConfigFoundation {
      *
      * @param map Properties map.
      */
+    @SuppressWarnings("rawtypes")
     public UserConfig(Map map) {
         super(map);
     }

@@ -1,5 +1,6 @@
 package com.mimecast.robin.smtp.connection;
 
+import com.mimecast.robin.config.LoggingConfig;
 import com.mimecast.robin.config.server.ScenarioConfig;
 import com.mimecast.robin.config.server.ServerConfig;
 import com.mimecast.robin.config.server.UserConfig;
@@ -36,7 +37,7 @@ public class Connection extends SmtpFoundation {
     /**
      * Session instance.
      */
-    private Session session = null;
+    private final Session session;
 
     /**
      * SessionTransactionList instance.
@@ -64,8 +65,12 @@ public class Connection extends SmtpFoundation {
      *
      * @param session Session instance.
      */
+    @SuppressWarnings("unchecked")
     public Connection(Session session) {
         this.session = session;
+
+        LoggingConfig logging = new LoggingConfig(Config.getProperties().getMapProperty("logging"));
+        this.logData = logging.getData();
     }
 
     /**
@@ -83,9 +88,7 @@ public class Connection extends SmtpFoundation {
         buildStreams();
 
         // Session.
-        if (session == null) {
-            session = Factories.getSession();
-        }
+        session = Factories.getSession();
 
         // Connection info.
         session.setAddr(socket.getLocalAddress().getHostName());

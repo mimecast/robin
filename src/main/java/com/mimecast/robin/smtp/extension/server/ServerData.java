@@ -60,7 +60,7 @@ public class ServerData extends ServerProcessor {
         connection.write("354 Ready and willing");
         try {
             connection.setTimeout(Connection.EXTENDEDTIMEOUT);
-            String data = connection.read(true);
+            String data = connection.readMultiline();
             log.debug("Received: {} bytes", data.length());
         } finally {
             connection.setTimeout(Connection.DEFAULTTIMEOUT);
@@ -112,14 +112,10 @@ public class ServerData extends ServerProcessor {
     private void binaryRead(BdatVerb verb, ByteArrayOutputStream out) throws IOException {
         try {
             connection.setTimeout(Connection.EXTENDEDTIMEOUT);
-            connection.read(verb.getSize(), out);
+            connection.readBytes(verb.getSize(), out);
         } finally {
             connection.setTimeout(Connection.DEFAULTTIMEOUT);
-
             log.info("<< BYTES {}", out.size());
-            if (out.size() > 0) {
-                log.debug(out.toString());
-            }
         }
     }
 

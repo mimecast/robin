@@ -77,6 +77,7 @@ class DigestUtils {
      * @param values Map.
      * @return StringBuilder.
      */
+    @SuppressWarnings("rawtypes")
     public static StringBuilder buildPayload(Map values) {
         StringBuilder payload = new StringBuilder();
 

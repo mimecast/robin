@@ -43,6 +43,7 @@ public class AssertConfig extends ConfigFoundation {
      *
      * @param map Configuration map.
      */
+    @SuppressWarnings("rawtypes")
     public AssertConfig(Map map) {
         super(map);
     }

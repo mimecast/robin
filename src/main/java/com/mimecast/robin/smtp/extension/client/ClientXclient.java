@@ -23,6 +23,7 @@ public class ClientXclient extends ClientProcessor {
      * @return Boolean.
      * @throws IOException Unable to communicate.
      */
+    @SuppressWarnings("rawtypes")
     @Override
     public boolean process(Connection connection) throws IOException {
         super.process(connection);

@@ -30,7 +30,7 @@ public abstract class AnnotationLoader {
     /**
      * Scans and instantiates plugins found.
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public static void load() {
         Reflections reflections = new Reflections("com.mimecast.robin.annotation.plugin");
         Set<Class<?>> annotated = reflections.getTypesAnnotatedWith(Plugin.class);

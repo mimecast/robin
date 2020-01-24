@@ -3,5 +3,8 @@
     "command": "MAIL",
     "pattern": "250\\sSender\\sOK\\s\\[([a-z0-9\\-_]+)\\.([a-z]+)([0-9]+)?]"
   },
+  "logging": {
+    "data": false
+  },
   "digestmd5.random": "64"
 }

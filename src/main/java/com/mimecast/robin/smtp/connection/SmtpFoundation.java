@@ -70,15 +70,16 @@ public abstract class SmtpFoundation {
     private String[] ciphers;
 
     /**
+     * Log DATA/BDAT payload.
+     */
+    protected boolean logData = true;
+
+    /**
      * Constants.
      */
     private static final Charset UTF_8 = StandardCharsets.UTF_8;
     private static final int DASH = 45;
     private static final int FULLSTOP = 46;
-
-    /**
-     * Logging constant.
-     */
     private static final String LOG_WRITE = ">> {}";
 
     /**
@@ -132,73 +133,31 @@ public abstract class SmtpFoundation {
      * @throws IOException Unable to communicate.
      */
     public String read() throws IOException {
-        return read("", false);
+        return read("");
     }
 
     /**
      * Read from socket expecting a particular response code.
      *
-     * @param code Expected SMTP response code.
-     * @return String read from buffer.
-     * @throws IOException Unable to communicate.
-     */
-    public String read(String code) throws IOException {
-        return read(code, false);
-    }
-
-    /**
-     * Read multiple lines from socket.
-     *
-     * @param multiline True to enable.
-     * @return String read from buffer.
-     * @throws IOException Unable to communicate.
-     */
-    public String read(boolean multiline) throws IOException {
-        return read("", multiline);
-    }
-
-    /**
-     * Read fixed number of bytes from socket.
-     *
-     * @param bytesToRead  Number of bytes to read.
-     * @param outputStream Output stream.
-     * @throws IOException Unable to communicate.
-     */
-    public void read(int bytesToRead, ByteArrayOutputStream outputStream) throws IOException {
-        for (int i = 0; i < bytesToRead; i++) {
-            outputStream.write((byte) inc.read());
-        }
-    }
-
-    /**
-     * Read from socket.
-     *
      * @param expectedCode Expected SMTP response code.
      * @return String read from buffer.
      * @throws IOException Unable to communicate.
      */
-    private String read(String expectedCode, boolean multiline) throws IOException {
+    public String read(String expectedCode) throws IOException {
         StringBuilder received = new StringBuilder();
         String receivedCode = "";
 
         try {
             byte[] read;
-            boolean stop;
             while ((read = inc.readLine()) != null) {
-                log.info("<< {}", StringUtils.stripEnd(new String(read, UTF_8), null));
+                log.trace("<< {}", StringUtils.stripEnd(new String(read, UTF_8), null));
 
-                if (multiline) {
-                    String str =new String(read);
-                    received.append(str);
-                    stop = isFullStop(str);
+                if (expectedCode.length() == 3) {
+                    receivedCode = new String(read).trim().substring(0, expectedCode.length());
                 }
-                else {
-                    receivedCode = new String(read).substring(0, expectedCode.length());
-                    received.append(new String(read));
-                    stop = isSmtpStop(read);
-                }
+                received.append(new String(read));
 
-                if (stop) {
+                if (isSmtpStop(read)) {
                     break;
                 }
             }
@@ -213,6 +172,47 @@ public abstract class SmtpFoundation {
             } else {
                 log.info("Error response code was {} but expected {}.", receivedCode, expectedCode);
             }
+        }
+
+        return received.toString();
+    }
+
+    /**
+     * Read fixed number of bytes from socket.
+     *
+     * @param bytesToRead  Number of bytes to read.
+     * @param outputStream Output stream.
+     * @throws IOException Unable to communicate.
+     */
+    public void readBytes(int bytesToRead, ByteArrayOutputStream outputStream) throws IOException {
+        for (int i = 0; i < bytesToRead; i++) {
+            outputStream.write((byte) inc.read());
+        }
+    }
+
+    /**
+     * Read multiline data from socket.
+     *
+     * @return String read from buffer.
+     * @throws IOException Unable to communicate.
+     */
+    public String readMultiline() throws IOException {
+        StringBuilder received = new StringBuilder();
+
+        try {
+            byte[] read;
+            while ((read = inc.readLine()) != null) {
+
+                String str = new String(read);
+                received.append(str);
+
+                if (isFullStop(str)) {
+                    break;
+                }
+            }
+        } catch (IOException e) {
+            log.info("Error reading: {}", e.getMessage());
+            throw e;
         }
 
         return received.toString();
@@ -295,11 +295,11 @@ public abstract class SmtpFoundation {
                     write = Arrays.copyOfRange(bytes, from, to);
                     from = to;
                     outStream.write(write);
-                    log.trace(LOG_WRITE, StringUtils.stripEnd(new String(write, UTF_8), null));
+                    if (logData) log.trace(LOG_WRITE, StringUtils.stripEnd(new String(write, UTF_8), null));
                 }
             } else {
                 outStream.write(bytes);
-                log.trace(LOG_WRITE, StringUtils.stripEnd(new String(bytes, UTF_8), null));
+                if (logData) log.trace(LOG_WRITE, StringUtils.stripEnd(new String(bytes, UTF_8), null));
             }
         } catch (IOException e) {
             log.info("Error writing: {}", e.getMessage());
@@ -343,7 +343,7 @@ public abstract class SmtpFoundation {
             }
 
             outStream.write(bytes);
-            log.trace(LOG_WRITE, StringUtils.stripEnd(new String(bytes, UTF_8).replaceAll("\\s+$",""), null));
+            if (logData) log.trace(LOG_WRITE, StringUtils.stripEnd(new String(bytes, UTF_8).replaceAll("\\s+$",""), null));
         }
         outStream.write("\r\n".getBytes(UTF_8));
     }

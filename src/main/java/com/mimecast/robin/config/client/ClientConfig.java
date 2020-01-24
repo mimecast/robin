@@ -64,7 +64,7 @@ public class ClientConfig extends ConfigFoundation {
      * @param name Route name.
      * @return Route configuration instance.
      */
-    @SuppressWarnings("RedundantCast")
+    @SuppressWarnings({"RedundantCast", "rawtypes"})
     public RouteConfig getRoute(String name) {
         if (routes.isEmpty()) getListProperty("routes").forEach(map -> routes.add(new RouteConfig((Map) map)));
         return routes.stream().filter(route -> route.getName().equals(name)).findFirst().orElse(null);

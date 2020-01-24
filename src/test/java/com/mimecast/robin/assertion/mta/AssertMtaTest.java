@@ -61,6 +61,7 @@ class AssertMtaTest {
     }
 
     @Test
+    @SuppressWarnings("rawtypes")
     void assertionNoUID() {
         assertThrows(AssertException.class, () -> {
             AssertMtaConfig assertions = new AssertMtaConfig(new HashMap());

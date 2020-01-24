@@ -24,6 +24,7 @@ public class ScenarioConfig extends ConfigFoundation {
      *
      * @param map Properties map.
      */
+    @SuppressWarnings("rawtypes")
     public ScenarioConfig(Map map) {
         super(map);
     }
