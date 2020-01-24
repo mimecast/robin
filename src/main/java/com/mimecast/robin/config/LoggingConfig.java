@@ -8,7 +8,7 @@ public class LoggingConfig extends ConfigFoundation {
      *
      * @param map Map.
      */
-    public LoggingConfig(Map<String, String> map) {
+    public LoggingConfig(Map<String, Object> map) {
         super(map);
     }
 
