@@ -5,7 +5,7 @@
     <groupId>com.mimecast</groupId>
     <artifactId>robin</artifactId>
     <name>robin</name>
-    <version>1.1.0-SNAPSHOT</version>
+    <version>1.1.0</version>
     <packaging>jar</packaging>
     <description>Debug and development tool for MTA architects.</description>
 
@@ -13,6 +13,14 @@
         <jdk.version>1.8</jdk.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Mimecast Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/mimecast/robin</url>
+        </repository>
+    </distributionManagement>
 
     <dependencies>
         <dependency>
