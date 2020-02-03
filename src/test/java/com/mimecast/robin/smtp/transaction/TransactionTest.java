@@ -33,6 +33,40 @@ class TransactionTest {
     }
 
     @Test
+    void withShortPayload() {
+        String command = "EHLO";
+        String payload = "MAIL FROM:<tony@example.com>";
+        String response = "OK";
+
+        Transaction transaction = new Transaction(command).setPayload(payload).setResponse(response).setError(false);
+
+        assertEquals(payload, transaction.getPayload());
+        assertEquals(response, transaction.getResponse());
+        assertEquals("102", transaction.getResponseCode());
+        assertEquals("OK", transaction.getResponseString());
+        assertFalse(transaction.isError());
+        assertEquals(command + "> " + payload, transaction.toString());
+
+    }
+
+    @Test
+    void withLongPayload() {
+        String command = "EHLO";
+        String payload = "MAIL FROM:<tony@example.com>";
+        String response = "Receipt OK";
+
+        Transaction transaction = new Transaction(command).setPayload(payload).setResponse(response).setError(false);
+
+        assertEquals(payload, transaction.getPayload());
+        assertEquals(response, transaction.getResponse());
+        assertEquals("102", transaction.getResponseCode());
+        assertEquals("Receipt OK", transaction.getResponseString());
+        assertFalse(transaction.isError());
+        assertEquals(command + "> " + payload, transaction.toString());
+
+    }
+
+    @Test
     void withoutPayload() {
         String command = "EHLO";
         String response = "250 OK";

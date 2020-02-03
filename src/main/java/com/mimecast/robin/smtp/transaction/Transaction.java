@@ -1,6 +1,8 @@
 package com.mimecast.robin.smtp.transaction;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Transaction.
@@ -10,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
  * @link http://mimecast.com Mimecast
  */
 public class Transaction {
+    private static final Logger log = LogManager.getLogger(Transaction.class);
 
     /**
      * Records the SMTP command of this transaction.
@@ -91,11 +94,25 @@ public class Transaction {
 
     /**
      * Gets the SMTP command response code (first three characters).
+     * <p>Returns 102 if response length too short.
      *
      * @return Response code string.
      */
     public String getResponseCode() {
-        return response.substring(0, 3);
+        String code = "102";
+
+        try  {
+            if (response != null && response.length() > 3) {
+                String temp = response.substring(0, 3);
+                if (Integer.parseInt(temp) > 0) {
+                    code = temp;
+                }
+            }
+        } catch (NumberFormatException e) {
+            log.info("Unable to parse integer: {}", e.getMessage());
+        }
+
+        return code;
     }
 
     /**
