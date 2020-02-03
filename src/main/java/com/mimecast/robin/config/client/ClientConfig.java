@@ -13,13 +13,20 @@ import java.util.Map;
  * <p>Cases inherit defaults from here.
  * <p>This also houses routes that can be chosen in a case.
  *
- * @see CaseConfig
+ * @see ConfigFoundation
  * @author "Vlad Marian" <vmarian@mimecast.com>
  * @link http://mimecast.com Mimecast
  */
 @SuppressWarnings("unchecked")
 public class ClientConfig extends ConfigFoundation {
     private final List<RouteConfig> routes = new ArrayList<>();
+
+    /**
+     * Constructs a new ClientConfig instance.
+     */
+    public ClientConfig() {
+        super();
+    }
 
     /**
      * Constructs a new ClientConfig instance with configuration path.
@@ -29,15 +36,6 @@ public class ClientConfig extends ConfigFoundation {
      */
     public ClientConfig(String path) throws IOException {
         super(path);
-    }
-
-    /**
-     * Gets EHLO domain.
-     *
-     * @return Ehlo domain.
-     */
-    public String getEhlo() {
-        return getStringProperty("ehlo");
     }
 
     /**

@@ -11,7 +11,7 @@ import java.util.Map;
  * <p>One instance will be made for every route defined.
  * <p>This can be used to configure MX, PORT and SMTP AUTH authentication in cases.
  *
- * @see ClientConfig
+ * @see ConfigFoundation
  * @author "Vlad Marian" <vmarian@mimecast.com>
  * @link http://mimecast.com Mimecast
  */

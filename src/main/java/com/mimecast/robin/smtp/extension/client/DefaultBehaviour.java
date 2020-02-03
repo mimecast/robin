@@ -49,7 +49,7 @@ public class DefaultBehaviour implements Behaviour {
             if (!process("auth", connection)) return false;
 
             // Start TLS if specifically configured to do after AUTH.
-            if(connection.getSession().isAuthTls()) {
+            if(connection.getSession().isAuthBeforeTls()) {
                 return startTls();
             }
         }

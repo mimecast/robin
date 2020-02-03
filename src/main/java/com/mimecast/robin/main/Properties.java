@@ -16,6 +16,13 @@ import java.io.IOException;
 public class Properties extends ConfigFoundation {
 
     /**
+     * Constructs a new Properties instance.
+     */
+    public Properties() {
+        super();
+    }
+
+    /**
      * Constructs a new Properties instance with given file path.
      *
      * @param path File path.

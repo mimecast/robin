@@ -19,6 +19,13 @@ import java.util.*;
 public class ServerConfig extends ConfigFoundation {
 
     /**
+     * Constructs a new ServerConfig instance.
+     */
+    public ServerConfig() {
+        super();
+    }
+
+    /**
      * Constructs a new ServerConfig instance with configuration path.
      *
      * @param path Path to configuration file.
@@ -34,7 +41,7 @@ public class ServerConfig extends ConfigFoundation {
      * @return Bind address string.
      */
     public String getBind() {
-        return getStringProperty("bind");
+        return getStringProperty("bind", "::");
     }
 
     /**
@@ -43,7 +50,7 @@ public class ServerConfig extends ConfigFoundation {
      * @return Bind address number.
      */
     public int getPort() {
-        return Math.toIntExact(getLongProperty("port"));
+        return Math.toIntExact(getLongProperty("port", 25L));
     }
 
     /**
@@ -52,7 +59,7 @@ public class ServerConfig extends ConfigFoundation {
      * @return Backlog size.
      */
     public int getBacklog() {
-        return Math.toIntExact(getLongProperty("backlog"));
+        return Math.toIntExact(getLongProperty("backlog", 25L));
     }
 
 
@@ -72,7 +79,7 @@ public class ServerConfig extends ConfigFoundation {
      * @return Boolean.
      */
     public boolean isAuth() {
-        return getBooleanProperty("auth");
+        return getBooleanProperty("auth", false);
     }
 
     /**
@@ -81,7 +88,7 @@ public class ServerConfig extends ConfigFoundation {
      * @return Boolean.
      */
     public boolean isStartTls() {
-        return getBooleanProperty("starttls");
+        return getBooleanProperty("starttls", true);
     }
 
     /**
@@ -90,7 +97,7 @@ public class ServerConfig extends ConfigFoundation {
      * @return Boolean.
      */
     public boolean isChunking() {
-        return getBooleanProperty("chunking");
+        return getBooleanProperty("chunking", true);
     }
 
     /**
@@ -99,7 +106,7 @@ public class ServerConfig extends ConfigFoundation {
      * @return Key store path.
      */
     public String getKeyStore() {
-        return getStringProperty("keystore");
+        return getStringProperty("keystore", "/usr/local/mimecast/keystore");
     }
 
     /**
@@ -108,7 +115,7 @@ public class ServerConfig extends ConfigFoundation {
      * @return Key store password string.
      */
     public String getKeyStorePassword() {
-        return getStringProperty("keystorepassword");
+        return getStringProperty("keystorepassword", "changeit");
     }
 
     /**

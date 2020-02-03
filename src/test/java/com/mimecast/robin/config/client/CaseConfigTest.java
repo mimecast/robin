@@ -56,8 +56,8 @@ class CaseConfigTest {
     }
 
     @Test
-    void isAuthTls() {
-        assertTrue(caseConfig.isAuthTls());
+    void isAuthBeforeTls() {
+        assertTrue(caseConfig.isAuthBeforeTls());
     }
 
     @Test

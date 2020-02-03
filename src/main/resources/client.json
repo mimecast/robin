@@ -2,7 +2,7 @@
   "mx": [
     "127.0.0.1"
   ],
-  "port": 2025,
+  "port": 25,
 
   "tls": true,
   "protocols": [

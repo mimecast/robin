@@ -39,6 +39,13 @@ import java.util.Map;
 public class AssertConfig extends ConfigFoundation {
 
     /**
+     * Constructs a new AssertConfig instance.
+     */
+    public AssertConfig() {
+        super();
+    }
+
+    /**
      * Constructs a new AssertConfig instance with given configuration map.
      *
      * @param map Configuration map.
@@ -46,13 +53,6 @@ public class AssertConfig extends ConfigFoundation {
     @SuppressWarnings("rawtypes")
     public AssertConfig(Map map) {
         super(map);
-    }
-
-    /**
-     * Constructs a new AssertConfig instance without a map.
-     */
-    public AssertConfig() {
-        super();
     }
 
     /**

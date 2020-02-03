@@ -39,43 +39,37 @@ public class ConfigLoader {
 
         if (path == null) path = "cfg" + PathUtils.separator;
 
-        String propertiesPath;
-        String serverPath;
-        String clientPath;
-        String log4jPath;
-
-        try {
-            propertiesPath = PathUtils.validatePath(Paths.get(path, "properties.json").toString(), "properties.json");
-            serverPath = PathUtils.validatePath(Paths.get(path, "server.json").toString(), "server.json");
-            clientPath = PathUtils.validatePath(Paths.get(path, "client.json").toString(), "client.json");
-            log4jPath = PathUtils.validatePath(Paths.get(path, "log4j2.xml").toString(), "log4j2.xml");
-            log.debug("Configuration directory: {}", path);
-        } catch (IOException e) {
-            log.fatal("Error reading configuration file: {}", e.getMessage());
-            throw new ConfigurationException("Can't find configuration file: " + e.getMessage());
+        String propertiesPath = Paths.get(path, "properties.json").toString();
+        if (PathUtils.isFile(propertiesPath)) {
+            try {
+                Config.initProperties(propertiesPath);
+            } catch (IOException e) {
+                log.fatal("Error reading properties.json.");
+                throw new ConfigurationException("Can't read properties.json.");
+            }
         }
 
-        try {
-            Config.initProperties(propertiesPath);
-        } catch (IOException e) {
-            log.fatal("Error reading properties.json.");
-            throw new ConfigurationException("Can't read properties.json.");
+        String serverPath = Paths.get(path, "server.json").toString();
+        if (PathUtils.isFile(serverPath)) {
+            try {
+                Config.initServer(serverPath);
+            } catch (IOException e) {
+                log.fatal("Error reading server.json.");
+                throw new ConfigurationException("Can't read server.json.");
+            }
         }
 
-        try {
-            Config.initServer(serverPath);
-        } catch (IOException e) {
-            log.fatal("Error reading server.json.");
-            throw new ConfigurationException("Can't read server.json.");
+        String clientPath = Paths.get(path, "client.json").toString();
+        if (PathUtils.isFile(clientPath)) {
+            try {
+                Config.initClient(clientPath);
+            } catch (Exception e) {
+                log.fatal("Error reading client.json.");
+                throw new ConfigurationException("Can't read client.json.");
+            }
         }
 
-        try {
-            Config.initClient(clientPath);
-        } catch (Exception e) {
-            log.fatal("Error reading client.json.");
-            throw new ConfigurationException("Can't read client.json.");
-        }
-
+        String log4jPath = Paths.get(path, "log4j2.xml").toString();
         if (PathUtils.isFile(log4jPath)) {
             try {
                 LoggerContext.getContext().setConfigLocation(new URI(log4jPath));
@@ -83,9 +77,6 @@ public class ConfigLoader {
                 log.fatal("Error loading log4j2.xml.");
                 throw new ConfigurationException("Can't load log4j.xml.");
             }
-        } else {
-            log.fatal("Error reading log4j2.xml.");
-            throw new ConfigurationException("Can't read log4j.xml.");
         }
     }
 }

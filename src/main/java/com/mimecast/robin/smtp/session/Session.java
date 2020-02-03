@@ -137,7 +137,7 @@ public class Session {
     /**
      * Do auth before TLS.
      */
-    private boolean authTls = false;
+    private boolean authBeforeTls = false;
 
     /**
      * [Client] Authentication enabled.
@@ -658,18 +658,18 @@ public class Session {
      *
      * @return AUTH before TLS enablement.
      */
-    public boolean isAuthTls() {
-        return authTls;
+    public boolean isAuthBeforeTls() {
+        return authBeforeTls;
     }
 
     /**
      * Sets AUTH before TLS enablement.
      *
-     * @param authTls AUTH before TLS enablement.
+     * @param authBeforeTls AUTH before TLS enablement.
      * @return Self.
      */
-    public Session setAuthTls(boolean authTls) {
-        this.authTls = authTls;
+    public Session setAuthBeforeTls(boolean authBeforeTls) {
+        this.authBeforeTls = authBeforeTls;
         return this;
     }
 

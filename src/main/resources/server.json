@@ -1,6 +1,6 @@
 {
   "bind": "::",
-  "port": 2025,
+  "port": 25,
   "backlog": 25,
   "errorLimit": 3,
 
@@ -8,7 +8,7 @@
   "starttls": true,
   "chunking": true,
 
-  "keystore": "/usr/local/mimecast/keystore",
+  "keystore": "/usr/local/keystore",
   "keystorepassword": "changeit",
 
   "users": [

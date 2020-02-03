@@ -12,28 +12,30 @@ Usage
 
 
     // Session.
-    Session session = new Session(); // Use XclientSession for XCLIENT capabilities.
+    Session session = new Session() // Use XclientSession for XCLIENT capabilities.
 
-    // Connection attempts.
-    session.setRetry(3)
-            .setDelay(5);
+            // Connection attempts.
+            .setRetry(3)
+            .setDelay(5)
 
-    // Connection details.
-    session.setMx("example.com")
-            .setTimeout(60)
+            // Connection details.
+            .setMx(Collections.singletonList("example.com"))
             .setPort(25)
+            .setTimeout(60000)
+
+            // TLS configuration.
             .setTls(true)
-            .setAuthTls(false) // Do AUTH before STRTTLS
-            .setAuthLoginCombined(true) // Send username and password in one line for AUTH LOGIN
-            .setAuthLoginRetry(true) // Disable authLoginCombined and retry AUTH LOGIN
+            .setAuthBeforeTls(false) // Do AUTH before STRTTLS.
+            .setAuthLoginCombined(true) // Send username and password in one line for AUTH LOGIN.
+            .setAuthLoginRetry(true) // Disable authLoginCombined and retry AUTH LOGIN.
             .setProtocols(new String[] { "TLS1.2" })
-            .setCiphers(new String[] { "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384", "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384", });
+            .setCiphers(new String[] { "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384", "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384", })
 
-    // Hello.
-    session.setEhlo("example.com");
+            // Hello domain.
+            .setEhlo("example.com")
 
-    // Auth.
-    session.setAuth(true)
+            // Authentication etails.
+            .setAuth(true)
             .setUsername("tony@example.com")
             .setPassword("giveHerTheRing");
 
@@ -54,7 +56,7 @@ Usage
     // Email stream // Preffered when available.
     envelope.setStream(new FileInputStream(new File("src/test/resources/lipsum.eml")));
 
-    // Email file // Preffered over subject and message. 
+    // Email file // Preffered over subject and message.
     envelope.setFile("/Users/john/Documents/lost.eml");
 
     // Email subject and message // If stream and file undefined.
@@ -74,3 +76,4 @@ Usage
 
     // Send.
     new EmailDelivery(session).send();
+

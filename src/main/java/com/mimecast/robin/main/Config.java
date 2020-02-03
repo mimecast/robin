@@ -32,17 +32,17 @@ public class Config {
     /**
      * SystemProperties or properties file configuration container.
      */
-    private static Properties properties;
+    private static Properties properties = new Properties();
 
     /**
      * Server configuration.
      */
-    private static ServerConfig server;
+    private static ServerConfig server = new ServerConfig();
 
     /**
      * Client default configuration.
      */
-    private static ClientConfig client;
+    private static ClientConfig client = new ClientConfig();
 
     /**
      * Gets properties.

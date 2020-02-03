@@ -37,7 +37,7 @@ public class DefaultTLSSocket implements TLSSocket {
     /**
      * Default TLS protocols supported as string array.
      */
-    private String[] protocols = new String[]{"SSLv3", "SSLv2Hello", "TLSv1", "TLSv1.1", "TLSv1.2"};
+    private String[] protocols;
 
     /**
      * Default TLS cipher suites supported as string array.

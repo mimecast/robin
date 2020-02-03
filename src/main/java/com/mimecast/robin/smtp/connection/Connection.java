@@ -69,7 +69,7 @@ public class Connection extends SmtpFoundation {
     public Connection(Session session) {
         this.session = session;
 
-        if (Config.getProperties() != null && Config.getProperties().hasProperty("logging")) {
+        if (Config.getProperties().hasProperty("logging")) {
             LoggingConfig logging = new LoggingConfig(Config.getProperties().getMapProperty("logging"));
             this.logData = logging.getData();
         }

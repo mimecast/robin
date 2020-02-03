@@ -12,13 +12,14 @@ Glossary
 - **timeout** - Socket timeout.
 - **mx** - MTA server list (default: 127.0.0.1).
 - **port** - MTA port (default: 25).
+- **route** - Selects a preconfigured route (see: client.json for routes configuration).
+- **tls** - Allows the client to do TLS when STARTTLS is advertised (default: true).
+- **protocols** - TLS protocols to support (default: Jave defaults).
+- **ciphers** - TLS ciphers to support (default: Jave defaults).
 - **auth** - SMTP authentication (default: false).
 - **user** - Authentication username.
 - **pass** - Authentication password.
-- **route** - Selects a preconfigured route (see: client.json for routes configuration).
-- **tls** - Allows the client to do TLS when STARTTLS is advertised (default: true).
-- **protocols** - TLS protocols to support (default: SSLv3, SSLv2Hello, TLSv1, TLSv1.1, TLSv1.2).
-- **authTls**  - Send AUTH before STARTLS (default: false). Vulnerable behaviour.
+- **authBeforeTls**  - Send AUTH before STARTLS (default: false). Vulnerable behaviour.
 - **authLoginCombined**  - Send username and password in one line for AUTH LOGIN.
 - **authLoginRetry**  - Disable authLoginCombined and retry AUTH LOGIN.
 - **ehlo** - Ehlo domain (default: hostname).

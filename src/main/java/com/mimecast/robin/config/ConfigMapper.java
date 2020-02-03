@@ -44,7 +44,7 @@ public class ConfigMapper {
                 .setTimeout(config.getTimeout())
                 .setPort(config.getPort())
                 .setTls(config.isTls())
-                .setAuthTls(config.isAuthTls())
+                .setAuthBeforeTls(config.isAuthBeforeTls())
                 .setProtocols(config.getProtocols())
                 .setCiphers(config.getCiphers());
 

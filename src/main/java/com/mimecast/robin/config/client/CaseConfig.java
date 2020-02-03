@@ -5,10 +5,7 @@ import com.mimecast.robin.config.assertion.AssertConfig;
 import com.mimecast.robin.main.Config;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Client case configuration container.
@@ -17,10 +14,11 @@ import java.util.Map;
  * <p>A case is configured via a JSON file.
  *
  * <p>This class provides type safe access to the client case configuration.
- * <p>Cases can inherit defaults from ClientConfig.
+ * <p>Cases will inherit defaults from ClientConfig.
  * <p>It also maps envelopes and assertions to corresponding objects.
  *
  * @see ClientConfig
+ * @see ConfigFoundation
  * @author "Vlad Marian" <vmarian@mimecast.com>
  * @link http://mimecast.com Mimecast
  */
@@ -89,7 +87,9 @@ public class CaseConfig extends ConfigFoundation {
      */
     public List<String> getMx() {
         RouteConfig routeConfig = getRoute();
-        return routeConfig != null && routeConfig.getMx() != null ? routeConfig.getMx() : getListProperty("mx");
+        return routeConfig != null && routeConfig.getMx() != null ?
+                routeConfig.getMx() :
+                getListProperty("mx", Collections.singletonList("127.0.0.1"));
     }
 
     /**
@@ -100,7 +100,9 @@ public class CaseConfig extends ConfigFoundation {
      */
     public int getPort() {
         RouteConfig routeConfig = getRoute();
-        return routeConfig != null && routeConfig.getPort() > 0 ? routeConfig.getPort() : Math.toIntExact(getLongProperty("port"));
+        return routeConfig != null && routeConfig.getPort() > 0 ?
+                routeConfig.getPort() :
+                Math.toIntExact(getLongProperty("port", 25L));
     }
 
     /**
@@ -111,7 +113,8 @@ public class CaseConfig extends ConfigFoundation {
      */
     public boolean isAuth() {
         RouteConfig routeConfig = getRoute();
-        return routeConfig != null && routeConfig.isAuth() || getBooleanProperty("auth");
+        return routeConfig != null && routeConfig.isAuth() ||
+                getBooleanProperty("auth", false);
     }
 
     /**
@@ -123,7 +126,8 @@ public class CaseConfig extends ConfigFoundation {
      */
     public boolean isAuthLoginCombined() {
         RouteConfig routeConfig = getRoute();
-        return routeConfig != null && routeConfig.isAuthLoginCombined() || getBooleanProperty("authLoginCombined");
+        return routeConfig != null && routeConfig.isAuthLoginCombined() ||
+                getBooleanProperty("authLoginCombined", false);
     }
 
     /**
@@ -136,7 +140,8 @@ public class CaseConfig extends ConfigFoundation {
      */
     public boolean isAuthLoginRetry() {
         RouteConfig routeConfig = getRoute();
-        return routeConfig != null && routeConfig.isAuthLoginRetry() || getBooleanProperty("authLoginRetry");
+        return routeConfig != null && routeConfig.isAuthLoginRetry() ||
+                getBooleanProperty("authLoginRetry", false);
     }
 
     /**
@@ -147,7 +152,9 @@ public class CaseConfig extends ConfigFoundation {
      */
     public String getUser() {
         RouteConfig routeConfig = getRoute();
-        return routeConfig != null && routeConfig.getUser() != null ? routeConfig.getUser() : getStringProperty("user");
+        return routeConfig != null && routeConfig.getUser() != null ?
+                routeConfig.getUser() :
+                getStringProperty("user");
     }
 
     /**
@@ -158,7 +165,9 @@ public class CaseConfig extends ConfigFoundation {
      */
     public String getPass() {
         RouteConfig routeConfig = getRoute();
-        return routeConfig != null && routeConfig.getPass() != null ? routeConfig.getPass() : getStringProperty("pass");
+        return routeConfig != null && routeConfig.getPass() != null ?
+                routeConfig.getPass() :
+                getStringProperty("pass");
     }
 
     /**
@@ -178,7 +187,7 @@ public class CaseConfig extends ConfigFoundation {
      * @return Boolean.
      */
     public boolean isTls() {
-        return getBooleanProperty("tls");
+        return getBooleanProperty("tls", true);
     }
 
     /**
@@ -186,8 +195,8 @@ public class CaseConfig extends ConfigFoundation {
      *
      * @return Boolean.
      */
-    public boolean isAuthTls() {
-        return getBooleanProperty("authTls");
+    public boolean isAuthBeforeTls() {
+        return getBooleanProperty("authBeforeTls", false);
     }
 
     /**
@@ -224,7 +233,7 @@ public class CaseConfig extends ConfigFoundation {
      * @return Ehlo domain.
      */
     public String getEhlo() {
-        return getStringProperty("ehlo");
+        return getStringProperty("ehlo", "localhost");
     }
 
     /**

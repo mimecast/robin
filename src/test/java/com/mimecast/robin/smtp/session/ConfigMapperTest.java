@@ -33,7 +33,7 @@ class ConfigMapperTest {
         assertEquals("example.net", session.getMx().get(0));
         assertEquals(465, session.getPort());
         assertTrue(session.isTls());
-        assertFalse(session.isAuthTls());
+        assertFalse(session.isAuthBeforeTls());
         assertEquals("TLSv1.1, TLSv1.2", String.join(", ", session.getProtocols()));
         assertEquals("TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384, " +
                 "TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384, " +
