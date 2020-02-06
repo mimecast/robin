@@ -5,11 +5,9 @@ import com.mimecast.robin.smtp.connection.Connection;
 import com.mimecast.robin.smtp.io.ChunkedInputStream;
 import com.mimecast.robin.smtp.io.MagicInputStream;
 import com.mimecast.robin.smtp.transaction.EnvelopeTransactionList;
+import org.apache.commons.io.input.BoundedInputStream;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 
 /**
  * DATA extension processor.
@@ -72,26 +70,56 @@ public class ClientData extends ClientProcessor {
             return false;
         }
 
+        // Configure data stream
+        InputStream inputStream = null;
+
         if (envelope.getFile() != null) {
             log.debug("Sending email from file: {}", envelope.getFile());
-            connection.stream(new MagicInputStream(new FileInputStream(new File(envelope.getFile())), envelope),
-                    envelope.getSlowBytes(), envelope.getSlowWait());
+            inputStream = new FileInputStream(new File(envelope.getFile()));
         }
 
         else if (envelope.getStream() != null) {
             log.debug("Sending email from stream.");
-            connection.stream(new MagicInputStream(envelope.getStream(), envelope),
-                    envelope.getSlowBytes(), envelope.getSlowWait());
+            inputStream = envelope.getStream();
         }
 
         else if (envelope.getMessage() != null) {
             log.debug("Sending email from headers and body.");
-            connection.write(envelope.getHeaders());
-            connection.write(envelope.getMessage());
+            inputStream = new ByteArrayInputStream((envelope.getHeaders() + envelope.getMessage()).getBytes());
+        }
+
+        // Send data
+        if (envelope.getTerminateAfterBytes() > 0) {
+            log.debug("Terminating after {} bytes.", envelope.getTerminateAfterBytes());
+            envelope.setTerminateBeforeDot(true);
+            inputStream = new BoundedInputStream(inputStream, envelope.getTerminateAfterBytes());
+        }
+
+        // Send data
+        if (inputStream != null) {
+            connection.stream(
+                    new MagicInputStream(inputStream, envelope),
+                    envelope.getSlowBytes(),
+                    envelope.getSlowWait()
+            );
+        }
+
+        // Terminate before dot.
+        if (envelope.isTerminateBeforeDot()) {
+            log.debug("Terminating before <CRLF>.<CRLF>");
+            connection.close();
+            return false;
         }
 
         log.debug("Sending [CRLF].[CRLF]");
         connection.write(".");
+
+        // Terminate after dot.
+        if (envelope.isTerminateAfterDot()) {
+            log.debug("Terminating after <CRLF>.<CRLF>");
+            connection.close();
+            return false;
+        }
 
         read = connection.read("250");
 

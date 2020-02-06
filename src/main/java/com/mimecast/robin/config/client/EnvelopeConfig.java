@@ -100,6 +100,36 @@ public class EnvelopeConfig extends ConfigFoundation {
     }
 
     /**
+     * Gets terminate after bytes.
+     * <p>Size of how many bytes to write to the socket before terminating connection.
+     *
+     * @return Size in bytes.
+     */
+    public int getTerminateAfterBytes() {
+        return Math.toIntExact(getLongProperty("terminateAfterBytes"));
+    }
+
+    /**
+     * Is terminate before dot.
+     * <p>Terminate connection before transmitting the &lt;CRLF&gt;.&lt;CRLF&gt; termiantor.
+     *
+     * @return Boolean.
+     */
+    public boolean isTerminateBeforeDot() {
+        return getBooleanProperty("terminateBeforeDot");
+    }
+
+    /**
+     * Is terminate after dot.
+     * <p>Terminate connection after transmitting the &lt;CRLF&gt;.&lt;CRLF&gt; termiantor.
+     *
+     * @return Boolean.
+     */
+    public boolean isTerminateAfterDot() {
+        return getBooleanProperty("terminateAfterDot");
+    }
+
+    /**
      * Gets slow bytes.
      * <p>This adds a write delay every given number of bytes.
      *

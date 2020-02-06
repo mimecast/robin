@@ -61,7 +61,8 @@ public class AssertMtaConfig extends ConfigFoundation {
      * @return Retry count.
      */
     public int getRetry() {
-        return Math.toIntExact(getLongProperty("retry"));
+        int retry = Math.toIntExact(getLongProperty("retry", 1L));
+        return retry > 0 ? retry : 1;
     }
 
     /**

@@ -89,14 +89,20 @@ public class ConfigMapper {
             envelope.getRcpts().add(magicReplace(rcpt));
         }
 
+        // EJF
         envelope.setMailEjf(magicReplace(envelopeConfig.getMailEjf()));
         envelope.setRcptEjf(magicReplace(envelopeConfig.getRcptEjf()));
 
+        // Transfer config
         if (envelopeConfig.getChunkSize() > 128) {
             envelope.setChunkSize(envelopeConfig.getChunkSize());
         }
         envelope.setChunkBdat(envelopeConfig.isChunkBdat());
         envelope.setChunkWrite(envelopeConfig.isChunkWrite());
+
+        envelope.setTerminateAfterBytes(envelopeConfig.getTerminateAfterBytes());
+        envelope.setTerminateBeforeDot(envelopeConfig.isTerminateBeforeDot());
+        envelope.setTerminateAfterDot(envelopeConfig.isTerminateAfterDot());
 
         envelope.setSlowBytes(envelopeConfig.getSlowBytes());
         envelope.setSlowWait(envelopeConfig.getSlowWait());

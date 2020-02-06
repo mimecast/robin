@@ -41,6 +41,10 @@ public class MessageEnvelope {
     private boolean chunkBdat = false;
     private boolean chunkWrite = false;
 
+    private int terminateAfterBytes = 0;
+    private boolean terminateBeforeDot = false;
+    private boolean terminateAfterDot = false;
+
     private int slowBytes = 1;
     private int slowWait = 0;
 
@@ -346,7 +350,7 @@ public class MessageEnvelope {
     /**
      * Sets chunk BDAT command.
      *
-     * @param chunkBdat Chunk BDAT enablement.
+     * @param chunkBdat Boolean.
      */
     public void setChunkBdat(boolean chunkBdat) {
         this.chunkBdat = chunkBdat;
@@ -366,10 +370,67 @@ public class MessageEnvelope {
     /**
      * Sets chunk write.
      *
-     * @param chunkWrite Chunk write enablement.
+     * @param chunkWrite Boolean.
      */
     public void setChunkWrite(boolean chunkWrite) {
         this.chunkWrite = chunkWrite;
+    }
+
+    /**
+     * Gets terminate after bytes.
+     * <p>Size of how many bytes to write to the socket before terminating connection.
+     *
+     * @return Size in bytes.
+     */
+    public int getTerminateAfterBytes() {
+        return terminateAfterBytes;
+    }
+
+    /**
+     * Sets chunk size.
+     *
+     * @param terminateAfterBytes Size in bytes.
+     */
+    public void setTerminateAfterBytes(int terminateAfterBytes) {
+        this.terminateAfterBytes = terminateAfterBytes;
+    }
+
+    /**
+     * Is terminate before dot.
+     * <p>Terminate connection before transmitting the &lt;CRLF&gt;.&lt;CRLF&gt; termiantor.
+     *
+     * @return Boolean.
+     */
+    public boolean isTerminateBeforeDot() {
+        return terminateBeforeDot;
+    }
+
+    /**
+     * Sets terminate after dot.
+     *
+     * @param terminateBeforeDot Boolean.
+     */
+    public void setTerminateBeforeDot(boolean terminateBeforeDot) {
+        this.terminateBeforeDot = terminateBeforeDot;
+    }
+
+    /**
+     * Is terminate after dot.
+     * <p>Terminate connection after transmitting the &lt;CRLF&gt;.&lt;CRLF&gt; termiantor.
+     *
+     * @return Boolean.
+     */
+    public boolean isTerminateAfterDot() {
+        return terminateAfterDot;
+    }
+
+    /**
+     * Sets terminate after dot.
+     *
+     * @param terminateAfterDot Boolean.
+     */
+    public void setTerminateAfterDot(boolean terminateAfterDot) {
+        this.terminateAfterDot = terminateAfterDot;
     }
 
     /**

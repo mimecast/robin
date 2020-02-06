@@ -7,41 +7,71 @@ Glossary
 --------
 
 ### Session
-- **retry** - Retry connection.
-- **delay** - Delay between retries.
-- **timeout** - Socket timeout.
-- **mx** - MTA server list (default: 127.0.0.1).
-- **port** - MTA port (default: 25).
-- **route** - Selects a preconfigured route (see: client.json for routes configuration).
-- **tls** - Allows the client to do TLS when STARTTLS is advertised (default: true).
-- **protocols** - TLS protocols to support (default: Jave defaults).
-- **ciphers** - TLS ciphers to support (default: Jave defaults).
-- **auth** - SMTP authentication (default: false).
-- **user** - Authentication username.
-- **pass** - Authentication password.
-- **authBeforeTls**  - Send AUTH before STARTLS (default: false). Vulnerable behaviour.
-- **authLoginCombined**  - Send username and password in one line for AUTH LOGIN.
-- **authLoginRetry**  - Disable authLoginCombined and retry AUTH LOGIN.
-- **ehlo** - Ehlo domain (default: hostname).
+#### Connection
+- **retry** - _(Integer, Attempts)_ [default: 1] How many times to attempt connection.
+- **delay** - _(Integer, Seconds)_ [default: 0] Delay between connection retries.
+- **timeout** - _(Integer, Milliseconds)_ [default: Java] Socket timeout.
+
+
+#### Destination
+- **mx** - _(List, String, IP, FQD)_ [default: 127.0.0.1] MX server list.
+- **port** - _(Integer)_ [default: 25] MX port.
+- **route** - _(String, Name)_ [default: none] Selects a preconfigured route by name from _client.json_ routes if any.
+
+
+#### Encryption
+- **tls** - _(Boolean)_ [default: false] Allows the client to do TLS when _STARTTLS_ is advertised.
+- **protocols** - _(List, String)_ [default: Java] TLS protocols to support.
+- **ciphers** - _(List, String)_ [default: Java] TLS ciphers to support.
+
+
+#### Authentication
+- **auth** - _(Boolean)_ [default: false] SMTP authentication.
+- **user** - _(String)_ Authentication username.
+- **pass** - _(String)_ Authentication password.
+
+
+#### Authentication Config
+- **authBeforeTls**  - _(Boolean)_ [default: false] Send _AUTH_ withot requireing TLS. **_Vulnerable behaviour._**
+- **authLoginCombined**  - _(Boolean)_ [default: false] Send username and password in one line for _AUTH LOGIN_.
+- **authLoginRetry**  - _(Boolean)_ [default: false] Disable authLoginCombined and retry _AUTH LOGIN_.
+
+
+#### EHLO
+- **ehlo** - _(String, IP, FQD)_ [default: hostname] _EHLO_ domain.
 
 
 #### XCLIENT
-- **xclient** - Special feature allowing enumation of client info:
+- **xclient** - _(SMTP command)_ Special feature allowing enumation of client info:
   - addr - IP address.
   - name - Reverse DNS.
   - helo - HELO/EHLO domain.
 
 
 ### Envelope
-- **mail** - Sender (default: client.json value).
-- **rcpt** - Recipient (default: client.json value).
-- **mailEjf** - Special variable for EJF magic. Value {$mail} will use client.json mail value.
-- **rcptEjf** - Special variable for EJF magic. Value {$rcpt} will use client.json rcpt value.
-- **chunkSize** - (default: 1400 bytes) Enables CHUNKING when set at minimum 128.
-- **chunkBdat**  - (default: false) Includes the BDAT command along with the first chunk.
-- **chunkWrite** - (default: false) Writes email data to socket in uneven chunks between 1024 and 2048 bytes if chunkSize greater than 2048.
-- **slowBytes** - (default: 1) Adds a write delay every given number of bytes if value is greater of equal to 1.
-- **slowWait** - (default: 0) Wait time in miliseconds if grater or equal to 100.
+- **mail** - _(String, Email Address)_ [default: client.json] Sender email address.
+- **rcpt** - _(List, String, Email Address)_ [default: client.json] Recipients list of email addresses.
+- **mailEjf** - _(String)_ Special variable for EJF magic. Value _{$mail}_ will use _client.json_ mail value.
+- **rcptEjf** - _(String)_ Special variable for EJF magic. Value _{$rcpt}_ will use _client.json_ rcpt value.
+
+
+#### Transfer
+##### BDAT Config
+- **chunkSize** - _(Integer, Bytes)_ [default: 1400, min: 128] Enables _CHUNKING_ if grater than minimum.
+- **chunkBdat**  - _(Boolean)_ [default: false] Writes _BDAT_ command to socket along with the first chunk.
+- **chunkWrite** - _(Boolean)_ [default: false] Writes to socket in uneven chunks between 1024 and 2048 bytes if _chunkSize_ at least 2048.
+
+
+##### DATA Config
+_Only one may be used at the same time (Order of priority)._
+- **terminateAfterBytes** - _(Integer, Bytes)_ [default: 0, min: 1] Terminates connection after transfering given bytes of _DATA_ when greater. Enables _terminateBeforeDot_.
+- **terminateBeforeDot** - _(Boolean)_ [default: false] Terminates connection right before transfering _DATA_ terminator &lt;CRLF&gt;.&lt;CRLF&gt;.
+- **terminateAfterDot** - _(Boolean)_ [default: false] Terminates connection right after transfering _DATA_ terminator &lt;CRLF&gt;.&lt;CRLF&gt;.
+
+
+##### Speed
+- **slowBytes** - _(Integer, Bytes)_ [default: 1, min: 1]  Adds a write delay every given number of bytes.
+- **slowWait** - _(Integer, Milliseconds)_ [default: 0, min: 100]  Wait time in milliseconds.
 
 
 #### Message
@@ -49,9 +79,9 @@ Every message should have either a file or a subject/message pair!
 If a file is not defined a MIME source will be generated from envelope date along with subject and message.
 Shile message is mandatory subject may be left blank.
 
-- **file** - Path to eml file to be transmitted.
-- **subject** - Email subject.
-- **message** - Email text/plain message.
+- **file** - _(String, Path)_ Path to eml file to be transmitted.
+- **subject** - _(String)_ Email subject.
+- **message** - _(String)_ Email text/plain message.
 
 
 SMTP Assertions
@@ -99,12 +129,12 @@ You may run assertions against your MTA logs from envelope level.
 A logs client needs to be plugged in for this functionality to work.
 LogsClient.java interface.
 
-- **wait** - Initial wait before calling the logs client (default: 2, min: 2).
-- **retry** - Retry attempts if empty logs list (default: 0).
-- **delay** - Delay between subsequent retries (default: 2, min: 2).
-- **verify** - List of regex matches to verify complete logs received. Provides stability when MTA takes more time to process.
-- **match** - Regex assertions to run against log lines. Multiple expressions can run on the same line. All must match.
-- **refuse** - The opposite of match. Will stop and error on first match.
+- **wait** - _(Integer, Seconds)_ [default: 2, min: 2] Initial wait before calling the logs client.
+- **retry** - _(Integer, Attempts)_ [default: 1, min: 1] How many times to attempt to fetch logs.
+- **delay** - _(Integer, Attempts)_ [default: 2, min: 2] Delay between attempts.
+- **verify** - _(List, String, Regex)_ List of regex matches to verify bottom most needed logs received. Provides stability when MTA takes more time.
+- **match** - _(List of List, String, Regex)_ Regex assertions to run against log lines. Multiple expressions can run on the same line. All must match.
+- **refuse** - _(List of List, String, Regex)_ The opposite of match. Will stop and error on first match.
 
         "wait": 10,
         "retry": 2,
@@ -154,6 +184,10 @@ Case
                 "chunkWrite": true,
 
                 "file": "src/test/resources/lipsum.eml",
+
+                "terminateAfterBytes": 1024,
+                "terminateBeforeDot": true,
+                "terminateAfterDot": true,
 
                 "assertions": {
                     "smtp": [
