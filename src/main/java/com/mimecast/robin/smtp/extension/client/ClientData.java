@@ -85,7 +85,7 @@ public class ClientData extends ClientProcessor {
 
         else if (envelope.getMessage() != null) {
             log.debug("Sending email from headers and body.");
-            inputStream = new ByteArrayInputStream((envelope.getHeaders() + envelope.getMessage()).getBytes());
+            inputStream = new ByteArrayInputStream((envelope.getHeaders() + "\r\n" + envelope.getMessage()).getBytes());
         }
 
         // Send data
