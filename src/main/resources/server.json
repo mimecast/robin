@@ -9,7 +9,7 @@
   "chunking": true,
 
   "keystore": "/usr/local/keystore",
-  "keystorepassword": "changeit",
+  "keystorepassword": "avengers",
 
   "users": [
     {

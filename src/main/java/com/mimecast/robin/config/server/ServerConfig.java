@@ -106,7 +106,7 @@ public class ServerConfig extends ConfigFoundation {
      * @return Key store path.
      */
     public String getKeyStore() {
-        return getStringProperty("keystore", "/usr/local/mimecast/keystore");
+        return getStringProperty("keystore", "/usr/local/keystore");
     }
 
     /**
@@ -115,7 +115,7 @@ public class ServerConfig extends ConfigFoundation {
      * @return Key store password string.
      */
     public String getKeyStorePassword() {
-        return getStringProperty("keystorepassword", "changeit");
+        return getStringProperty("keystorepassword", "");
     }
 
     /**
