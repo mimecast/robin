@@ -176,11 +176,13 @@ public class AssertMta {
             if (logs != null && !logs.isEmpty()) {
                 logsList = logs.toList();
                 if (verifyLogs()) {
+                    log.info("Verify success");
                     break;
                 }
             }
 
             delay = assertions.getDelay(); // Retry delay.
+            log.info("Verify {}", (count < assertions.getRetry() - 1 ? "failure" : "attempts spent"));
         }
 
         if (logsList == null || logsList.isEmpty()) {
