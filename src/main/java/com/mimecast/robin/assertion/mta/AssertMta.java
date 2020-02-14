@@ -187,7 +187,7 @@ public class AssertMta {
                 log.debug("Assert MTA logs fetch got none");
             }
 
-            delay = assertMtaConfig.getDelay(); // Retry delay.
+            delay = assertMtaConfig.getDelay() * 1000L; // Retry delay.
             log.info("Assert MTA logs fetch verify {}", (count < assertMtaConfig.getRetry() - 1 ? "failure" : "attempts spent"));
         }
 
