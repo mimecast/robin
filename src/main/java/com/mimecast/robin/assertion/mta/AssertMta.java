@@ -41,10 +41,10 @@ import java.util.regex.Pattern;
  *       221 2.0.0 closing connection o13si19240726wrj.243 - gsmtp
  * </pre>
  *
- * @see LogsClient
- * @see AssertGroup
  * @author "Vlad Marian" <vmarian@mimecast.com>
  * @link http://mimecast.com Mimecast
+ * @see LogsClient
+ * @see AssertGroup
  */
 public class AssertMta {
     private static final Logger log = LogManager.getLogger(AssertMta.class);
@@ -52,7 +52,7 @@ public class AssertMta {
     /**
      * Assertion config.
      */
-    private final AssertMtaConfig assertions;
+    private final AssertMtaConfig assertMtaConfig;
 
     /**
      * EnvelopeTransactionList instance.
@@ -89,12 +89,14 @@ public class AssertMta {
      * Constructs a new AssertMta instance.
      *
      * @param client                  LogsClient instance.
-     * @param assertions              AssertMtaConfig instance.
+     * @param assertMtaConfig         AssertMtaConfig instance.
      * @param envelopeTransactionList EnvelopeTransactionList instance.
      * @throws AssertException Assertion exception.
      */
-    public AssertMta(LogsClient client, AssertMtaConfig assertions, EnvelopeTransactionList envelopeTransactionList) throws AssertException {
-        this.assertions = assertions;
+    public AssertMta(LogsClient client, AssertMtaConfig assertMtaConfig, EnvelopeTransactionList envelopeTransactionList) throws AssertException {
+        this.assertMtaConfig = assertMtaConfig;
+        log.debug("Assert MTA Config: {}", assertMtaConfig);
+
         this.envelopeTransactionList = envelopeTransactionList;
         this.client = client;
 
@@ -102,8 +104,8 @@ public class AssertMta {
             findUID(); // No point in doing anything if we can't get it.
             compileVerify(); // Precompile verify patterns for performance.
             findLogs(); // Get the logs for that UID and verify.
-            compilePatterns(assertions.getMatch(), matchGroups); // Precompile match patterns for performance.
-            compilePatterns(assertions.getRefuse(), refuseGroups); // Precompile refuse patterns for performance.
+            compilePatterns(assertMtaConfig.getMatch(), matchGroups); // Precompile match patterns for performance.
+            compilePatterns(assertMtaConfig.getRefuse(), refuseGroups); // Precompile refuse patterns for performance.
             checkPatterns(true); // Match patters to log lines.
             checkPatterns(false); // Refuse patters to log lines.
             verifyMatches(); // Evaluate unmatched assertion and except.
@@ -121,12 +123,13 @@ public class AssertMta {
     private void findUID() throws AssertException {
         // Gets MTA UID from assertions config or defaults to properties.
         Map<String, String> map;
-        if (assertions.hasProperty("uid")) {
-            map = assertions.getMapProperty("uid");
+        if (assertMtaConfig.hasProperty("uid")) {
+            map = assertMtaConfig.getMapProperty("uid");
         } else {
             map = Config.getProperties().getMapProperty("mta.uid");
         }
         MtaUid mtaUid = new MtaUid(map);
+        log.debug("Assert MTA UID: {}", mtaUid);
 
         // Select transaction for configured command.
         Transaction transaction = null;
@@ -168,21 +171,24 @@ public class AssertMta {
      * Find logs by UID using given client if any.
      */
     private void findLogs() throws AssertException {
-        long delay = assertions.getWait() > 0 ? assertions.getWait() * 1000L : 2000L; // Initial wait 2 seconds.
-        for (int count = 0; count < assertions.getRetry(); count++) {
+        long delay = assertMtaConfig.getWait() > 0 ? assertMtaConfig.getWait() * 1000L : 2000L; // Initial wait 2 seconds.
+        for (int count = 0; count < assertMtaConfig.getRetry(); count++) {
             Sleep.nap((int) delay);
+            log.info("Assert MTA logs fetch attempt {} of {}", count + 1, assertMtaConfig.getRetry());
 
             JSONArray logs = client.getLogs(uid);
             if (logs != null && !logs.isEmpty()) {
                 logsList = logs.toList();
                 if (verifyLogs()) {
-                    log.info("Verify success");
+                    log.debug("Assert MTA logs fetch verify success");
                     break;
                 }
+            } else {
+                log.debug("Assert MTA logs fetch got none");
             }
 
-            delay = assertions.getDelay(); // Retry delay.
-            log.info("Verify {}", (count < assertions.getRetry() - 1 ? "failure" : "attempts spent"));
+            delay = assertMtaConfig.getDelay(); // Retry delay.
+            log.info("Assert MTA logs fetch verify {}", (count < assertMtaConfig.getRetry() - 1 ? "failure" : "attempts spent"));
         }
 
         if (logsList == null || logsList.isEmpty()) {
@@ -194,7 +200,7 @@ public class AssertMta {
      * Precompile verify patterns for performance.
      */
     private void compileVerify() {
-        for (String assertion : assertions.getVerify()) {
+        for (String assertion : assertMtaConfig.getVerify()) {
             verifyPatterns.add(Pattern.compile(assertion, Pattern.CASE_INSENSITIVE));
         }
     }
@@ -271,7 +277,7 @@ public class AssertMta {
     /**
      * Match log line to patterns.
      *
-     * @param line Log line.
+     * @param line     Log line.
      * @param positive Success on match.
      */
     private void checkLine(String line, boolean positive) throws AssertException {
@@ -288,8 +294,8 @@ public class AssertMta {
 
                 // Evaluate if all positive patterns matched.
                 if (positive && group.getMatched().size() == group.getPatterns().size()) {
-                    log.debug("LOG: {}", line);
-                    log.debug("MATCH: {}", group.getMatched().toString());
+                    log.debug("Assert MTA LOG: {}", line);
+                    log.info("Assert MTA matched: {}", group.getMatched().toString());
                 }
             }
         }
@@ -298,8 +304,8 @@ public class AssertMta {
     /**
      * Match log line to pattern group.
      *
-     * @param group AssertGroup instance.
-     * @param line Log line.
+     * @param group    AssertGroup instance.
+     * @param line     Log line.
      * @param positive Success on match.
      */
     private void matchLine(AssertGroup group, String line, boolean positive) throws AssertException {
@@ -310,8 +316,8 @@ public class AssertMta {
 
                 // Break on first negative match
                 if (!positive) {
-                    log.debug("LOG: {}", line);
-                    log.debug("MATCH: {}", group.getMatched().toString());
+                    log.debug("Assert MTA log: {}", line);
+                    log.error("Assert MTA not matched: {}", group.getMatched().toString());
                     throw new AssertException("Found refuse pattern " + group.getMatched() + " in logs");
                 }
             }

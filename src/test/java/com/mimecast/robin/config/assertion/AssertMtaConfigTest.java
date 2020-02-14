@@ -24,23 +24,31 @@ class AssertMtaConfigTest {
         String json =
                 "{\n" +
                 "  \"mta\": {\n" +
+                "    \"wait\": 5,\n" +
                 "    \"delay\": 30,\n" +
                 "    \"retry\": 3,\n" +
+                "    \"verify\": [\"MTAOUTSUMMARY\"],\n" +
                 "    \"match\": [\n" +
                 "      [\"MTAEMAILEXPLODE\", \"Skel=Aph-\"],\n" +
                 "      [\"MTASPAMRESULT\", \"Act=Acc\"]\n" +
+                "    ],\n" +
+                "    \"refuse\": [\n" +
+                "      [\"java.lang.NullPointerException\"]\n" +
                 "    ]\n" +
                 "  }\n" +
                 "}";
 
         Map<String, Object> map = new Gson().fromJson(json, new TypeToken<HashMap<String, Object>>() {}.getType());
-        AssertConfig assertConfig = new AssertConfig(map);
+        AssertMtaConfig assertMtaConfig = new AssertConfig(map).getMta();
 
-        assertEquals(30, assertConfig.getMta().getDelay());
-        assertEquals(3, assertConfig.getMta().getRetry());
-        assertEquals("MTAEMAILEXPLODE", assertConfig.getMta().getMatch().get(0).get(0));
-        assertEquals("Skel=Aph-", assertConfig.getMta().getMatch().get(0).get(1));
-        assertEquals("MTASPAMRESULT", assertConfig.getMta().getMatch().get(1).get(0));
-        assertEquals("Act=Acc", assertConfig.getMta().getMatch().get(1).get(1));
+        assertEquals(5, assertMtaConfig.getWait());
+        assertEquals(30, assertMtaConfig.getDelay());
+        assertEquals(3, assertMtaConfig.getRetry());
+        assertEquals("MTAOUTSUMMARY", assertMtaConfig.getVerify().get(0));
+        assertEquals("MTAEMAILEXPLODE", assertMtaConfig.getMatch().get(0).get(0));
+        assertEquals("Skel=Aph-", assertMtaConfig.getMatch().get(0).get(1));
+        assertEquals("MTASPAMRESULT", assertMtaConfig.getMatch().get(1).get(0));
+        assertEquals("Act=Acc", assertMtaConfig.getMatch().get(1).get(1));
+        assertEquals("java.lang.NullPointerException", assertMtaConfig.getRefuse().get(0).get(0));
     }
 }
