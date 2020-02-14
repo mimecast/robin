@@ -33,8 +33,8 @@ class AssertMtaTest {
         matches.add(Arrays.asList("MTACONNSUMMARY", "IP=8.8.8.8"));
 
         Map<String, Object> map = new HashMap<>();
-        map.put("delay", 5D);
-        map.put("retry", 1D);
+        map.put("delay", 5);
+        map.put("retry", 1);
         map.put("match", matches);
 
         AssertMtaConfig assertions = new AssertMtaConfig(map);

@@ -113,6 +113,15 @@ public abstract class ConfigFoundation {
     public Long getLongProperty(String name) {
         Object prop = map.get(name);
         if (prop != null) {
+            if (prop instanceof Integer) {
+                return ((Integer) prop).longValue();
+            }
+            if (prop instanceof Long) {
+                return (Long) prop;
+            }
+            if (prop instanceof Short) {
+                return ((Short) prop).longValue();
+            }
             return prop instanceof Double ? ((Double) prop).longValue() : Long.parseLong((String) map.get(name));
         }
         return 0L;
