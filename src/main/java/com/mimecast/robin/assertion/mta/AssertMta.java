@@ -95,7 +95,7 @@ public class AssertMta {
      */
     public AssertMta(LogsClient client, AssertMtaConfig assertMtaConfig, EnvelopeTransactionList envelopeTransactionList) throws AssertException {
         this.assertMtaConfig = assertMtaConfig;
-        log.debug("Assert MTA Config: {}", assertMtaConfig);
+        log.debug("Assert MTA Config: {}", assertMtaConfig.getMap());
 
         this.envelopeTransactionList = envelopeTransactionList;
         this.client = client;
@@ -129,7 +129,7 @@ public class AssertMta {
             map = Config.getProperties().getMapProperty("mta.uid");
         }
         MtaUid mtaUid = new MtaUid(map);
-        log.debug("Assert MTA UID: {}", mtaUid);
+        log.debug("Assert MTA UID: {}", mtaUid.getMap());
 
         // Select transaction for configured command.
         Transaction transaction = null;
