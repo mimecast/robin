@@ -142,6 +142,7 @@ class EmailDeliveryTest {
         stringBuilder.append("250 2.1.0 Sender OK\r\n");
         stringBuilder.append("250 2.1.5 Recipient OK\r\n");
         stringBuilder.append("250 2.0.0 Chunk OK\r\n");
+        stringBuilder.append("250 2.0.0 Chunk OK\r\n");
         stringBuilder.append("221 2.0.0 Closing connection\r\n");
 
         ConnectionMock connection = getConnection(stringBuilder);
@@ -155,7 +156,7 @@ class EmailDeliveryTest {
         assertEquals("EHLO example.com\r\n", connection.getLine(1));
         assertEquals("MAIL FROM:<tony@example.com> SIZE=294\r\n", connection.getLine(2));
         assertEquals("RCPT TO:<pepper@example.com>\r\n", connection.getLine(3));
-        assertEquals("BDAT 289 LAST\r\n", connection.getLine(4));
+        assertEquals("BDAT 277\r\n", connection.getLine(4));
         assertEquals("MIME-Version: 1.0\r\n", connection.getLine(5));
         assertEquals("From: <tony@example.com>\r\n", connection.getLine(8));
         assertEquals("To: <pepper@example.com>\r\n", connection.getLine(9));
@@ -163,8 +164,9 @@ class EmailDeliveryTest {
         assertEquals("Content-Type: text/plain\r\n", connection.getLine(11));
         assertEquals("Content-Transfer-Encoding: 8bit\r\n", connection.getLine(12));
         assertEquals("\r\n", connection.getLine(13));
-        assertEquals("Rescue me!\r\n", connection.getLine(14));
-        assertEquals("QUIT\r\n", connection.getLine(15));
+        assertEquals("BDAT 12 LAST\r\n", connection.getLine(14));
+        assertEquals("Rescue me!\r\n", connection.getLine(15));
+        assertEquals("QUIT\r\n", connection.getLine(16));
 
         assertEquals("220 example.com ESMTP", connection.getSessionTransactionList().getLast("SMTP").getResponse());
         assertEquals("250-smtp.example.com at your service, [127.0.0.1]\r\n" +

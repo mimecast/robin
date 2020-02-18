@@ -240,15 +240,25 @@ public abstract class SmtpFoundation {
     }
 
     /**
-     * Write to a socket via the instance DataOutputStream.
+     * Write string to a socket via the instance DataOutputStream.
      *
      * @param string String to write to socket.
      * @throws IOException Unable to communicate.
      */
     public void write(String string) throws IOException {
+        write((string + "\r\n").getBytes(UTF_8));
+    }
+
+    /**
+     * Write bytes to a socket via the instance DataOutputStream.
+     *
+     * @param bytes String to write to socket.
+     * @throws IOException Unable to communicate.
+     */
+    public void write(byte[] bytes) throws IOException {
         try {
-            out.write((string + "\r\n").getBytes(UTF_8));
-            log.info(LOG_WRITE, string);
+            out.write(bytes);
+            log.info(LOG_WRITE, new String(bytes).trim());
         } catch (IOException e) {
             log.info("Error writing: {}", e.getMessage());
             throw e;
@@ -283,7 +293,7 @@ public abstract class SmtpFoundation {
                     random = min + Random.no(max - min);
                     totalBytes -= random;
                     chunks.add(random);
-                } while(totalBytes > max);
+                } while (totalBytes > max);
                 chunks.add(totalBytes);
 
                 // Write chunks to socket and log.
@@ -343,7 +353,9 @@ public abstract class SmtpFoundation {
             }
 
             outStream.write(bytes);
-            if (logData) log.trace(LOG_WRITE, StringUtils.stripEnd(new String(bytes, UTF_8).replaceAll("\\s+$",""), null));
+            if (logData) {
+                log.trace(LOG_WRITE, StringUtils.stripEnd(new String(bytes, UTF_8).replaceAll("\\s+$", ""), null));
+            }
         }
         outStream.write("\r\n".getBytes(UTF_8));
     }

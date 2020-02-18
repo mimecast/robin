@@ -147,6 +147,7 @@ class ClientDataTest {
     void processBdatWithSubjectAndMessage() throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("250 OK\r\n");
+        stringBuilder.append("250 OK\r\n");
         ConnectionMock connection = new ConnectionMock(stringBuilder);
         connection.getSession().setEhloBdat(true);
 
@@ -168,26 +169,37 @@ class ClientDataTest {
         assertTrue(process);
 
         connection.parseLines();
-        assertEquals("BDAT 289 LAST\r\n", connection.getLine(1));
+        assertEquals("BDAT 277\r\n", connection.getLine(1));
         assertEquals("MIME-Version: 1.0\r\n", connection.getLine(2));
         assertEquals("From: <tony@example.com>\r\n", connection.getLine(5));
         assertEquals("To: <pepper@example.com>\r\n", connection.getLine(6));
         assertEquals("Subject: Lost in space\r\n", connection.getLine(7));
         assertEquals("\r\n", connection.getLine(10));
-        assertEquals("Rescue me!\r\n", connection.getLine(11));
+        assertEquals("BDAT 12 LAST\r\n", connection.getLine(11));
+        assertEquals("Rescue me!\r\n", connection.getLine(12));
     }
 
     @Test
     void processBdatWithFile() throws IOException {
-        processBdatWithFileAndOptionalChunk(false);
+        processBdatWithFileOrStreamAndOptionalChunk(false, false);
     }
 
     @Test
     void processBdatWithFileAndChunkBdat() throws IOException {
-        processBdatWithFileAndOptionalChunk(true);
+        processBdatWithFileOrStreamAndOptionalChunk(true, false);
     }
 
-    void processBdatWithFileAndOptionalChunk(boolean chunkBdat) throws IOException {
+    @Test
+    void processBdatWithStream() throws IOException {
+        processBdatWithFileOrStreamAndOptionalChunk(false, true);
+    }
+
+    @Test
+    void processBdatWithStreamAndChunkBdat() throws IOException {
+        processBdatWithFileOrStreamAndOptionalChunk(true, true);
+    }
+
+    void processBdatWithFileOrStreamAndOptionalChunk(boolean chunkBdat, boolean stream) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("250 OK\r\n");
         stringBuilder.append("250 OK\r\n");
@@ -198,7 +210,11 @@ class ClientDataTest {
         connection.getSession().setEhloBdat(true);
 
         MessageEnvelope envelope = new MessageEnvelope();
-        envelope.setFile("src/test/resources/lipsum.eml");
+        if (stream) {
+            envelope.setFile("src/test/resources/lipsum.eml");
+        } else {
+            envelope.setStream(new FileInputStream(new File("src/test/resources/lipsum.eml")));
+        }
         envelope.setChunkSize(512);
         envelope.setChunkBdat(chunkBdat);
         connection.getSession().addEnvelope(envelope);

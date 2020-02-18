@@ -54,7 +54,6 @@ public class ClientData extends ClientProcessor {
 
     /**
      * DATA processor.
-     * TODO Implement slow from headers and body.
      *
      * @return Boolean.
      * @throws IOException Unable to communicate.
@@ -76,14 +75,12 @@ public class ClientData extends ClientProcessor {
         if (envelope.getFile() != null) {
             log.debug("Sending email from file: {}", envelope.getFile());
             inputStream = new FileInputStream(new File(envelope.getFile()));
-        }
 
-        else if (envelope.getStream() != null) {
+        } else if (envelope.getStream() != null) {
             log.debug("Sending email from stream.");
             inputStream = envelope.getStream();
-        }
 
-        else if (envelope.getMessage() != null) {
+        } else if (envelope.getMessage() != null) {
             log.debug("Sending email from headers and body.");
             inputStream = new ByteArrayInputStream((envelope.getHeaders() + "\r\n" + envelope.getMessage()).getBytes());
         }
@@ -129,66 +126,77 @@ public class ClientData extends ClientProcessor {
 
     /**
      * BDAT processor.
-     * TODO Implement CHUNKING from stream.
-     * TODO Implement slow from headers and body.
      *
      * @return Boolean.
      * @throws IOException Unable to communicate.
      */
     private boolean processBdat() throws IOException {
-        String write;
         String read;
 
-        if (envelope.getFile() != null) {
-            try(ChunkedInputStream chunks = new ChunkedInputStream(
-                    new FileInputStream(new File(envelope.getFile())), envelope)) {
+        if (envelope.getFile() != null || envelope.getStream() != null) {
+            InputStream inputStream = null;
 
-                int length;
-                byte[] bdat;
-                String sdat;
+            // Choose file or stream
+            if (envelope.getFile() != null) {
+                inputStream = new FileInputStream(new File(envelope.getFile()));
+
+            } else if (envelope.getStream() != null) {
+                inputStream = envelope.getStream();
+            }
+
+            try (ChunkedInputStream chunks = new ChunkedInputStream(inputStream, envelope)) {
                 ByteArrayOutputStream chunk;
-
-                while(chunks.hasChunks()) {
-                    byte[] payload;
-
+                while (chunks.hasChunks()) {
                     chunk = chunks.getChunk();
-                    length = chunk.size();
-                    sdat = ("BDAT " + length + (!chunks.hasChunks() ? " LAST" : ""));
-                    bdat = (sdat + "\r\n").getBytes();
+                    read = writeChunk(chunk.toByteArray(), !chunks.hasChunks());
 
-                    // Merge bdat to first chunk.
-                    if (envelope.isChunkBdat()) {
-                        payload = new byte[bdat.length + chunk.size()];
-                        System.arraycopy(bdat, 0, payload, 0, bdat.length);
-                        System.arraycopy(chunk.toByteArray(), 0, payload, bdat.length, chunk.size());
-                    } else {
-                        connection.write(sdat);
-                        payload = chunk.toByteArray();
-                    }
-
-                    connection.write(payload, envelope.isChunkWrite(), envelope.getSlowBytes(), envelope.getSlowWait());
-
-                    read = connection.read("250");
-
-                    envelopeTransactions.addTransaction("BDAT", new String(bdat), read, !read.startsWith("250"));
-                    if(!read.startsWith("250")) return false;
+                    if (!read.startsWith("250")) return false;
                 }
             }
-        }
 
-        else if (envelope.getMessage() != null) {
-            // TODO Write headers and message separatly.
-            write = "BDAT " + (envelope.getHeaders().getBytes().length + 2 + envelope.getMessage().getBytes().length + 2) + " LAST";
-            connection.write(write);
-            connection.write(envelope.getHeaders());
-            connection.write(envelope.getMessage());
+        } else if (envelope.getMessage() != null) {
+            // Write headers
+            read = writeChunk((envelope.getHeaders() + "\r\n").getBytes(), false);
+            if (!read.startsWith("250")) {
+                return false;
+            }
 
-            read = connection.read("250");
-
-            envelopeTransactions.addTransaction("BDAT", write, read, !read.startsWith("250"));
+            // Write body
+            read = writeChunk((envelope.getMessage() + "\r\n").getBytes(), true);
             return read.startsWith("250");
         }
 
         return false;
+    }
+
+    /**
+     * Writes BDAT chunk to socket.
+     *
+     * @param chunk Chunk to write as byte array.
+     * @param last  Is last chunk?
+     * @return SMTP response string.
+     * @throws IOException Unable to communicate.
+     */
+    private String writeChunk(byte[] chunk, boolean last) throws IOException {
+        byte[] bdat = ("BDAT " + chunk.length + (last ? " LAST" : "") + "\r\n").getBytes();
+        byte[] payload;
+
+        // Merge bdat to first chunk.
+        if (envelope.isChunkBdat()) {
+            payload = new byte[bdat.length + chunk.length];
+            System.arraycopy(bdat, 0, payload, 0, bdat.length);
+            System.arraycopy(chunk, 0, payload, bdat.length, chunk.length);
+
+        } else {
+            connection.write(bdat);
+            payload = chunk;
+        }
+
+        connection.write(payload, envelope.isChunkWrite(), envelope.getSlowBytes(), envelope.getSlowWait());
+
+        String read = connection.read("250");
+        envelopeTransactions.addTransaction("BDAT", new String(bdat), read, !read.startsWith("250"));
+
+        return read;
     }
 }
