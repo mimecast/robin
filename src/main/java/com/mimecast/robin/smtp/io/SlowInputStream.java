@@ -33,6 +33,11 @@ public class SlowInputStream extends InputStream {
     private final int wait;
 
     /**
+     * Time in miliseconds waited for.
+     */
+    private int totalWait = 0;
+
+    /**
      * Bytes read counter.
      */
     private int count = 0;
@@ -52,13 +57,14 @@ public class SlowInputStream extends InputStream {
 
     @Override
     public int read() throws IOException {
-        if (bytes >= 1 && wait >= 100) {
+        if (bytes >= 128 && wait >= 100) {
             int read = in.read();
 
             count++;
             if (count == bytes) {
                 count = 0;
                 log.info("Waiting after {} bytes read.", bytes);
+                totalWait += wait;
                 Sleep.nap(wait);
             }
 
@@ -66,5 +72,15 @@ public class SlowInputStream extends InputStream {
         } else {
             return in.read();
         }
+    }
+
+    /**
+     * Gets total wait time spent waiting in miliseconds.
+     * <p>This is primarly here for unit testing.
+     *
+     * @return Integer.
+     */
+    public int getTotalWait() {
+        return totalWait;
     }
 }

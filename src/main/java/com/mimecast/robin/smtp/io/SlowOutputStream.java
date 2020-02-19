@@ -34,6 +34,11 @@ public class SlowOutputStream extends OutputStream {
     private final int wait;
 
     /**
+     * Time in miliseconds waited for.
+     */
+    private int totalWait = 0;
+
+    /**
      * Bytes read counter.
      */
     private int count = 0;
@@ -58,10 +63,21 @@ public class SlowOutputStream extends OutputStream {
             if (count == bytes) {
                 count = 0;
                 log.info("Waiting after {} bytes wrote.",  bytes);
+                totalWait += wait;
                 Sleep.nap(wait);
             }
         }
 
         out.write(b);
+    }
+
+    /**
+     * Gets total wait time spent waiting in miliseconds.
+     * <p>This is primarly here for unit testing.
+     *
+     * @return Integer.
+     */
+    public int getTotalWait() {
+        return totalWait;
     }
 }
