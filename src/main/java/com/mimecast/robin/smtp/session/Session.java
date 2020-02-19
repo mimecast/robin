@@ -170,9 +170,9 @@ public class Session {
     private InternetAddress mail;
 
     /**
-     * RCPT TO envelope address.
+     * RCPT TO envelope addresses.
      */
-    private InternetAddress rcpt;
+    private List<InternetAddress> rcpts = new ArrayList<>();
 
     /**
      * List of envelopes.
@@ -798,18 +798,18 @@ public class Session {
      *
      * @return RCPT TO address.
      */
-    public InternetAddress getRcpt() {
-        return rcpt;
+    public List<InternetAddress> getRcpts() {
+        return rcpts;
     }
 
     /**
-     * Sets RCPT TO address.
+     * Adds RCPT TO address.
      *
      * @param rcpt RCPT TO address.
      * @return Self.
      */
-    public Session setRcpt(InternetAddress rcpt) {
-        this.rcpt = rcpt;
+    public Session addRcpt(InternetAddress rcpt) {
+        this.rcpts.add(rcpt);
         return this;
     }
 

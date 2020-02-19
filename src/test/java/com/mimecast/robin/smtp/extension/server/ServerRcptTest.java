@@ -31,6 +31,6 @@ class ServerRcptTest {
 
         assertTrue(process);
         assertEquals("friday@example.com", rcpt.getAddress().getAddress());
-        assertEquals("friday@example.com", connection.getSession().getRcpt().getAddress());
+        assertEquals("friday@example.com", connection.getSession().getRcpts().get(0).getAddress());
     }
 }

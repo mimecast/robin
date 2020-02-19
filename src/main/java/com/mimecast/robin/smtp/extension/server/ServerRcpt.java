@@ -43,7 +43,7 @@ public class ServerRcpt extends ServerMail {
 
         // Accept all.
         else {
-            connection.getSession().setRcpt(getAddress());
+            connection.getSession().addRcpt(getAddress());
             connection.write("250 2.1.5 Recipient OK");
         }
 
