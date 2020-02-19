@@ -43,7 +43,7 @@ public abstract class ConfigFoundation {
      */
     protected ConfigFoundation(String path) throws IOException {
         if (PathUtils.isFile(path)) {
-            String props = PathUtils.readFile(PathUtils.validatePath(path), Charset.defaultCharset());
+            String props = PathUtils.readFile(path, Charset.defaultCharset());
             map = new Gson().fromJson(JsonSanitizer.sanitize(props), Map.class);
         }
     }
