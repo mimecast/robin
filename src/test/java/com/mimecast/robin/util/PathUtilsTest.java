@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import javax.naming.ConfigurationException;
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
@@ -19,16 +20,6 @@ class PathUtilsTest {
     }
 
     @Test
-    void validatePath() throws IOException {
-        assertEquals("src/test/resources/properties.json", PathUtils.validatePath("src/test/resources/properties.json", "Not there"));
-    }
-
-    @Test
-    void validatePathException() {
-        assertThrows(IOException.class, () -> PathUtils.validatePath("src/test/resources/nofile.json", "Not there"));
-    }
-
-    @Test
     void isFile() {
         assertTrue(PathUtils.isFile("src/test/resources/properties.json"));
     }
@@ -36,6 +27,19 @@ class PathUtilsTest {
     @Test
     void isNotFile() {
         assertFalse(PathUtils.isFile("src/test/resources/not.file"));
+    }
+
+    @Test
+    void cleanFilePath() {
+        String random = "¬!\"£$%^&*()_+Q{}:@~|<>?`-=[];'#\\,./";
+        assertEquals("¬!\"£$%^&*()_+Q{}:@~|<>?`-=[];'#,.", PathUtils.normalize(random));
+    }
+
+    @Test
+    void makePath() {
+        String path = "/tmp/" + System.nanoTime();
+        assertTrue(PathUtils.makePath(path));
+        assertTrue(new File(path).delete());
     }
 
     @Test

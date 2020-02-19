@@ -1,10 +1,15 @@
 package com.mimecast.robin.util;
 
+import org.apache.commons.io.FilenameUtils;
+
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Objects;
 
 /**
  * Path handling static utilities.
@@ -17,7 +22,7 @@ public final class PathUtils extends File {
     /**
      * Creates a new PathUtils instance.
      *
-     * @param  path A pathname string
+     * @param path A pathname string
      * @throws NullPointerException If the path argument is null.
      */
     private PathUtils(String path) {
@@ -25,33 +30,24 @@ public final class PathUtils extends File {
     }
 
     /**
-     * Check if file exists.
-     *
-     * @param path File path.
-     */
-    public static String validatePath(String path) throws IOException {
-        return validatePath(path, path);
-    }
-
-    /**
-     * Check if file exists with exception.
-     *
-     * @param path      File path.
-     * @param exception Exception message to throw if it excepts.
-     */
-    public static String validatePath(String path, String exception) throws IOException {
-        if (isFile(path)) return path;
-        throw new IOException(exception);
-    }
-
-    /**
-     * Check if file exists boolean.
+     * Is file readable.
      *
      * @param path File path.
      * @return Boolean.
      */
     public static boolean isFile(String path) {
         return path != null && new PathUtils(path).isFile();
+    }
+
+    /**
+     * Normalizez file/directory name.
+     *
+     * @param path File/directory name.
+     * @return Normalized string.
+     */
+    public static String normalize(String path) {
+        Objects.requireNonNull(path, "path must not be null");
+        return FilenameUtils.normalize(path).replaceAll(PathUtils.separator, "");
     }
 
     /**
@@ -65,6 +61,17 @@ public final class PathUtils extends File {
     }
 
     /**
+     * Makes directory path if not exists.
+     *
+     * @param path Directory path.
+     * @return Boolean.
+     */
+    public static boolean makePath(String path) {
+        Objects.requireNonNull(path, "path must not be null");
+        return new PathUtils(path).isDirectory() || new PathUtils(path).mkdirs();
+    }
+
+    /**
      * Get file contents as a string using given charset.
      *
      * @param path    File path.
@@ -73,6 +80,8 @@ public final class PathUtils extends File {
      * @throws IOException Unable to read file.
      */
     public static String readFile(String path, Charset charset) throws IOException {
-        return isFile(path) ? new String(Files.readAllBytes(Paths.get(path)), charset) : "";
+        Objects.requireNonNull(path, "path must not be null");
+        Objects.requireNonNull(charset, "charset must not be null");
+        return new String(Files.readAllBytes(Paths.get(path)), charset);
     }
 }
