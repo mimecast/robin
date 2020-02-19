@@ -119,6 +119,15 @@ public class ServerConfig extends ConfigFoundation {
     }
 
     /**
+     * Gets storage directory.
+     *
+     * @return Storage directory path as string.
+     */
+    public String getStorageDir() {
+        return getStringProperty("storage", "/tmp/store");
+    }
+
+    /**
      * Gets users list.
      *
      * @return Users list.

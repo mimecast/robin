@@ -11,6 +11,8 @@
   "keystore": "/usr/local/keystore",
   "keystorepassword": "avengers",
 
+  "storage": "/usr/local/store",
+
   "users": [
     {
       "name": "vmarian@mimecast.com",
