@@ -2,17 +2,18 @@ package com.mimecast.robin.smtp.extension.server;
 
 import com.mimecast.robin.config.server.ScenarioConfig;
 import com.mimecast.robin.main.Config;
+import com.mimecast.robin.main.Factories;
 import com.mimecast.robin.smtp.connection.Connection;
 import com.mimecast.robin.smtp.verb.BdatVerb;
 import com.mimecast.robin.smtp.verb.Verb;
+import com.mimecast.robin.storage.StorageClient;
+import org.apache.commons.io.output.CountingOutputStream;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Optional;
 
 /**
  * DATA extension processor.
- * TODO Save email received to file.
  *
  * @author "Vlad Marian" <vmarian@mimecast.com>
  * @link http://mimecast.com Mimecast
@@ -28,6 +29,7 @@ public class ServerData extends ServerProcessor {
     public String getAdvert() {
         return Config.getServer().isStartTls() ? "CHUNKING" : "";
     }
+
     /**
      * DATA processor.
      *
@@ -42,9 +44,8 @@ public class ServerData extends ServerProcessor {
 
         if (verb.getKey().equals("bdat")) {
             binary();
-        }
 
-        else {
+        } else {
             ascii();
         }
 
@@ -58,10 +59,14 @@ public class ServerData extends ServerProcessor {
      */
     private void ascii() throws IOException {
         connection.write("354 Ready and willing");
+
+        StorageClient storageClient = Factories.getStorageClient(connection);
+        CountingOutputStream cos = new CountingOutputStream(storageClient.getStream());
+
         try {
             connection.setTimeout(Connection.EXTENDEDTIMEOUT);
-            String data = connection.readMultiline();
-            log.debug("Received: {} bytes", data.length());
+            connection.readMultiline(cos);
+            log.debug("Received: {} bytes", cos.getByteCount());
         } finally {
             connection.setTimeout(Connection.DEFAULTTIMEOUT);
         }
@@ -69,9 +74,8 @@ public class ServerData extends ServerProcessor {
         Optional<ScenarioConfig> opt = connection.getScenario();
         if (opt.isPresent() && opt.get().getData() != null) {
             connection.write(opt.get().getData());
-        }
-
-        else {
+        } else {
+            storageClient.save();
             connection.write("250 2.0.0 Received OK");
         }
     }
@@ -86,12 +90,12 @@ public class ServerData extends ServerProcessor {
 
         if (verb.getCount() == 1) {
             connection.write("501 5.5.4 Invalid arguments");
-        }
-
-        else {
+        } else {
             // Read bytes.
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            binaryRead(bdatVerb, out);
+            StorageClient storageClient = Factories.getStorageClient(connection);
+            CountingOutputStream cos = new CountingOutputStream(storageClient.getStream());
+            binaryRead(bdatVerb, cos);
+            log.debug("Received: {} bytes", cos.getByteCount());
 
             // Scenario response or accept.
             scenarioResponse();
@@ -106,16 +110,16 @@ public class ServerData extends ServerProcessor {
      * Binary read with extended timeout.
      *
      * @param verb Verb instance.
-     * @param out ByteArrayOutputStream instance.
+     * @param cos  CountingOutputStream instance.
      * @throws IOException Unable to communicate.
      */
-    private void binaryRead(BdatVerb verb, ByteArrayOutputStream out) throws IOException {
+    private void binaryRead(BdatVerb verb, CountingOutputStream cos) throws IOException {
         try {
             connection.setTimeout(Connection.EXTENDEDTIMEOUT);
-            connection.readBytes(verb.getSize(), out);
+            connection.readBytes(verb.getSize(), cos);
         } finally {
             connection.setTimeout(Connection.DEFAULTTIMEOUT);
-            log.info("<< BYTES {}", out.size());
+            log.info("<< BYTES {}", cos.getByteCount());
         }
     }
 

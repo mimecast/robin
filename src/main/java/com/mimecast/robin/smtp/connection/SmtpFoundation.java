@@ -9,7 +9,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.net.ssl.SSLSocket;
-import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -181,51 +180,44 @@ public abstract class SmtpFoundation {
      * Read fixed number of bytes from socket.
      *
      * @param bytesToRead  Number of bytes to read.
-     * @param outputStream Output stream.
+     * @param outputStream OutputStream instance.
      * @throws IOException Unable to communicate.
      */
-    public void readBytes(int bytesToRead, ByteArrayOutputStream outputStream) throws IOException {
+    public void readBytes(int bytesToRead, OutputStream outputStream) throws IOException {
         for (int i = 0; i < bytesToRead; i++) {
             outputStream.write((byte) inc.read());
         }
     }
 
     /**
-     * Read multiline data from socket.
+     * Read multiline data from socket to given output stream.
      *
-     * @return String read from buffer.
+     * @param out OutputStream instance.
      * @throws IOException Unable to communicate.
      */
-    public String readMultiline() throws IOException {
-        StringBuilder received = new StringBuilder();
-
+    public void readMultiline(OutputStream out) throws IOException {
         try {
             byte[] read;
             while ((read = inc.readLine()) != null) {
-
-                String str = new String(read);
-                received.append(str);
-
-                if (isFullStop(str)) {
+                if (isFullStop(read)) {
                     break;
                 }
+                out.write(read);
             }
         } catch (IOException e) {
             log.info("Error reading: {}", e.getMessage());
             throw e;
         }
-
-        return received.toString();
     }
 
     /**
      * Check for fullstop.
      *
-     * @param string String.
+     * @param bytes Byte array.
      * @return True if found.
      */
-    private boolean isFullStop(String string) {
-        byte[] check = string.trim().getBytes();
+    private boolean isFullStop(byte[] bytes) {
+        byte[] check = new String(bytes).trim().getBytes();
         return check.length == 1 && check[0] == FULLSTOP;
     }
 

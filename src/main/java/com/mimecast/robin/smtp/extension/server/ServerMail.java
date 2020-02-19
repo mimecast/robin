@@ -24,7 +24,7 @@ public class ServerMail extends ServerProcessor {
     /**
      * MAIL FROM address.
      */
-    InternetAddress address;
+    protected InternetAddress address;
 
     /**
      * MAIL FROM SIZE param (if any).
