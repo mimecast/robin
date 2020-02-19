@@ -35,7 +35,7 @@ class SampleCase {
      * @throws IOException     Communication issues.
      */
     @Test
-    void smtpUtf8() throws AssertException, IOException, ConfigurationException {
+    void pangrams() throws AssertException, IOException, ConfigurationException {
         new Client("src/main/resources/")
                 .send("src/test/resources/cases/config/pangrams.json");
     }
