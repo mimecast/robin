@@ -4,12 +4,16 @@ import com.mimecast.robin.annotation.Plugin;
 import com.mimecast.robin.assertion.mta.client.LogsClient;
 import com.mimecast.robin.smtp.auth.DigestCache;
 import com.mimecast.robin.smtp.auth.StaticDigestCache;
+import com.mimecast.robin.smtp.connection.Connection;
 import com.mimecast.robin.smtp.extension.client.Behaviour;
 import com.mimecast.robin.smtp.extension.client.DefaultBehaviour;
 import com.mimecast.robin.smtp.security.DefaultTLSSocket;
 import com.mimecast.robin.smtp.security.PermissiveTrustManager;
 import com.mimecast.robin.smtp.security.TLSSocket;
 import com.mimecast.robin.smtp.session.Session;
+import com.mimecast.robin.storage.LocalStorageClient;
+import com.mimecast.robin.storage.StorageClient;
+import com.mimecast.robin.util.PathUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -57,6 +61,12 @@ public class Factories {
      * <p>Only used for subsequent authentication.
      */
     private static Callable<DigestCache> database;
+
+    /**
+     * MTA storage client.
+     * <p>Used to store MTA emails received.
+     */
+    private static Callable<StorageClient> storageClient;
 
     /**
      * MTA logs client.
@@ -199,6 +209,33 @@ public class Factories {
         }
 
         return new StaticDigestCache();
+    }
+
+    /**
+     * Sets StorageClient.
+     *
+     * @param callable StorageClient callable.
+     */
+    public static void setStorageClient(Callable<StorageClient> callable) {
+        storageClient = callable;
+    }
+
+    /**
+     * Gets StorageClient.
+     *
+     * @param connection Connection instance.
+     * @return StorageClient instance.
+     */
+    public static StorageClient getStorageClient(Connection connection) {
+        if (storageClient != null) {
+            try {
+                return storageClient.call().setConnection(connection);
+            } catch (Exception e) {
+                log.error("Error calling storage client: {}", e.getMessage());
+            }
+        }
+
+        return new LocalStorageClient().setConnection(connection);
     }
 
     /**
