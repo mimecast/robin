@@ -2,6 +2,12 @@
   "route": "net",
   "timeout": 30,
 
+  "xclient": {
+    "name": "example.com",
+    "helo": "example.net",
+    "addr": "127.0.0.10"
+  },
+
   "auth": true,
   "authBeforeTls": true,
   "user": "tony@example.com",
