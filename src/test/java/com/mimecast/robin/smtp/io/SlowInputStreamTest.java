@@ -8,6 +8,7 @@ import java.io.InputStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@SuppressWarnings("StatementWithEmptyBody")
 class SlowInputStreamTest {
 
     @Test

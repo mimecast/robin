@@ -3,7 +3,6 @@ package com.mimecast.robin.storage;
 import com.mimecast.robin.smtp.connection.Connection;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.OutputStream;
 
 /**
@@ -41,5 +40,5 @@ public interface StorageClient {
     /**
      * Saves file.
      */
-    void save() throws IOException;
+    void save();
 }

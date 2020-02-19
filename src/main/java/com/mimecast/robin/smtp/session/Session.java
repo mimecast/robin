@@ -172,7 +172,7 @@ public class Session {
     /**
      * RCPT TO envelope addresses.
      */
-    private List<InternetAddress> rcpts = new ArrayList<>();
+    private final List<InternetAddress> rcpts = new ArrayList<>();
 
     /**
      * List of envelopes.

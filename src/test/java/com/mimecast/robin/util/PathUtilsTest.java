@@ -11,7 +11,6 @@ import java.nio.charset.Charset;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SuppressWarnings("ResultOfMethodCallIgnored")
 class PathUtilsTest {
 
     @BeforeAll

@@ -32,7 +32,7 @@ public class LocalStorageClient implements StorageClient {
     /**
      * Save file name.
      */
-    protected String fileName;
+    protected final String fileName;
 
     /**
      * Save file path.

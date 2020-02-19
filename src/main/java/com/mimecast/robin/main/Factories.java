@@ -13,7 +13,6 @@ import com.mimecast.robin.smtp.security.TLSSocket;
 import com.mimecast.robin.smtp.session.Session;
 import com.mimecast.robin.storage.LocalStorageClient;
 import com.mimecast.robin.storage.StorageClient;
-import com.mimecast.robin.util.PathUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
