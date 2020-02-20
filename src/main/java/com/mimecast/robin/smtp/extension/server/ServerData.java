@@ -21,6 +21,11 @@ import java.util.Optional;
 public class ServerData extends ServerProcessor {
 
     /**
+     * Number of MIME bytes received.
+     */
+    private long bytesReceived = 0L;
+
+    /**
      * CHUNKING advert.
      *
      * @return Advert string.
@@ -48,6 +53,7 @@ public class ServerData extends ServerProcessor {
         } else {
             ascii();
         }
+        log.debug("Received: {} bytes", bytesReceived);
 
         return true;
     }
@@ -66,7 +72,7 @@ public class ServerData extends ServerProcessor {
         try {
             connection.setTimeout(Connection.EXTENDEDTIMEOUT);
             connection.readMultiline(cos);
-            log.debug("Received: {} bytes", cos.getByteCount());
+            bytesReceived = cos.getByteCount();
         } finally {
             connection.setTimeout(Connection.DEFAULTTIMEOUT);
         }
@@ -95,7 +101,7 @@ public class ServerData extends ServerProcessor {
             StorageClient storageClient = Factories.getStorageClient(connection);
             CountingOutputStream cos = new CountingOutputStream(storageClient.getStream());
             binaryRead(bdatVerb, cos);
-            log.debug("Received: {} bytes", cos.getByteCount());
+            bytesReceived = cos.getByteCount();
 
             // Scenario response or accept.
             scenarioResponse();
@@ -138,5 +144,14 @@ public class ServerData extends ServerProcessor {
         else {
             connection.write("250 2.0.0 Chunk OK");
         }
+    }
+
+    /**
+     * Gets bytes received.
+     *
+     * @return Integer.
+     */
+    public long getBytesReceived() {
+        return bytesReceived;
     }
 }

@@ -78,7 +78,6 @@ public abstract class SmtpFoundation {
      */
     private static final Charset UTF_8 = StandardCharsets.UTF_8;
     private static final int DASH = 45;
-    private static final int FULLSTOP = 46;
     private static final String LOG_WRITE = ">> {}";
 
     /**
@@ -177,6 +176,16 @@ public abstract class SmtpFoundation {
     }
 
     /**
+     * Check for SMTP multiline last line.
+     *
+     * @param bytes Byte array.
+     * @return True if last line.
+     */
+    private boolean isSmtpStop(byte[] bytes) {
+        return bytes.length < 4 || bytes[3] != DASH;
+    }
+
+    /**
      * Read fixed number of bytes from socket.
      *
      * @param bytesToRead  Number of bytes to read.
@@ -191,6 +200,8 @@ public abstract class SmtpFoundation {
 
     /**
      * Read multiline data from socket to given output stream.
+     * <p>To remove the &lt;CRLF&gt;.&lt;CRLF&gt; terminator we need to keep EOL's.
+     * <p>This lets us check previous line endings + current line for the terminator as per RFC 5321.
      *
      * @param out OutputStream instance.
      * @throws IOException Unable to communicate.
@@ -198,11 +209,21 @@ public abstract class SmtpFoundation {
     public void readMultiline(OutputStream out) throws IOException {
         try {
             byte[] read;
+            byte[] eol = new byte[0];
             while ((read = inc.readLine()) != null) {
-                if (isFullStop(read)) {
+                // Stop if terminator found
+                int length = eol.length + read.length;
+                if ((length == 5 || length == 3) && isTerminator(eol, read)) {
                     break;
                 }
-                out.write(read);
+
+                // Write previous EOL if any
+                out.write(eol);
+                // Get current EOL and store
+                eol = getEol(read);
+
+                // Write line without EOL
+                out.write(trimBytes(read, eol.length));
             }
         } catch (IOException e) {
             log.info("Error reading: {}", e.getMessage());
@@ -211,24 +232,75 @@ public abstract class SmtpFoundation {
     }
 
     /**
-     * Check for fullstop.
+     * Is fullstop.
+     * <p>Check given byte arrays form &lt;CRLF&gt;.&lt;CRLF&gt; terminator sequence.
      *
-     * @param bytes Byte array.
-     * @return True if found.
+     * @param arrays Byte arrays.
+     * @return Boolean.
      */
-    private boolean isFullStop(byte[] bytes) {
-        byte[] check = new String(bytes).trim().getBytes();
-        return check.length == 1 && check[0] == FULLSTOP;
+    private boolean isTerminator(byte[]... arrays) {
+        int length = 0;
+        for (int i = 0; i < arrays.length; i++) {
+            length += arrays[i].length;
+        }
+
+        byte[] total = new byte[length];
+        int pos = 0;
+        for (int i = 0; i < arrays.length; i++) {
+            System.arraycopy(arrays[i], 0, total, pos, arrays[i].length);
+            pos += arrays[i].length;
+        }
+
+        return  (total.length == 5 && total[0] == 13 && total[1] == 10 && total[2] == 46 && total[3] == 13 && total[4] == 10) ||
+                // For non compliant cases
+                (total.length == 3 && total[0] == 10 && total[1] == 46 && total[2] == 10) ||
+                (total.length == 3 && total[0] == 13 && total[1] == 46 && total[2] == 13);
     }
 
     /**
-     * Check for SMTP multiline last line.
+     * Gets EOL.
+     * <p>Gets EOL bytes from given byte array.
      *
      * @param bytes Byte array.
-     * @return True if last line.
+     * @return Byte array.
      */
-    private boolean isSmtpStop(byte[] bytes) {
-        return bytes.length < 4 || bytes[3] != DASH;
+    public byte[] getEol(byte[] bytes) {
+        byte[] eol = new byte[0];
+
+        if (bytes.length != 0) {
+            byte two = 0;
+            byte one = bytes[bytes.length - 1];
+
+            if (bytes.length > 1) {
+                two = bytes[bytes.length - 2];
+            }
+
+            if (two == 13 && one == 10) {
+                eol = new byte[2];
+                eol[0] = two;
+                eol[1] = one;
+            }
+            else if (one == 13 || one == 10) {
+                eol = new byte[1];
+                eol[0] = one;
+            }
+        }
+
+        return eol;
+    }
+
+    /**
+     * Trim bytes.
+     * <p>Trim given number of bytes from given byte array.
+     *
+     * @param bytes Byte array.
+     * @param count Integer.
+     * @return Byte array.
+     */
+    public byte[] trimBytes(byte[] bytes, int count) {
+        byte[] rest = new byte[bytes.length - count];
+        System.arraycopy(bytes, 0, rest, 0, bytes.length - count);
+        return rest;
     }
 
     /**
