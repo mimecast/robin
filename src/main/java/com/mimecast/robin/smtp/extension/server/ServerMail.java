@@ -11,10 +11,10 @@ import java.util.Optional;
 
 /**
  * MAIL extension processor.
- * @link https://tools.ietf.org/html/rfc1870 RFC1870
- * @link https://tools.ietf.org/html/rfc3030 RFC3030
- * @link https://tools.ietf.org/html/rfc3461 RFC3461
- * @link https://tools.ietf.org/html/rfc6152 RFC6152
+ * @link https://tools.ietf.org/html/rfc1870 RFC 1870
+ * @link https://tools.ietf.org/html/rfc3030 RFC 3030
+ * @link https://tools.ietf.org/html/rfc3461 RFC 3461
+ * @link https://tools.ietf.org/html/rfc6152 RFC 6152
  *
  * @author "Vlad Marian" <vmarian@mimecast.com>
  * @link http://mimecast.com Mimecast
@@ -108,7 +108,7 @@ public class ServerMail extends ServerProcessor {
     /**
      * Gets MAIL FROM SIZE param.
      *
-     * @link https://tools.ietf.org/html/rfc1870 RFC1870
+     * @link https://tools.ietf.org/html/rfc1870 RFC 1870
      * @return Size in bytes.
      */
     public int getSize() {
@@ -122,8 +122,8 @@ public class ServerMail extends ServerProcessor {
     /**
      * Gets MAIL FROM BODY param.
      *
-     * @link https://tools.ietf.org/html/rfc3030 RFC3030
-     * @link https://tools.ietf.org/html/rfc6152 RFC6152
+     * @link https://tools.ietf.org/html/rfc3030 RFC 3030
+     * @link https://tools.ietf.org/html/rfc6152 RFC 6152
      * @return BODY string.
      */
     public String getBody() {
@@ -137,7 +137,7 @@ public class ServerMail extends ServerProcessor {
     /**
      * Gets MAIL FROM NOTIFY list param.
      *
-     * @link https://tools.ietf.org/html/rfc3461#section-4.1 RFC3461#section-4.1
+     * @link https://tools.ietf.org/html/rfc3461#section-4.1 RFC 3461#section-4.1
      * @return NOTIFY addresses as array list.
      */
     public String[] getNotify() {
@@ -177,7 +177,7 @@ public class ServerMail extends ServerProcessor {
     /**
      * Gets MAIL FROM RET param.
      *
-     * @link https://tools.ietf.org/html/rfc3461#section-4.3 RFC3461#section-4.3
+     * @link https://tools.ietf.org/html/rfc3461#section-4.3 RFC 3461#section-4.3
      * @return RET string.
      */
     public String getRet() {

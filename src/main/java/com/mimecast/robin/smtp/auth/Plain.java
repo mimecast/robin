@@ -7,7 +7,7 @@ import java.io.ByteArrayOutputStream;
 
 /**
  * Plain authentication mechanism.
- * @link https://tools.ietf.org/html/rfc4616 RFC4616
+ * @link https://tools.ietf.org/html/rfc4616 RFC 4616
  *
  * @author "Vlad Marian" <vmarian@mimecast.com>
  * @link http://mimecast.com Mimecast

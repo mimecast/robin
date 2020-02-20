@@ -13,7 +13,7 @@ import java.security.NoSuchAlgorithmException;
  * <p>This provides common functionalities for both client and server implementations.
  * <p>It automatically constructs an instance of SecureRandom.
  * <p>This can be overridden from an extension by providing a Random instance.
- * @link https://tools.ietf.org/html/rfc2831 RFC2831
+ * @link https://tools.ietf.org/html/rfc2831 RFC 2831
  *
  * @see Random
  * @see SecureRandom

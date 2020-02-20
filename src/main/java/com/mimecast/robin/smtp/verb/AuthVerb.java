@@ -5,9 +5,9 @@ import org.apache.commons.codec.binary.Base64;
 /**
  * AUTH verb.
  * <p>This is used for parsing AUTH PLAIN and AUTH LOGIN commands.
- * @link https://tools.ietf.org/html/rfc4954 RFC4954
+ * @link https://tools.ietf.org/html/rfc4954 RFC 4954
  * @link https://tools.ietf.org/html/draft-murchison-sasl-login-00 SASL LOGIN
- * @link https://tools.ietf.org/html/rfc2831 RFC2831
+ * @link https://tools.ietf.org/html/rfc2831 RFC 2831
  *
  * @author "Vlad Marian" <vmarian@mimecast.com>
  * @link http://mimecast.com Mimecast

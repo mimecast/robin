@@ -7,10 +7,10 @@ import java.io.IOException;
 /**
  * MAIL verb.
  * <p>This is used for parsing MAIL and RCPT commands.
- * @link https://tools.ietf.org/html/rfc1870 RFC1870
- * @link https://tools.ietf.org/html/rfc3030 RFC3030
- * @link https://tools.ietf.org/html/rfc3461 RFC3461
- * @link https://tools.ietf.org/html/rfc6152 RFC6152
+ * @link https://tools.ietf.org/html/rfc1870 RFC 1870
+ * @link https://tools.ietf.org/html/rfc3030 RFC 3030
+ * @link https://tools.ietf.org/html/rfc3461 RFC 3461
+ * @link https://tools.ietf.org/html/rfc6152 RFC 6152
  *
  * @author "Vlad Marian" <vmarian@mimecast.com>
  * @link http://mimecast.com Mimecast

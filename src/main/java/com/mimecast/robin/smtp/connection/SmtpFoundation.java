@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * SMTP foundation for socket reads and writes.
  * <p>Provides basic socket functionalities for building SMTP servers and clients.
- * @link https://tools.ietf.org/html/rfc5321 RFC5321
+ * @link https://tools.ietf.org/html/rfc5321 RFC 5321
  *
  * @see Connection
  * @author "Vlad Marian" <vmarian@mimecast.com>
@@ -313,7 +313,7 @@ public abstract class SmtpFoundation {
      * Write from given InputStream.
      * <p>Used for DATA deliveries.
      * <p>Implements dot stuffing.
-     * <p>See RFC5321 Section 4.5.2.
+     * @link https ://tools.ietf.org/html/rfc5321#section-4.5.2 RFC 5321 4.5.2
      *
      * @param inputStream Input stream.
      * @throws IOException Unable to communicate.

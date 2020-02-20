@@ -20,7 +20,7 @@ import java.util.*;
 public class Session {
 
     /**
-     * Current RFC2822 compliant date.
+     * Current RFC 2822 compliant date.
      */
     private String date;
 

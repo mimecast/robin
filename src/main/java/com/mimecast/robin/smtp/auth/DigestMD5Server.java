@@ -4,7 +4,7 @@ import java.util.Optional;
 
 /**
  * Digest-MD5 authentication server implementation.
- * @link https://tools.ietf.org/html/rfc2831 RFC2831
+ * @link https://tools.ietf.org/html/rfc2831 RFC 2831
  *
  * @see DigestMD5
  * @see Random

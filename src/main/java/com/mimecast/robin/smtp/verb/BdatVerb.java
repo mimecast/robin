@@ -3,7 +3,7 @@ package com.mimecast.robin.smtp.verb;
 /**
  * BDAT verb.
  * <p>This is used for parsing BDAT commands for CHUNKING implementation.
- * @link https://tools.ietf.org/html/rfc3030 RFC3030
+ * @link https://tools.ietf.org/html/rfc3030 RFC 3030
  *
  * @author "Vlad Marian" <vmarian@mimecast.com>
  * @link http://mimecast.com Mimecast

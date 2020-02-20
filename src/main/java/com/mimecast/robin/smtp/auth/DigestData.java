@@ -9,8 +9,8 @@ import java.util.Map;
  * Digest data.
  * <p>This is a container for challenges and responses.
  *
- * @link https ://tools.ietf.org/html/rfc2831#section-2.1.1 RFC2831 2.1.1
- * @link https ://tools.ietf.org/html/rfc2831#section-2.1.2 RFC2831 2.1.2
+ * @link https ://tools.ietf.org/html/rfc2831#section-2.1.1 RFC 2831 2.1.1
+ * @link https ://tools.ietf.org/html/rfc2831#section-2.1.2 RFC 2831 2.1.2
  */
 @SuppressWarnings("UnusedReturnValue")
 public class DigestData {
