@@ -11,7 +11,7 @@
  * <p>This project can be compiled into a runnable JAR.
  * <br>A CLI interface is implemented with support for both client and server execution.
  *
- * <p>CLI usage:
+ * <h2>CLI usage:</h2>
  * <pre>
  *      $ java -jar robin.jar
  *      MTA development, debug and testing tool
@@ -20,6 +20,8 @@
  *      --client   Run as client
  *      --server   Run as server
  * </pre>
+ *
+ * <h2>CLI usage client:</h2>
  * <pre>
  *      $ java -jar robin.jar --client
  *      Email delivery client
@@ -34,6 +36,8 @@
  *      -r,--rcpt &lt;arg&gt;    RCPT TO address
  *      -x,--mx &lt;arg&gt;      Server to connect to
  * </pre>
+ *
+ * <h2>CLI usage server:</h2>
  * <pre>
  *      $ java -jar robin.jar --server
  *      Debug MTA server

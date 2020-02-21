@@ -1,7 +1,5 @@
 package com.mimecast.robin.smtp;
 
-import com.mimecast.robin.assertion.Assert;
-import com.mimecast.robin.assertion.AssertException;
 import com.mimecast.robin.main.Factories;
 import com.mimecast.robin.smtp.connection.Connection;
 import com.mimecast.robin.smtp.connection.SmtpException;
@@ -50,9 +48,9 @@ public class EmailDelivery {
      * Send.
      * <p>Main executable.
      *
-     * @throws AssertException the assert exception
+     * @return Self.
      */
-    public void send() throws AssertException {
+    public EmailDelivery send() {
         try {
             connection.connect();
             log.debug("Remote ready and willing.");
@@ -75,8 +73,9 @@ public class EmailDelivery {
 
         } finally {
             connection.close();
-            new Assert(connection).run();
         }
+
+        return this;
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.mimecast.robin.main;
 
+import com.mimecast.robin.assertion.Assert;
 import com.mimecast.robin.assertion.AssertException;
 import com.mimecast.robin.config.client.CaseConfig;
 import com.mimecast.robin.smtp.EmailDelivery;
@@ -56,6 +57,9 @@ public class Client extends Foundation {
         session.map(caseConfig);
 
         // Send.
-        new EmailDelivery(session).send();
+        EmailDelivery emailDelivery = new EmailDelivery(session).send();
+
+        // Assert.
+        new Assert(emailDelivery.getConnection()).run();
     }
 }

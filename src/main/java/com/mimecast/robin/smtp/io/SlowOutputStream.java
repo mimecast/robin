@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * Slow output stream.
+ * Output stream with slow data writing capability.
  *
  * <p>Slows down the writing for given miliseconds every given bytes.
  */

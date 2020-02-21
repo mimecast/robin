@@ -10,7 +10,7 @@
  *     mvn clean -D test="cases.*Case" test
  * </pre>
  *
- * <p><b>Example configuration:</b>
+ * <h2>Example configuration:</h2>
  * <pre>
  *     "assertions": {
  * </pre>
@@ -62,9 +62,7 @@
  *           ]
  *         }
  * </pre>
- * <pre>
- *     }
- * </pre>
+ *
  * <ul>
  *     <li><b>wait</b> - <i>(Integer, Seconds)</i> [default: 2, min: 2] Initial wait before calling the logs client.
  *     <li><b>delay</b> - <i>(Integer, Attempts)</i> [default: 2, min: 2] Delay between attempts.
@@ -73,5 +71,9 @@
  *     <li><b>match</b>  - <i>(List of List, String, Regex)</i> Regex assertions to run against log lines. Multiple expressions can run on the same line. All must match.
  *     <li><b>refuse</b> - <i>(List of List, String, Regex)</i> The opposite of match. Will stop and error on first match.
  * </ul>
+ *
+ * <pre>
+ *     }
+ * </pre>
  */
 package com.mimecast.robin.assertion;

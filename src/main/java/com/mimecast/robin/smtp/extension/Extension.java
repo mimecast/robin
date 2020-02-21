@@ -8,7 +8,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.concurrent.Callable;
 
 /**
- * Extension.
+ * Extension container.
  *
  * <p>This holds pairs of client and server callable for the extension implementations.
  */

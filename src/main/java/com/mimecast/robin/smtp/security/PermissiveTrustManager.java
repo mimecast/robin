@@ -6,6 +6,8 @@ import java.security.cert.X509Certificate;
 
 /**
  * All trusting manager.
+ *
+ * <p>Don't use in any production environments.
  */
 @SuppressWarnings("all")
 public class PermissiveTrustManager implements X509TrustManager {

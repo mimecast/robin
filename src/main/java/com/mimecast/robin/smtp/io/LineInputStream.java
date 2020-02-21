@@ -9,7 +9,7 @@ import java.io.InputStream;
 import java.io.PushbackInputStream;
 
 /**
- * Line input stream.
+ * Input stream with binary line reading capability.
  *
  * <p>InputStream implementation returns lines with EOL as byte array and counts lines.
  */

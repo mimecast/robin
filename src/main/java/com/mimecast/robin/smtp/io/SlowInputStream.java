@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Slow input stream.
+ * Input stream with slow data reading capability.
  *
  * <p>Slows down the reading for given miliseconds every given bytes.
  */

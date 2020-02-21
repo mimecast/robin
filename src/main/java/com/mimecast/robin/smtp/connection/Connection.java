@@ -23,8 +23,8 @@ import java.net.Socket;
 import java.util.Optional;
 
 /**
- * Connection container.
- * <p>This is the object that passes through all the implementations of the extensions used in a receipt or delivery.
+ * Connection controller.
+ * <p>This is the single object that passes through all the implementations of the extensions used in a receipt or delivery.
  *
  * @see EmailDelivery
  * @see EmailReceipt

@@ -20,7 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * TLS socket.
+ * Standard TLS handshake negociation implementation.
  */
 public class DefaultTLSSocket implements TLSSocket {
     private static final Logger log = LogManager.getLogger(DefaultTLSSocket.class);

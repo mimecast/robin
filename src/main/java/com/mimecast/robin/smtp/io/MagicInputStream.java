@@ -12,11 +12,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Magic input stream.
+ * Input stream with magic variable replacement capability.
  *
  * <p>This implements line reading InputStream.
  * <p>It finds and replaces magic tags in lines read given MessageEnvelope provided.
  * <p>It uses LineInputStream to do the actual line reading.
+ *
+ * <p><b>Will break binary integrity on replaced lines, to be used in string lines only.</b>
  *
  * @see LineInputStream
  */

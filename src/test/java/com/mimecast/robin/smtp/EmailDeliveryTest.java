@@ -1,6 +1,5 @@
 package com.mimecast.robin.smtp;
 
-import com.mimecast.robin.assertion.AssertException;
 import com.mimecast.robin.main.Foundation;
 import com.mimecast.robin.smtp.connection.ConnectionMock;
 import org.apache.commons.lang3.StringUtils;
@@ -37,7 +36,7 @@ class EmailDeliveryTest {
     }
 
     @Test
-    void processAscii() throws AssertException, IOException {
+    void processAscii() throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("220 example.com ESMTP\r\n");
         stringBuilder.append("250-smtp.example.com at your service, [127.0.0.1]\r\n" +
@@ -82,7 +81,7 @@ class EmailDeliveryTest {
     }
 
     @Test
-    void processAsciiWithErrors() throws AssertException, IOException {
+    void processAsciiWithErrors() throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("220 example.com ESMTP\r\n");
         stringBuilder.append("500 5.3.3 Unrecognized command\r\n");
@@ -102,7 +101,7 @@ class EmailDeliveryTest {
     }
 
     @Test
-    void processAsciiWithEnvelopeErrors() throws AssertException, IOException {
+    void processAsciiWithEnvelopeErrors() throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("220 example.com ESMTP\r\n");
         stringBuilder.append("250-smtp.example.com at your service, [127.0.0.1]\r\n" +
@@ -135,7 +134,7 @@ class EmailDeliveryTest {
     }
 
     @Test
-    void processBinary() throws AssertException, IOException {
+    void processBinary() throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("220 example.com ESMTP\r\n");
         stringBuilder.append("250-smtp.example.com at your service, [127.0.0.1]\r\n" +
@@ -183,7 +182,7 @@ class EmailDeliveryTest {
     }
 
     @Test
-    void processBinaryLong() throws AssertException, IOException {
+    void processBinaryLong() throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("220 example.com ESMTP\r\n");
         stringBuilder.append("250-smtp.example.com at your service, [127.0.0.1]\r\n" +

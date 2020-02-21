@@ -9,7 +9,7 @@ import java.io.InputStream;
 import java.util.Arrays;
 
 /**
- * Chunked input stream.
+ * Input stream with data chunking capabilities for SMTP CHUNKING extension.
  *
  * <p>This wraps an input stream and provides chunked writes.
  * <p>By extending MagicInputStream it also provides magic variable replacement.
