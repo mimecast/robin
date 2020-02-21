@@ -10,7 +10,8 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * SMTP server and client supported verbs.
+ * Server and client SMTP extensions container.
+ *
  * <p>Every SMTP verb is implemented by an extension.
  * <p>Each extension has a server and a client implementation.
  * <p>The server will select the appropriate extension to the SMTP verb it receives.
@@ -20,8 +21,6 @@ import java.util.Optional;
  * @see ClientProcessor
  * @see ServerProcessor
  * @see Behaviour
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  */
 public class Extensions {
 
@@ -33,7 +32,7 @@ public class Extensions {
     /*
       Default extensions.
      */
-     static {
+    static {
         map.put("helo", new Extension(ServerEhlo::new, ClientEhlo::new));
         map.put("ehlo", new Extension(ServerEhlo::new, ClientEhlo::new));
 

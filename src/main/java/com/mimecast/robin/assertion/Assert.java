@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 
 /**
  * Assertion engine.
+ *
  * <p>Called at the end of a client delivery.
  * <p>It will read the assertions from the configuration and try to assert them against SMTP transactions and external logs.
  * <p>External logs are only assertable given a client that can provide the logs.
@@ -62,7 +63,8 @@ public class Assert {
             for (List<String> assertion : list) {
                 if (assertion.size() == 2) {
                     List<Transaction> transactions = transactionList.getTransactions(assertion.get(0));
-                    if (transactions.isEmpty()) throw new AssertException("Assert unable to find transaction for [" + assertion.get(0) + "]");
+                    if (transactions.isEmpty())
+                        throw new AssertException("Assert unable to find transaction for [" + assertion.get(0) + "]");
                     assertTransactions(transactions, assertion.get(1));
                 }
             }
@@ -111,16 +113,27 @@ public class Assert {
                     }
 
                     // External.
-                    if (!Factories.getExternalKeys().isEmpty()) {
-                        for (String key : Factories.getExternalKeys()) {
-                            ExternalClient client = Factories.getExternalClient(key, connection, i);
-                            if (client != null) {
-                                new AssertExternal(client, envelope.getAssertions().getExternal(key));
-                            } else {
-                                throw new AssertException("Assert external client not instanciated");
-                            }
-                        }
-                    }
+                    assertExternal(envelope, i);
+                }
+            }
+        }
+    }
+
+    /**
+     * Assert external logs if any.
+     *
+     * @param envelope MessageEnvelope instance.
+     * @param transactionId Transaction ID.
+     * @throws AssertException Assertion exception.
+     */
+    private void assertExternal(MessageEnvelope envelope, int transactionId) throws AssertException {
+        if (!Factories.getExternalKeys().isEmpty()) {
+            for (String key : Factories.getExternalKeys()) {
+                ExternalClient client = Factories.getExternalClient(key, connection, transactionId);
+                if (client != null) {
+                    new AssertExternal(client, envelope.getAssertions().getExternal(key));
+                } else {
+                    throw new AssertException("Assert external client not instanciated");
                 }
             }
         }

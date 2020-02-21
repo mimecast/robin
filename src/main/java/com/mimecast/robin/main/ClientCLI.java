@@ -16,11 +16,9 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * CLI controller for email delivery client.
+ * Implementation of client CLI.
  *
  * @see Client
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  */
 public class ClientCLI {
 
@@ -68,14 +66,17 @@ public class ClientCLI {
 
     /**
      * Instantiate client and send.
+     *
+     * @param cmd CommandLine instance.
+     * @throws AssertException Assertion exception.
+     * @throws ConfigurationException Unable to read/parse config file.
      */
     private void send(CommandLine cmd) throws AssertException, ConfigurationException {
         try {
             if (StringUtils.isNotBlank(cmd.getOptionValue("json"))) {
                 new Client(cmd.getOptionValue("conf"))
                         .send(cmd.getOptionValue("json"));
-            }
-            else if (StringUtils.isNotBlank(cmd.getOptionValue("file"))) {
+            } else if (StringUtils.isNotBlank(cmd.getOptionValue("file"))) {
                 Client client = new Client(cmd.getOptionValue("conf"));
 
                 CaseConfig caseConfig = new CaseConfig();
@@ -97,15 +98,17 @@ public class ClientCLI {
     /**
      * CLI getOptions.
      * <i>Listing order will be alphabetical</i>.
+     *
+     * @return Options instance.
      */
     private Options options() {
         Options options = new Options();
-        options.addOption("c", "conf", true,  "Path to configuration dir (Default: cfg/)");
-        options.addOption("x", "mx",   true,  "Server to connect to");
-        options.addOption("p", "port", true,  "Port to connect to");
-        options.addOption("j", "json", true,  "Path to case file JSON");
-        options.addOption("m", "mail", true,  "MAIL FROM address");
-        options.addOption("f", "file", true,  "EML file to send");
+        options.addOption("c", "conf", true, "Path to configuration dir (Default: cfg/)");
+        options.addOption("x", "mx", true, "Server to connect to");
+        options.addOption("p", "port", true, "Port to connect to");
+        options.addOption("j", "json", true, "Path to case file JSON");
+        options.addOption("m", "mail", true, "MAIL FROM address");
+        options.addOption("f", "file", true, "EML file to send");
         options.addOption("h", "help", false, "Show usage help");
 
         // Optional with unlimited values.
@@ -130,7 +133,7 @@ public class ClientCLI {
         String json = cmd.getOptionValue("json");
         String conf = cmd.getOptionValue("conf");
 
-        if (StringUtils.isBlank(json) && StringUtils.isBlank(file) ) {
+        if (StringUtils.isBlank(json) && StringUtils.isBlank(file)) {
             main.log("Config error: A file or a JSON are required");
             return false;
         }

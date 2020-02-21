@@ -1,7 +1,9 @@
 package com.mimecast.robin.smtp.extension.client;
 
 import com.mimecast.robin.main.Factories;
-import com.mimecast.robin.smtp.auth.*;
+import com.mimecast.robin.smtp.auth.DigestMD5Client;
+import com.mimecast.robin.smtp.auth.Login;
+import com.mimecast.robin.smtp.auth.Plain;
 import com.mimecast.robin.smtp.connection.Connection;
 import org.apache.commons.lang3.StringUtils;
 
@@ -9,9 +11,6 @@ import java.io.IOException;
 
 /**
  * AUTH extension processor.
- *
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  */
 public class ClientAuth extends ClientProcessor {
 
@@ -19,8 +18,8 @@ public class ClientAuth extends ClientProcessor {
      * AUTH mechanisms.
      */
     private static final String AUTH_DIGEST = "AUTH DIGEST-MD5";
-    private static final String AUTH_PLAIN  = "AUTH PLAIN";
-    private static final String AUTH_LOGIN  = "AUTH LOGIN";
+    private static final String AUTH_PLAIN = "AUTH PLAIN";
+    private static final String AUTH_LOGIN = "AUTH LOGIN";
 
     /**
      * AUTH LOGIN configuration.
@@ -46,13 +45,9 @@ public class ClientAuth extends ClientProcessor {
         // Select mechanism.
         if (connection.getSession().getEhloAuth().contains("digest-md5")) {
             return authDigestMD5();
-        }
-
-        else if (connection.getSession().getEhloAuth().contains("login")) {
+        } else if (connection.getSession().getEhloAuth().contains("login")) {
             return authLogin();
-        }
-
-        else if (connection.getSession().getEhloAuth().contains("plain")) {
+        } else if (connection.getSession().getEhloAuth().contains("plain")) {
             return authPlain();
         }
 

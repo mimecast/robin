@@ -1,12 +1,14 @@
 package com.mimecast.robin.main;
 
+import com.mimecast.robin.config.Properties;
 import com.mimecast.robin.config.client.ClientConfig;
 import com.mimecast.robin.config.server.ServerConfig;
 
 import java.io.IOException;
 
 /**
- * Accessor for global configuration instances.
+ * Master configuration initializer and container.
+ *
  * <p>Properties is designed to provide a generic container for extendability.
  * <p>This can also be used to access syetm properties.
  * <p>It will favor system properties over properties file values.
@@ -17,8 +19,6 @@ import java.io.IOException;
  * @see Properties
  * @see ServerConfig
  * @see ClientConfig
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  */
 public class Config {
 

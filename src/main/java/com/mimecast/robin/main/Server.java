@@ -9,14 +9,13 @@ import java.nio.file.Paths;
 
 /**
  * Socket listener.
+ *
  * <p>This is the means by which the server is started.
  * <p>It's initilized with a configuration dir path.
  * <p>The configuration path is used to load the global configuration files.
  * <p>Loads both client and server configuration files.
  *
  * @see SmtpListener
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  */
 class Server extends Foundation {
 
@@ -29,6 +28,7 @@ class Server extends Foundation {
      * Runner.
      *
      * @param path Directory path.
+     * @throws ConfigurationException Unable to read/parse config file.
      */
     public static void run(String path) throws ConfigurationException {
         init(path); // Initialize foundation.

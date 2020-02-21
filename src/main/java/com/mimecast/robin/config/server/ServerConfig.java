@@ -7,13 +7,12 @@ import java.util.*;
 
 /**
  * Server configuration.
+ *
  * <p>This class provides type safe access to server configuration.
  * <p>It also maps authentication users and behaviour scenarios to corresponding objects.
  *
  * @see UserConfig
  * @see ScenarioConfig
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  */
 @SuppressWarnings("unchecked")
 public class ServerConfig extends ConfigFoundation {

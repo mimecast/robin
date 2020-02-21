@@ -9,10 +9,8 @@ import java.io.InputStream;
 
 /**
  * Slow input stream.
- * <p>Slows down the reading for given miliseconds every given bytes.
  *
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
+ * <p>Slows down the reading for given miliseconds every given bytes.
  */
 public class SlowInputStream extends InputStream {
     private static final Logger log = LogManager.getLogger(SlowInputStream.class);
@@ -45,9 +43,9 @@ public class SlowInputStream extends InputStream {
     /**
      * Constructs a new SlowInputStream instance with given bytes and wait.
      *
-     * @param in   InputStream instance.
+     * @param in    InputStream instance.
      * @param bytes Size of bytes.
-     * @param wait Time in miliseconds.
+     * @param wait  Time in miliseconds.
      */
     public SlowInputStream(InputStream in, int bytes, int wait) {
         this.in = in;

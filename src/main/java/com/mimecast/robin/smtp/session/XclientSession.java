@@ -8,11 +8,10 @@ import java.util.Map;
 
 /**
  * XCLIENT session.
- * <p>This provides access to XCLIENT session data.
- * @link http://www.postfix.org/XCLIENT_README.html Postfix XCLIENT
  *
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
+ * <p>This provides access to XCLIENT session data.
+ *
+ * @see <a href="http://www.postfix.org/XCLIENT_README.html">Postfix XCLIENT</a>
  */
 @SuppressWarnings("UnusedReturnValue")
 public class XclientSession extends Session {
@@ -30,8 +29,8 @@ public class XclientSession extends Session {
      * Maps CaseConfig to this session.
      */
     @Override
-    public void map(CaseConfig config) {
-        new XclientConfigMapper(config).mapTo(this);
+    public void map(CaseConfig caseConfig) {
+        new XclientConfigMapper(caseConfig).mapTo(this);
     }
 
     /**

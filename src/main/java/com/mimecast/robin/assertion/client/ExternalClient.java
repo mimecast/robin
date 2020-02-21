@@ -7,7 +7,7 @@ import com.mimecast.robin.smtp.connection.Connection;
 import org.json.JSONArray;
 
 /**
- * Interface for external client.
+ * Interface for external logs client.
  *
  * @see Assert
  * @see AssertExternal
@@ -33,7 +33,8 @@ public interface ExternalClient {
 
     /**
      * Gets server logs.
-     * <p>This is called by AssertExternal to get the logs if it has MTA assertions to do.
+     *
+     * <p>This is called by AssertExternal to get the logs.
      *
      * @return JSONArray instance.
      */

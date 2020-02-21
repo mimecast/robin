@@ -6,14 +6,13 @@ import java.util.Map;
 
 /**
  * Server user configuration container.
+ *
  * <p>This is a container for users defined in the server configuration.
  * <p>One instance will be made for every user defined.
  * <p>This can be used to authenticate users when testing clients.
  * <p>The server supports AUTH PLAIN LOGIN.
  *
  * @see ServerConfig
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  */
 public class UserConfig extends ConfigFoundation {
 

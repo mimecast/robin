@@ -7,6 +7,7 @@ import java.util.Map;
 
 /**
  * MTA assertions container.
+ *
  * <p>This should constructed using a map like the following:
  * <pre>
  *     "mta": {
@@ -17,7 +18,8 @@ import java.util.Map;
  *         ]
  *     }
  * </pre>
- * <p>This may be present at both envelope level only.
+ *
+ * <p>This may be present at envelope level only.
  */
 @SuppressWarnings("unchecked")
 public class AssertExternalConfig extends ConfigFoundation {

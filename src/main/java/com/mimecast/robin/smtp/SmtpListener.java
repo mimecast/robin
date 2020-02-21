@@ -3,19 +3,18 @@ package com.mimecast.robin.smtp;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.io.IOException;
 import java.net.SocketException;
 
 /**
  * SMTP socket listener.
+ *
  * <p>This runs a ServerSocket bound to configured interface and port.
  * <p>An email receipt instance will be constructed for each accepted connection.
  *
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  * @see EmailReceipt
  */
 public class SmtpListener {

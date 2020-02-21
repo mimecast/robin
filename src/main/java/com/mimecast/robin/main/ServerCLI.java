@@ -5,11 +5,9 @@ import com.mimecast.robin.Main;
 import javax.naming.ConfigurationException;
 
 /**
- * CLI controller for socket listener.
+ * Implementation of server CLI.
  *
  * @see Server
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  */
 public class ServerCLI {
 
@@ -36,7 +34,7 @@ public class ServerCLI {
      * @param main Main instance.
      */
     public static void main(Main main) {
-        if(main.getArgs().length > 0) {
+        if (main.getArgs().length > 0) {
             try {
                 Server.run(main.getArgs()[0]);
             } catch (ConfigurationException e) {

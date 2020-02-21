@@ -9,11 +9,9 @@ import java.util.*;
 
 /**
  * Message envelope.
+ *
  * <p>This is the container for SMTP envelopes.
  * <p>It will store the meta data associated with each email sent.
- *
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  */
 public class MessageEnvelope {
 
@@ -271,12 +269,14 @@ public class MessageEnvelope {
     }
 
     /**
-     * Gets subject.
+     * Sets subject.
      * <p>May be used if no eml file provided.
      * <p>Basic plain/text eml will be generated.
+     *
+     * @param subject Subject string.
      */
-    public void setSubject(String subj) {
-        this.subject = subj;
+    public void setSubject(String subject) {
+        this.subject = subject;
     }
 
     /**
@@ -436,7 +436,7 @@ public class MessageEnvelope {
     /**
      * Gets slow bytes.
      * <p>This adds a write delay every given number of bytes.
-     * <p>Must be >= 128 or the functionality will be disabled.
+     * <p>Must be &gt;= 128 or the functionality will be disabled.
      * <p>Works only with file and stream not with headers and message.
      *
      * @return Size in bytes.
@@ -457,7 +457,7 @@ public class MessageEnvelope {
     /**
      * Gets slow wait.
      * <p>Wait time in miliseconds.
-     * <p>Must be >= 100 or the functionality will be disabled.
+     * <p>Must be &gt;= 100 or the functionality will be disabled.
      *
      * @return Chunk size in bytes.
      */

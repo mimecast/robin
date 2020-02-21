@@ -1,20 +1,21 @@
 package com.mimecast.robin.smtp.session;
 
-import com.mimecast.robin.config.assertion.AssertConfig;
 import com.mimecast.robin.config.ConfigMapper;
+import com.mimecast.robin.config.assertion.AssertConfig;
 import com.mimecast.robin.config.client.CaseConfig;
 import com.mimecast.robin.smtp.MessageEnvelope;
 
 import javax.mail.internet.InternetAddress;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Session.
- * <p>This is the primary container for session data.
  *
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
+ * <p>This is the primary container for session data.
  */
 @SuppressWarnings("UnusedReturnValue")
 public class Session {
@@ -193,9 +194,11 @@ public class Session {
 
     /**
      * Maps CaseConfig to this session.
+     *
+     * @param caseConfig CaseConfig instance.
      */
-    public void map(CaseConfig config) {
-        new ConfigMapper(config).mapTo(this);
+    public void map(CaseConfig caseConfig) {
+        new ConfigMapper(caseConfig).mapTo(this);
     }
 
     /**
@@ -491,6 +494,7 @@ public class Session {
     /**
      * Sets EHLO advertised size.
      *
+     * @param ehloSize EHLO size integer.
      * @return Self.
      */
     public Session setEhloSize(int ehloSize) {
@@ -510,6 +514,7 @@ public class Session {
     /**
      * Sets EHLO advertised STARTTLS.
      *
+     * @param ehloTls EHLO TLS boolean.
      * @return Self.
      */
     public Session setEhloTls(boolean ehloTls) {
@@ -529,6 +534,7 @@ public class Session {
     /**
      * Sets EHLO advertised 8BITMIME.
      *
+     * @param ehlo8bit EHLO 8bit boolean.
      * @return Self.
      */
     public Session setEhlo8bit(boolean ehlo8bit) {
@@ -548,6 +554,7 @@ public class Session {
     /**
      * Sets EHLO advertised BINARYMIME.
      *
+     * @param ehloBinary EHLO binary boolean.
      * @return Self.
      */
     public Session setEhloBinary(boolean ehloBinary) {
@@ -567,6 +574,7 @@ public class Session {
     /**
      * Sets EHLO advertised CHUNKING.
      *
+     * @param ehloBdat EHLO CHUNKING boolean.
      * @return Self.
      */
     public Session setEhloBdat(boolean ehloBdat) {
@@ -586,6 +594,7 @@ public class Session {
     /**
      * Sets EHLO logging short code.
      *
+     * @param ehloLog EHLO logging short code string.
      * @return Self.
      */
     public Session setEhloLog(String ehloLog) {
@@ -605,6 +614,7 @@ public class Session {
     /**
      * Sets EHLO advertised authentication mechanisms.
      *
+     * @param ehloAuth EHLO AUTH list of strings.
      * @return Self.
      */
     public Session setEhloAuth(List<String> ehloAuth) {

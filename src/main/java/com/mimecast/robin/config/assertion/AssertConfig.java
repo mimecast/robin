@@ -9,30 +9,14 @@ import java.util.Map;
 
 /**
  * Assertions container.
- * <p>This should constructed using a map like the following:
- * <pre>
- *     "assertions": {
- *         "smtp": [
- *             ["MAIL", "250 Sender OK"],
- *             ["RCPT", "250 Recipient OK"],
- *             ["DATA", "^250"],
- *             ["DATA", "Received OK"]
- *         ],
- *         "external": {
- *             "delay": 5,
- *             "retry": 2,
- *             "match": [
- *                 ["SPAMRESULT", "Action=Accept"]
- *             ]
- *         }
- *     }
- * </pre>
- * <p>This may be present at both session and envelope level.
- * <p>SMTP assertions are done directly over the SMTP transactions.
+ *
+ * <p>SMTP assertions may be present at both session and envelope level.
+ * <br>They are done directly over the SMTP transactions.
+ *
  * <p>External assertions require a client for fetching the logs.
  *
  * @see ExternalClient
- * @see Factories;
+ * @see Factories
  * @see AssertExternalConfig
  */
 @SuppressWarnings("unchecked")
@@ -67,9 +51,10 @@ public class AssertConfig extends ConfigFoundation {
     /**
      * Gets external assertion configuration instance.
      *
+     * @param key Config map key.
      * @return AssertExternalConfig instance.
      */
-    public AssertExternalConfig getExternal(String name) {
-        return new AssertExternalConfig(getMapProperty(name));
+    public AssertExternalConfig getExternal(String key) {
+        return new AssertExternalConfig(getMapProperty(key));
     }
 }

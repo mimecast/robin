@@ -8,9 +8,6 @@ import java.io.IOException;
 
 /**
  * Client extension processor abstract.
- *
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  */
 public abstract class ClientProcessor {
     static final Logger log = LogManager.getLogger(ClientProcessor.class);

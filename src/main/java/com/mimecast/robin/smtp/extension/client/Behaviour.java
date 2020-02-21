@@ -6,9 +6,6 @@ import java.io.IOException;
 
 /**
  * Client behaviour interface.
- *
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  */
 public interface Behaviour {
 

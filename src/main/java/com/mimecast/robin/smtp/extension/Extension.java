@@ -9,10 +9,8 @@ import java.util.concurrent.Callable;
 
 /**
  * Extension.
- * <p>This holds pairs of client and server callable for the extension implementations.
  *
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
+ * <p>This holds pairs of client and server callable for the extension implementations.
  */
 public class Extension {
     private static final Logger log = LogManager.getLogger(Extension.class);

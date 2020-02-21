@@ -6,10 +6,8 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * Transaction.
- * <p>This provides a container for SMTP transaction details.
  *
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
+ * <p>This provides a container for SMTP transaction details.
  */
 public class Transaction {
     private static final Logger log = LogManager.getLogger(Transaction.class);
@@ -101,7 +99,7 @@ public class Transaction {
     public String getResponseCode() {
         String code = "102";
 
-        try  {
+        try {
             if (response != null && response.length() > 3) {
                 String temp = response.substring(0, 3);
                 if (Integer.parseInt(temp) > 0) {

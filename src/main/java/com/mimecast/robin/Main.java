@@ -16,13 +16,12 @@ import java.util.Optional;
 
 /**
  * Main runnable.
+ *
  * <p>This implements the commandline --client and --server options.
  * <p>Further CLI options are implemented individually within each component.
  *
  * @see ServerCLI
  * @see ClientCLI
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  */
 @SuppressWarnings("squid:S106")
 public class Main {
@@ -74,7 +73,7 @@ public class Main {
             }
 
             // Run server.
-            else if(cmd.hasOption("server")) {
+            else if (cmd.hasOption("server")) {
                 purgeArg("--server");
                 ServerCLI.main(this);
             }

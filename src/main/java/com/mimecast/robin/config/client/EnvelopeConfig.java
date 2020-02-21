@@ -1,7 +1,7 @@
 package com.mimecast.robin.config.client;
 
-import com.mimecast.robin.config.assertion.AssertConfig;
 import com.mimecast.robin.config.ConfigFoundation;
+import com.mimecast.robin.config.assertion.AssertConfig;
 import com.mimecast.robin.smtp.MessageEnvelope;
 
 import java.util.List;
@@ -9,14 +9,13 @@ import java.util.Map;
 
 /**
  * Case envelope configuration container.
+ *
  * <p>This is a container for envelopes defined in a case configuration.
  * <p>One instance will be made for every envelope defined.
  * <p>This will be used to collect the necessary data to generate the MessageEnvelope.
  *
  * @see CaseConfig
  * @see MessageEnvelope
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  */
 @SuppressWarnings("unchecked")
 public class EnvelopeConfig extends ConfigFoundation {
@@ -91,7 +90,7 @@ public class EnvelopeConfig extends ConfigFoundation {
     /**
      * Is chunk write randomly.
      * <p>This will write random size chunks from chunk size chunks.
-     * <p>The chunks are limited to in between 1024 and 2048 bytes so chunk size must be >= to 2048.
+     * <p>The chunks are limited to in between 1024 and 2048 bytes so chunk size must be &gt;= to 2048.
      *
      * @return Boolean.
      */

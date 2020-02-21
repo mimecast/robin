@@ -2,6 +2,7 @@ package com.mimecast.robin.assertion;
 
 /**
  * Assertion exception.
+ *
  * <p>Thrown by Assert and AssertExternal if an assertion doesn't match anything.
  *
  * @see Assert

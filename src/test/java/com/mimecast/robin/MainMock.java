@@ -4,10 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * CLI runnable.
- *
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
+ * Main runnable.
  */
 public final class MainMock extends Main {
 

@@ -11,9 +11,6 @@ import java.util.Optional;
 
 /**
  * Default client behaviour.
- *
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  */
 public class DefaultBehaviour implements Behaviour {
     protected static final Logger log = LogManager.getLogger(DefaultBehaviour.class);
@@ -25,6 +22,9 @@ public class DefaultBehaviour implements Behaviour {
 
     /**
      * Executes delivery.
+     *
+     * @param connection Connection instance.
+     * @throws IOException Unable to communicate.
      */
     @Override
     public void process(Connection connection) throws IOException {
@@ -41,6 +41,9 @@ public class DefaultBehaviour implements Behaviour {
 
     /**
      * Executes AUTH.
+     *
+     * @return Boolean.
+     * @throws IOException Unable to communicate.
      */
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     boolean auth() throws IOException {
@@ -49,7 +52,7 @@ public class DefaultBehaviour implements Behaviour {
             if (!process("auth", connection)) return false;
 
             // Start TLS if specifically configured to do after AUTH.
-            if(connection.getSession().isAuthBeforeTls()) {
+            if (connection.getSession().isAuthBeforeTls()) {
                 return startTls();
             }
         }
@@ -59,6 +62,9 @@ public class DefaultBehaviour implements Behaviour {
 
     /**
      * Executes EHLO.
+     *
+     * @return Boolean.
+     * @throws IOException Unable to communicate.
      */
     boolean ehlo() throws IOException {
         // HELO/EHLO
@@ -71,6 +77,9 @@ public class DefaultBehaviour implements Behaviour {
 
     /**
      * Executes STARTTLS.
+     *
+     * @return Boolean.
+     * @throws IOException Unable to communicate.
      */
     boolean startTls() throws IOException {
         return !process("starttls", connection) || !connection.getSession().isStartTls() || ehlo();
@@ -78,6 +87,8 @@ public class DefaultBehaviour implements Behaviour {
 
     /**
      * Executes DATA.
+     *
+     * @throws IOException Unable to communicate.
      */
     void data() throws IOException {
         for (int i = 0; i < connection.getSession().getEnvelopes().size(); i++) {
@@ -88,6 +99,8 @@ public class DefaultBehaviour implements Behaviour {
 
     /**
      * Executes envelope delivery.
+     *
+     * @throws IOException Unable to communicate.
      */
     private void send() throws IOException {
         if (!process("mail", connection)) return;
@@ -97,6 +110,8 @@ public class DefaultBehaviour implements Behaviour {
 
     /**
      * Executes QUIT.
+     *
+     * @throws IOException Unable to communicate.
      */
     void quit() throws IOException {
         Optional<Extension> opt = Extensions.getExtension("quit");
@@ -107,6 +122,11 @@ public class DefaultBehaviour implements Behaviour {
 
     /**
      * Processes extension.
+     *
+     * @param extension  String.
+     * @param connection Connection instance.
+     * @return Boolean.
+     * @throws IOException Unable to communicate.
      */
     boolean process(String extension, Connection connection) throws IOException {
         Optional<Extension> opt = Extensions.getExtension(extension);

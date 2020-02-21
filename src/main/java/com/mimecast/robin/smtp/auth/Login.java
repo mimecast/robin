@@ -5,10 +5,8 @@ import org.apache.commons.codec.binary.Base64;
 
 /**
  * Login authentication mechanism.
- * @link https://tools.ietf.org/html/draft-murchison-sasl-login-00 SASL LOGIN
  *
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
+ * @see <a href="https://tools.ietf.org/html/draft-murchison-sasl-login-00">DRAFT SASL LOGIN</a>
  */
 public class Login {
 

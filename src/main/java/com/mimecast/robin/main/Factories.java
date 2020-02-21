@@ -25,6 +25,7 @@ import java.util.concurrent.Callable;
 
 /**
  * Factories for pluggable components.
+ *
  * <p>This is a factories container for extensible components.
  * <p>You may write a plugin to inject yours.
  *
@@ -73,7 +74,7 @@ public class Factories {
      * External clients.
      * <p>Used to fetch external service logs for assertion.
      */
-    private static Map<String, Callable<ExternalClient>> externalClients = new HashMap<>();
+    private static final Map<String, Callable<ExternalClient>> externalClients = new HashMap<>();
 
     /**
      * Protected constructor.

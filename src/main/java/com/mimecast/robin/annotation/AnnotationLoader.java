@@ -10,12 +10,10 @@ import java.util.*;
 
 /**
  * Plugin annotation loader.
+ *
  * <p>This class scans the plugin package at runtime to identify classes annotated with the @Plugin interface.
  * <p>After ordering them by priority it will instantiate each one in that order.
  * <p>Priority collision is not handled thus their order will be random.
- *
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  */
 public abstract class AnnotationLoader {
     private static final Logger log = LogManager.getLogger(AnnotationLoader.class);

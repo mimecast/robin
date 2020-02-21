@@ -6,9 +6,6 @@ import java.io.IOException;
 
 /**
  * QUIT extension processor.
- *
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  */
 public class ClientQuit extends ClientRset {
 

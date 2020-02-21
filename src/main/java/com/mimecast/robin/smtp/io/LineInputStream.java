@@ -10,10 +10,8 @@ import java.io.PushbackInputStream;
 
 /**
  * Line input stream.
- * <p>InputStream implementation returns lines with EOL as byte array and counts lines.
  *
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
+ * <p>InputStream implementation returns lines with EOL as byte array and counts lines.
  */
 public class LineInputStream extends PushbackInputStream {
     private static final Logger log = LogManager.getLogger(LineInputStream.class);
@@ -57,13 +55,13 @@ public class LineInputStream extends PushbackInputStream {
      * @return Byte array.
      * @throws IOException Unable to read.
      */
-    @SuppressWarnings({"squid:S1168","squid:S135"})
+    @SuppressWarnings({"squid:S1168", "squid:S135"})
     public byte[] readLine() throws IOException {
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 
         boolean foundCR = false;
         int intByte;
-        while((intByte = read()) != -1) {
+        while ((intByte = read()) != -1) {
             // Have CR but LF doesn't follow unread byte and return what is read so far.
             if (foundCR && intByte != LF) {
                 unread(intByte);

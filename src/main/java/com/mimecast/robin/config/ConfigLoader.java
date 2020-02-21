@@ -13,13 +13,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Paths;
 
 /**
- * Static configuration files loader.
- * <p>Loads both client and server configuration files regardless of the invoked functionality.
- * <p>It also loads properties and log4j configuration.
- * <p>Make sure all files are in the default or given path.
- *
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
+ * Static predefined config files loader (client, server, properties, log4j).
  */
 public class ConfigLoader {
     private static final Logger log = LogManager.getLogger(ConfigLoader.class);
@@ -33,6 +27,9 @@ public class ConfigLoader {
 
     /**
      * Load global configuration files.
+     *
+     * @param path Path to configuration file.
+     * @throws ConfigurationException Unable to read/parse config file.
      */
     public static void load(String path) throws ConfigurationException {
         log.debug("Working directory: {}", System.getProperty("user.dir"));

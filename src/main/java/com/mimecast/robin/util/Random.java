@@ -3,10 +3,7 @@ package com.mimecast.robin.util;
 import java.security.SecureRandom;
 
 /**
- * Random int and string generator.
- *
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
+ * Random number and string generator.
  */
 public final class Random {
 
@@ -44,7 +41,7 @@ public final class Random {
      */
     public static String ch(int length) {
         StringBuilder str = new StringBuilder();
-        for(int i = 0; i < length; i++){
+        for (int i = 0; i < length; i++) {
             str.append(CH.charAt(no(CH.length() - 1)));
         }
         return str.toString();

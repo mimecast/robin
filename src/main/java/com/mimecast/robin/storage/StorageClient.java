@@ -6,12 +6,10 @@ import java.io.FileNotFoundException;
 import java.io.OutputStream;
 
 /**
- * Interface for MTA file storage integration.
- * <p>The instanciation of this will be done via Factories.
- * <p>Connection is required to allow customisation absed on sender/recipient.
+ * Server file storage interface.
  *
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
+ * <p>The instanciation of this will be done via Factories.
+ * <p>Connection is required to allow customisation based on sender/recipient.
  */
 public interface StorageClient {
 
@@ -27,6 +25,7 @@ public interface StorageClient {
      * Gets file output stream.
      *
      * @return OutputStream instance.
+     * @throws FileNotFoundException File not found.
      */
     OutputStream getStream() throws FileNotFoundException;
 

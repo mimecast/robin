@@ -5,12 +5,10 @@ import org.apache.commons.codec.binary.Base64;
 /**
  * AUTH verb.
  * <p>This is used for parsing AUTH PLAIN and AUTH LOGIN commands.
- * @link https://tools.ietf.org/html/rfc4954 RFC 4954
- * @link https://tools.ietf.org/html/draft-murchison-sasl-login-00 SASL LOGIN
- * @link https://tools.ietf.org/html/rfc2831 RFC 2831
  *
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
+ * @see <a href="https://tools.ietf.org/html/rfc4954">RFC 4954</a>
+ * @see <a href="https://tools.ietf.org/html/draft-murchison-sasl-login-00">DRAFT SASL LOGIN</a>
+ * @see <a href="https://tools.ietf.org/html/rfc2831">RFC 2831</a>
  */
 public class AuthVerb extends Verb {
 
@@ -69,9 +67,7 @@ public class AuthVerb extends Verb {
                 username = parts[1];
                 password = parts[2];
             }
-        }
-
-        else if (getType().equalsIgnoreCase("LOGIN") && parts.length > 2) {
+        } else if (getType().equalsIgnoreCase("LOGIN") && parts.length > 2) {
             username = new String(Base64.decodeBase64(parts[2]));
         }
     }

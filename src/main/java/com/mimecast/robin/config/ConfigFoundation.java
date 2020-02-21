@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.json.JsonSanitizer;
 import com.mimecast.robin.config.client.ClientConfig;
 import com.mimecast.robin.config.server.ServerConfig;
-import com.mimecast.robin.main.Properties;
 import com.mimecast.robin.util.PathUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,15 +16,14 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Configuration foundation.
+ * JSON config file loader and primitive getters provider.
+ *
  * <p>This provides the default means to get lists, maps, strings, longs and booleans.
  * <p>Lists and maps are unchecked and should be checked in the extending classes.
  *
  * @see Properties
  * @see ServerConfig
  * @see ClientConfig
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
 public abstract class ConfigFoundation {
@@ -40,6 +38,7 @@ public abstract class ConfigFoundation {
      * Constructs a new ConfigFoundation instance with given file path.
      *
      * @param path File path.
+     * @throws IOException Unable to read file.
      */
     protected ConfigFoundation(String path) throws IOException {
         if (PathUtils.isFile(path)) {

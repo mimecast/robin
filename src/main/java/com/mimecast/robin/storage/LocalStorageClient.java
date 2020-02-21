@@ -15,11 +15,9 @@ import java.util.Locale;
 import java.util.UUID;
 
 /**
- * Local Storage Client.
- * <p>Saves files on disk.
+ * Local storage client implementation.
  *
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
+ * <p>Saves files on disk.
  */
 public class LocalStorageClient implements StorageClient {
     private static final Logger log = LogManager.getLogger(LocalStorageClient.class);
@@ -62,7 +60,7 @@ public class LocalStorageClient implements StorageClient {
         this.connection = connection;
 
         // Append first recipient domain/address to path
-        if(connection != null && !connection.getSession().getRcpts().isEmpty()) {
+        if (connection != null && !connection.getSession().getRcpts().isEmpty()) {
             String[] splits = connection.getSession().getRcpts().get(0).getAddress().split("@");
             if (splits.length == 2) {
                 path = Paths.get(

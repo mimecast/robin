@@ -7,10 +7,8 @@ import java.io.IOException;
 
 /**
  * Client behaviour with XCLIENT support.
- * @link http://www.postfix.org/XCLIENT_README.html Postfix XCLIENT
  *
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
+ * @see <a href="http://www.postfix.org/XCLIENT_README.html">Postfix XCLIENT</a>
  */
 public class XclientBehaviour extends DefaultBehaviour {
 
@@ -27,7 +25,7 @@ public class XclientBehaviour extends DefaultBehaviour {
         // XCLIENT
         if (connection.getSession() instanceof XclientSession) {
             XclientSession session = (XclientSession) connection.getSession();
-            if (session.getXclient() != null &&session.getXclient().size() > 0) {
+            if (session.getXclient() != null && session.getXclient().size() > 0) {
                 if (!process("xclient", connection)) return;
 
                 // Post XCLIENT hello.

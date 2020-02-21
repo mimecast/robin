@@ -14,9 +14,6 @@ import java.util.Optional;
 
 /**
  * DATA extension processor.
- *
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  */
 public class ServerData extends ServerProcessor {
 

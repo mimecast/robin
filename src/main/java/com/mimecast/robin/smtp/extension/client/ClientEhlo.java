@@ -1,7 +1,7 @@
 package com.mimecast.robin.smtp.extension.client;
 
-import com.mimecast.robin.smtp.connection.SmtpException;
 import com.mimecast.robin.smtp.connection.Connection;
+import com.mimecast.robin.smtp.connection.SmtpException;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -11,9 +11,6 @@ import java.util.Collections;
 
 /**
  * EHLO extension processor.
- *
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  */
 public class ClientEhlo extends ClientProcessor {
 
@@ -77,7 +74,7 @@ public class ClientEhlo extends ClientProcessor {
      * Process EHLO response.
      *
      * @param write Write string.
-     * @param read Read string.
+     * @param read  Read string.
      * @throws SmtpException SMTP delivery exception.
      */
     private void processResponse(String write, String read) throws SmtpException {
@@ -95,18 +92,18 @@ public class ClientEhlo extends ClientProcessor {
         for (String line : read.split("\r\n")) {
             line = line.replace("250 ", "").replace("250-", "").toLowerCase();
 
-            if(line.startsWith("size ")) {
+            if (line.startsWith("size ")) {
                 connection.getSession().setEhloSize(Integer.parseInt(line.replace("size ", "").trim()));
             }
 
-            if(line.startsWith("auth ")) {
+            if (line.startsWith("auth ")) {
                 Collections.addAll(connection.getSession().getEhloAuth(), line.replace("^auth", "").trim().split("\\s"));
             }
 
-            if (line.contains("8bitmime"))   connection.getSession().setEhlo8bit(true);
+            if (line.contains("8bitmime")) connection.getSession().setEhlo8bit(true);
             if (line.contains("binarymime")) connection.getSession().setEhloBinary(true);
-            if (line.contains("chunking"))   connection.getSession().setEhloBdat(true);
-            if (line.contains("starttls"))   connection.getSession().setEhloTls(true);
+            if (line.contains("chunking")) connection.getSession().setEhloBdat(true);
+            if (line.contains("starttls")) connection.getSession().setEhloTls(true);
         }
     }
 }

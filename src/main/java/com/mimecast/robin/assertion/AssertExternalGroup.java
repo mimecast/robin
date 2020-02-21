@@ -5,18 +5,14 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 /**
- * Assert group.
- * <p>Container class for pattern groups used for MTA assertion.
+ * Assert external group.
+ *
+ * <p>Container class for pattern groups used for external logs assertion.
  *
  * @see AssertExternal
  */
 @SuppressWarnings("UnusedReturnValue")
-public class AssertGroup {
-
-    /**
-     * Regex rules to match against.
-     */
-    private List<String> rules = new ArrayList<>();
+public class AssertExternalGroup {
 
     /**
      * Compiled regex patterns.
@@ -27,26 +23,6 @@ public class AssertGroup {
      * Matched regex patterns.
      */
     private final List<Pattern> matched = new ArrayList<>();
-
-    /**
-     * Gets rules.
-     *
-     * @return Regex list.
-     */
-    public List<String> getRules() {
-        return rules;
-    }
-
-    /**
-     * Sets rules.
-     *
-     * @param list Regex list.
-     * @return Self.
-     */
-    public AssertGroup setRules(List<String> list) {
-        rules = list;
-        return this;
-    }
 
     /**
      * Gets unmatched.
@@ -78,7 +54,7 @@ public class AssertGroup {
      * @param pattern Pattern.
      * @return Self.
      */
-    public AssertGroup addMatched(Pattern pattern) {
+    public AssertExternalGroup addMatched(Pattern pattern) {
         if (!matched.contains(pattern)) {
             matched.add(pattern);
         }
@@ -100,7 +76,7 @@ public class AssertGroup {
      * @param list Patterns list.
      * @return Self.
      */
-    public AssertGroup setPatterns(List<Pattern> list) {
+    public AssertExternalGroup setPatterns(List<Pattern> list) {
         patterns = list;
         return this;
     }

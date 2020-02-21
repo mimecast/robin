@@ -1,8 +1,8 @@
 package com.mimecast.robin.smtp.extension.server;
 
+import com.mimecast.robin.config.server.UserConfig;
 import com.mimecast.robin.main.Config;
 import com.mimecast.robin.main.Extensions;
-import com.mimecast.robin.config.server.UserConfig;
 import com.mimecast.robin.smtp.connection.Connection;
 import com.mimecast.robin.smtp.verb.AuthVerb;
 import com.mimecast.robin.smtp.verb.Verb;
@@ -14,9 +14,6 @@ import java.util.Optional;
 /**
  * AUTH extension processor.
  * TODO Implement DIGEST-MD5 support.
- *
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  */
 public class ServerAuth extends ServerProcessor {
 
@@ -118,9 +115,7 @@ public class ServerAuth extends ServerProcessor {
             pass = connection.read();
             pass = new String(Base64.decodeBase64(pass));
             if (Extensions.isExtension(pass)) return; // Failsafe to catch unexpected commands.
-        }
-
-        else {
+        } else {
             connection.write("334 VXNlcm5hbWU6"); // Username:
             user = connection.read();
             user = new String(Base64.decodeBase64(user));

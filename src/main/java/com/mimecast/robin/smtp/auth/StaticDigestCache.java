@@ -5,11 +5,9 @@ import java.util.Map;
 
 /**
  * Digest-MD5 authentication mechanism database.
+ *
  * <p>It would be wise to implement limitations in both size and time.
  * <p>While the size should be based on hardware TTL should be at most an hour.
- *
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  */
 public class StaticDigestCache extends DigestCache {
 

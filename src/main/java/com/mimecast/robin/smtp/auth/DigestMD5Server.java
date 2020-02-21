@@ -4,12 +4,10 @@ import java.util.Optional;
 
 /**
  * Digest-MD5 authentication server implementation.
- * @link https://tools.ietf.org/html/rfc2831 RFC 2831
  *
+ * @see <a href="https://tools.ietf.org/html/rfc2831">RFC 2831</a>
  * @see DigestMD5
  * @see Random
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  */
 class DigestMD5Server extends DigestMD5 {
 
@@ -71,9 +69,9 @@ class DigestMD5Server extends DigestMD5 {
             // Check if responses match.
             if (
                     !ownMap.getResponse().isEmpty() &&
-                    !clientMap.getResponse().isEmpty() &&
-                    clientMap.getResponse().equals(ownMap.getResponse())
-                    ) {
+                            !clientMap.getResponse().isEmpty() &&
+                            clientMap.getResponse().equals(ownMap.getResponse())
+            ) {
                 return Optional.of(DigestUtils.encode("rspauth=" + client.computerServerResponse()));
             }
         }

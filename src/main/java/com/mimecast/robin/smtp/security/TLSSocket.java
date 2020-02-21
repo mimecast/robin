@@ -7,10 +7,6 @@ import java.security.GeneralSecurityException;
 
 /**
  * TLS socket.
- * <p>Establishes TLS over given socket.
- *
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  */
 public interface TLSSocket {
 

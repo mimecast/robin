@@ -10,15 +10,14 @@ import java.security.NoSuchAlgorithmException;
 
 /**
  * Digest-MD5 authentication mechanism.
+ *
  * <p>This provides common functionalities for both client and server implementations.
  * <p>It automatically constructs an instance of SecureRandom.
  * <p>This can be overridden from an extension by providing a Random instance.
- * @link https://tools.ietf.org/html/rfc2831 RFC 2831
  *
+ * @see <a href="https://tools.ietf.org/html/rfc2831">RFC 2831</a>
  * @see Random
  * @see SecureRandom
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  */
 public abstract class DigestMD5 {
     static final Logger log = LogManager.getLogger(DigestMD5.class);
@@ -86,6 +85,7 @@ public abstract class DigestMD5 {
 
     /**
      * Sets DigestDatabase.
+     *
      * @param database DigestDatabase instance.
      */
     public void setDigestDatabase(DigestCache database) {
@@ -94,6 +94,7 @@ public abstract class DigestMD5 {
 
     /**
      * Sets random generator.
+     *
      * @param random Random instance.
      */
     public void setRandom(Random random) {
@@ -102,6 +103,7 @@ public abstract class DigestMD5 {
 
     /**
      * Sets random size.
+     *
      * @param randomSize Size integer.
      */
     public void setRandomSize(int randomSize) {

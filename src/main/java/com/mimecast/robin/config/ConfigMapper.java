@@ -1,8 +1,8 @@
 package com.mimecast.robin.config;
 
-import com.mimecast.robin.main.Config;
 import com.mimecast.robin.config.client.CaseConfig;
 import com.mimecast.robin.config.client.EnvelopeConfig;
+import com.mimecast.robin.main.Config;
 import com.mimecast.robin.smtp.MessageEnvelope;
 import com.mimecast.robin.smtp.session.Session;
 import org.apache.commons.lang3.StringUtils;
@@ -10,10 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 
 /**
- * Mapper for CaseConfig to Session.
- *
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
+ * Mapper of CaseConfig to Session.
  */
 public class ConfigMapper {
 
@@ -73,9 +70,9 @@ public class ConfigMapper {
     /**
      * Add envelope.
      *
-     * @param session Session instance.
+     * @param session        Session instance.
      * @param envelopeConfig EnvelopeConfig instance.
-     * @param caseConfig  CaseCOnfig instance.
+     * @param caseConfig     CaseCOnfig instance.
      */
     private void addEnvelope(Session session, EnvelopeConfig envelopeConfig, CaseConfig caseConfig) {
         // Message object.

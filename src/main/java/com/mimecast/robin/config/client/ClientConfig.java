@@ -9,13 +9,12 @@ import java.util.Map;
 
 /**
  * Default client configuration container.
+ *
  * <p>This class provides type safe access to default client configuration.
  * <p>Cases inherit defaults from here.
  * <p>This also houses routes that can be chosen in a case.
  *
  * @see ConfigFoundation
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  */
 @SuppressWarnings("unchecked")
 public class ClientConfig extends ConfigFoundation {

@@ -2,10 +2,8 @@ package com.mimecast.robin.smtp.verb;
 
 /**
  * EHLO verb.
- * <p>This is used for parsing HELO/EHLO commands.
  *
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
+ * <p>This is used for parsing HELO/EHLO commands.
  */
 public class EhloVerb extends Verb {
 

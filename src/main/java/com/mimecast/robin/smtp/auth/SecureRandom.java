@@ -4,12 +4,11 @@ import org.apache.geronimo.mail.util.Hex;
 
 /**
  * Digest-MD5 authentication mechanism random generator.
+ *
  * <p>This is the default implementation of Random.
  *
  * @see DigestMD5
  * @see Random
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  */
 public class SecureRandom implements Random {
 

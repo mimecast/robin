@@ -17,10 +17,8 @@ import java.util.List;
 
 /**
  * Email delivery core.
- * <p>This is used to connect and deliver emails based on given Session.
  *
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
+ * <p>This is used to connect and deliver emails based on given Session.
  */
 public class EmailDelivery {
     private static final Logger log = LogManager.getLogger(EmailDelivery.class);
@@ -62,8 +60,7 @@ public class EmailDelivery {
             Behaviour behaviour = Factories.getBehaviour();
             if (behaviour != null) {
                 behaviour.process(connection);
-            }
-            else log.error("Error getting behaviour. This is bad.");
+            } else log.error("Error getting behaviour. This is bad.");
 
             log.debug("Terminating communication.");
             terminate();
@@ -99,9 +96,11 @@ public class EmailDelivery {
 
     /**
      * Log errors.
+     *
+     * @param errors List of Transaction instances.
      */
     private void logErrors(List<Transaction> errors) {
-        if(!errors.isEmpty()) {
+        if (!errors.isEmpty()) {
             log.info("Errors in delivery: {}", errors.size());
             for (Transaction t : errors) {
                 log.info("Error: {}", t.getResponse());

@@ -13,12 +13,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Assert External logs.
+ * Assert external logs.
+ *
  * <p>Asserts against external service log lines.
  * <p>Logs can be pulled using the given ExternalClient instance.
  *
  * @see ExternalClient
- * @see AssertGroup
+ * @see AssertExternalGroup
  */
 public class AssertExternal {
     private static final Logger log = LogManager.getLogger(AssertExternal.class);
@@ -46,8 +47,8 @@ public class AssertExternal {
     /**
      * Compiled patterns.
      */
-    private final List<AssertGroup> matchGroups = new ArrayList<>();
-    private final List<AssertGroup> refuseGroups = new ArrayList<>();
+    private final List<AssertExternalGroup> matchGroups = new ArrayList<>();
+    private final List<AssertExternalGroup> refuseGroups = new ArrayList<>();
 
     /**
      * Constructs a new AssertExternal instance.
@@ -159,7 +160,7 @@ public class AssertExternal {
      * @param groups    List of List of String.
      * @param container List of AssertGroup instances.
      */
-    private void compilePatterns(List<List<String>> groups, List<AssertGroup> container) {
+    private void compilePatterns(List<List<String>> groups, List<AssertExternalGroup> container) {
         // Make new list of assertions with precompiled patterns for performance.
         // Additionally we need a result field to track matches.
         for (List<String> list : groups) {
@@ -168,7 +169,7 @@ public class AssertExternal {
                 compiled.add(Pattern.compile(assertion, Pattern.CASE_INSENSITIVE));
             }
 
-            container.add(new AssertGroup().setRules(list).setPatterns(compiled));
+            container.add(new AssertExternalGroup().setPatterns(compiled));
         }
     }
 
@@ -199,9 +200,9 @@ public class AssertExternal {
      */
     private void checkLine(String line, boolean positive) throws AssertException {
         // Choose positive or negative matching groups
-        List<AssertGroup> groups = positive ? matchGroups : refuseGroups;
+        List<AssertExternalGroup> groups = positive ? matchGroups : refuseGroups;
 
-        for (AssertGroup group : groups) {
+        for (AssertExternalGroup group : groups) {
 
             // Skip matched.
             if (!group.hasMatched()) {
@@ -226,7 +227,7 @@ public class AssertExternal {
      * @param positive Success on match.
      * @throws AssertException Assertion exception.
      */
-    private void matchLine(AssertGroup group, String line, boolean positive) throws AssertException {
+    private void matchLine(AssertExternalGroup group, String line, boolean positive) throws AssertException {
         for (Pattern pattern : group.getPatterns()) {
             Matcher m = pattern.matcher(line);
             if (m.find()) {
@@ -248,7 +249,7 @@ public class AssertExternal {
      * @throws AssertException Assertion exception.
      */
     private void verifyMatches() throws AssertException {
-        for (AssertGroup group : matchGroups) {
+        for (AssertExternalGroup group : matchGroups) {
             if (!group.hasMatched()) {
                 throw new AssertException("Unable to find pattern " + group.getUnmatched() + " in logs");
             }

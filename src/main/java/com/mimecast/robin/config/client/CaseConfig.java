@@ -9,18 +9,16 @@ import java.util.*;
 
 /**
  * Client case configuration container.
+ *
  * <p>Running cases is the primary scope of this project.
  * <p>These are designed to be used for smoke testing your MTA.
  * <p>A case is configured via a JSON file.
- *
  * <p>This class provides type safe access to the client case configuration.
  * <p>Cases will inherit defaults from ClientConfig.
  * <p>It also maps envelopes and assertions to corresponding objects.
  *
  * @see ClientConfig
  * @see ConfigFoundation
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  */
 @SuppressWarnings("unchecked")
 public class CaseConfig extends ConfigFoundation {

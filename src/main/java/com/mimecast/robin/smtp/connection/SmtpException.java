@@ -4,10 +4,8 @@ import java.io.IOException;
 
 /**
  * Smtp exception.
- * <p>This is thrown when there was a problem with the SMTP exchange.
  *
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
+ * <p>This is thrown when there was a problem with the SMTP exchange.
  */
 public class SmtpException extends IOException {
 
@@ -20,9 +18,11 @@ public class SmtpException extends IOException {
 
     /**
      * Constructs a new SmtpException instance with given Exception.
+     *
+     * @param exception Exception instance.
      */
-    public SmtpException(Exception e) {
-        super(e);
+    public SmtpException(Exception exception) {
+        super(exception);
     }
 
     /**

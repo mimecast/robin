@@ -1,7 +1,7 @@
 package com.mimecast.robin.smtp.extension.server;
 
-import com.mimecast.robin.main.Extensions;
 import com.mimecast.robin.config.server.ScenarioConfig;
+import com.mimecast.robin.main.Extensions;
 import com.mimecast.robin.smtp.connection.Connection;
 import com.mimecast.robin.smtp.extension.Extension;
 import com.mimecast.robin.smtp.verb.EhloVerb;
@@ -15,9 +15,6 @@ import java.util.Optional;
 
 /**
  * EHLO extension processor.
- *
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  */
 public class ServerEhlo extends ServerProcessor {
 

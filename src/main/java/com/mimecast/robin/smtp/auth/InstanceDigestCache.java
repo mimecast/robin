@@ -5,10 +5,8 @@ import java.util.Map;
 
 /**
  * Digest-MD5 authentication mechanism database.
- * <p>Designed for testing purposes only.
  *
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
+ * <p>Designed for testing purposes only.
  */
 public class InstanceDigestCache extends DigestCache {
 

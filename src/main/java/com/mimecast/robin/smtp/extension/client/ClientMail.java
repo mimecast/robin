@@ -9,9 +9,6 @@ import java.io.IOException;
 
 /**
  * MAIL extension processor.
- *
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  */
 public class ClientMail extends ClientProcessor {
 

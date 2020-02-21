@@ -10,12 +10,10 @@ import java.util.Map;
 
 /**
  * Digest-MD5 authentication client implementation.
- * @link https://tools.ietf.org/html/rfc2831 RFC 2831
  *
+ * @see <a href="https://tools.ietf.org/html/rfc2831">RFC 2831</a>
  * @see DigestMD5
  * @see Random
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  */
 @SuppressWarnings("squid:S1192")
 public class DigestMD5Client extends DigestMD5 {
@@ -208,7 +206,7 @@ public class DigestMD5Client extends DigestMD5 {
             digest.update((":smtp/" + digestData.getHost()).getBytes(ascii));
 
             // Client.
-            String client = clientHead  + clientBody + new String(Hex.encode(digest.digest()), ascii);
+            String client = clientHead + clientBody + new String(Hex.encode(digest.digest()), ascii);
             log.debug("Building client: {}", client);
             digest.update(client.getBytes(ascii));
 

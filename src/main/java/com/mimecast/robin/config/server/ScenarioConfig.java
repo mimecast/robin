@@ -7,14 +7,13 @@ import java.util.Map;
 
 /**
  * Server scenario configuration container.
+ *
  * <p>This is a container for scenarios defined in the server configuration.
  * <p>One instance will be made for every scenario defined.
  * <p>This can be used to define specific behaviours for the server.
  * <p>As in when to reject a command and with what response.
  *
  * @see ServerConfig
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  */
 @SuppressWarnings("unchecked")
 public class ScenarioConfig extends ConfigFoundation {

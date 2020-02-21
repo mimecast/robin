@@ -1,17 +1,14 @@
-package com.mimecast.robin.main;
+package com.mimecast.robin.config;
 
-import com.mimecast.robin.config.ConfigFoundation;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 
 /**
- * Properties configuration.
+ * General purpose configuration.
+ *
  * <p>This provides access to a generic properties file.
  * <p>It will also read primitives from system properties with priority.
- *
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  */
 public class Properties extends ConfigFoundation {
 
@@ -26,6 +23,7 @@ public class Properties extends ConfigFoundation {
      * Constructs a new Properties instance with given file path.
      *
      * @param path File path.
+     * @throws IOException Unable to read file.
      */
     public Properties(String path) throws IOException {
         super(path);

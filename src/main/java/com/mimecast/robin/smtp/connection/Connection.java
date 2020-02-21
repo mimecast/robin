@@ -1,6 +1,6 @@
 package com.mimecast.robin.smtp.connection;
 
-import com.mimecast.robin.config.LoggingConfig;
+import com.mimecast.robin.config.client.LoggingConfig;
 import com.mimecast.robin.config.server.ScenarioConfig;
 import com.mimecast.robin.config.server.ServerConfig;
 import com.mimecast.robin.config.server.UserConfig;
@@ -28,8 +28,6 @@ import java.util.Optional;
  *
  * @see EmailDelivery
  * @see EmailReceipt
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  */
 public class Connection extends SmtpFoundation {
     private static final Logger log = LogManager.getLogger(Connection.class);
@@ -53,7 +51,8 @@ public class Connection extends SmtpFoundation {
      * [Client] Constructs a new Connection instance with given Session.
      * <p>This is primarly here for unit testing.
      *
-     * @param session Session instance.
+     * @param session                Session instance.
+     * @param sessionTransactionList SessionTransactionList instance.
      */
     public Connection(Session session, SessionTransactionList sessionTransactionList) {
         this(session);

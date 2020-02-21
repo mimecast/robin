@@ -2,12 +2,11 @@ package com.mimecast.robin.smtp.auth;
 
 /**
  * Digest-MD5 authentication mechanism returning predefined string instead of a random one.
+ *
  * <p>This is used for verifying challenge responses.
  *
  * @see DigestMD5
  * @see Random
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  */
 public class NotRandom implements Random {
 

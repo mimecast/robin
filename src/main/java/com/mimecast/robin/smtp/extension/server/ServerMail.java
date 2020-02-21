@@ -11,13 +11,11 @@ import java.util.Optional;
 
 /**
  * MAIL extension processor.
- * @link https://tools.ietf.org/html/rfc1870 RFC 1870
- * @link https://tools.ietf.org/html/rfc3030 RFC 3030
- * @link https://tools.ietf.org/html/rfc3461 RFC 3461
- * @link https://tools.ietf.org/html/rfc6152 RFC 6152
  *
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
+ * @see <a href="https://tools.ietf.org/html/rfc1870">RFC 1870</a>
+ * @see <a href="https://tools.ietf.org/html/rfc3030">RFC 3030</a>
+ * @see <a href="https://tools.ietf.org/html/rfc3461">RFC 3461</a>
+ * @see <a href="https://tools.ietf.org/html/rfc6152">RFC 6152</a>
  */
 public class ServerMail extends ServerProcessor {
 
@@ -108,8 +106,8 @@ public class ServerMail extends ServerProcessor {
     /**
      * Gets MAIL FROM SIZE param.
      *
-     * @link https://tools.ietf.org/html/rfc1870 RFC 1870
      * @return Size in bytes.
+     * @see <a href="https://tools.ietf.org/html/rfc1870">RFC 1870</a>
      */
     public int getSize() {
         if (size == 0) {
@@ -122,9 +120,9 @@ public class ServerMail extends ServerProcessor {
     /**
      * Gets MAIL FROM BODY param.
      *
-     * @link https://tools.ietf.org/html/rfc3030 RFC 3030
-     * @link https://tools.ietf.org/html/rfc6152 RFC 6152
      * @return BODY string.
+     * @see <a href="https://tools.ietf.org/html/rfc3030">RFC 3030</a>
+     * @see <a href="https://tools.ietf.org/html/rfc6152">RFC 6152</a>
      */
     public String getBody() {
         if (body.isEmpty()) {
@@ -137,8 +135,8 @@ public class ServerMail extends ServerProcessor {
     /**
      * Gets MAIL FROM NOTIFY list param.
      *
-     * @link https://tools.ietf.org/html/rfc3461#section-4.1 RFC 3461#section-4.1
      * @return NOTIFY addresses as array list.
+     * @see <a href="https://tools.ietf.org/html/rfc3461#section-4.1">RFC 3461 #4.1</a>
      */
     public String[] getNotify() {
         if (notify.length == 0) {
@@ -154,9 +152,9 @@ public class ServerMail extends ServerProcessor {
     /**
      * Gets MAIL FROM ORCPT param.
      *
-     * @link https://tools.ietf.org/html/rfc3461#section-4.2 RFC 3461#section-4.2
      * @return Original recipient address string.
      * @throws IOException MAIL address parsing problem.
+     * @see <a href="https://tools.ietf.org/html/rfc3461#section-4.2">RFC 3461 #4.2</a>
      */
     public InternetAddress getORcpt() throws IOException {
         if (oRcpt == null) {
@@ -177,8 +175,8 @@ public class ServerMail extends ServerProcessor {
     /**
      * Gets MAIL FROM RET param.
      *
-     * @link https://tools.ietf.org/html/rfc3461#section-4.3 RFC 3461#section-4.3
      * @return RET string.
+     * @see <a href="https://tools.ietf.org/html/rfc3461#section-4.3">RFC 3461 #4.3</a>
      */
     public String getRet() {
         if (ret.isEmpty()) {
@@ -191,8 +189,8 @@ public class ServerMail extends ServerProcessor {
     /**
      * Gets MAIL FROM ENVID param.
      *
-     * @link https://tools.ietf.org/html/rfc3461#section-4.4 RFC 3461#section-4.4
      * @return ENVID string.
+     * @see <a href="https://tools.ietf.org/html/rfc3461#section-4.4">RFC 3461 #4.4</a>
      */
     public String getEnvId() {
         if (envId.isEmpty()) {

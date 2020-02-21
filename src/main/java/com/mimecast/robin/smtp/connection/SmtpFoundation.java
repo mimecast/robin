@@ -21,12 +21,11 @@ import java.util.List;
 
 /**
  * SMTP foundation for socket reads and writes.
+ *
  * <p>Provides basic socket functionalities for building SMTP servers and clients.
- * @link https://tools.ietf.org/html/rfc5321 RFC 5321
  *
  * @see Connection
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
+ * @see <a href="https://tools.ietf.org/html/rfc5321">RFC 5321</a>
  */
 public abstract class SmtpFoundation {
     private static final Logger log = LogManager.getLogger(SmtpFoundation.class);
@@ -240,18 +239,18 @@ public abstract class SmtpFoundation {
      */
     private boolean isTerminator(byte[]... arrays) {
         int length = 0;
-        for (int i = 0; i < arrays.length; i++) {
-            length += arrays[i].length;
+        for (byte[] array : arrays) {
+            length += array.length;
         }
 
         byte[] total = new byte[length];
         int pos = 0;
-        for (int i = 0; i < arrays.length; i++) {
-            System.arraycopy(arrays[i], 0, total, pos, arrays[i].length);
-            pos += arrays[i].length;
+        for (byte[] array : arrays) {
+            System.arraycopy(array, 0, total, pos, array.length);
+            pos += array.length;
         }
 
-        return  (total.length == 5 && total[0] == 13 && total[1] == 10 && total[2] == 46 && total[3] == 13 && total[4] == 10) ||
+        return (total.length == 5 && total[0] == 13 && total[1] == 10 && total[2] == 46 && total[3] == 13 && total[4] == 10) ||
                 // For non compliant cases
                 (total.length == 3 && total[0] == 10 && total[1] == 46 && total[2] == 10) ||
                 (total.length == 3 && total[0] == 13 && total[1] == 46 && total[2] == 13);
@@ -279,8 +278,7 @@ public abstract class SmtpFoundation {
                 eol = new byte[2];
                 eol[0] = two;
                 eol[1] = one;
-            }
-            else if (one == 13 || one == 10) {
+            } else if (one == 13 || one == 10) {
                 eol = new byte[1];
                 eol[0] = one;
             }
@@ -385,10 +383,10 @@ public abstract class SmtpFoundation {
      * Write from given InputStream.
      * <p>Used for DATA deliveries.
      * <p>Implements dot stuffing.
-     * @link https ://tools.ietf.org/html/rfc5321#section-4.5.2 RFC 5321 4.5.2
      *
      * @param inputStream Input stream.
      * @throws IOException Unable to communicate.
+     * @see <a href="https://tools.ietf.org/html/rfc5321#section-4.5.2">RFC 5321 #4.5.2</a>
      */
     public void stream(LineInputStream inputStream) throws IOException {
         stream(inputStream, 1, 0);

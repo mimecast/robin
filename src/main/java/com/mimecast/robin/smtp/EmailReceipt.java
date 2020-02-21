@@ -2,8 +2,8 @@ package com.mimecast.robin.smtp;
 
 import com.mimecast.robin.main.Config;
 import com.mimecast.robin.main.Extensions;
-import com.mimecast.robin.smtp.extension.Extension;
 import com.mimecast.robin.smtp.connection.Connection;
+import com.mimecast.robin.smtp.extension.Extension;
 import com.mimecast.robin.smtp.verb.Verb;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,11 +14,9 @@ import java.util.Optional;
 
 /**
  * Email receipt runnable.
+ *
  * <p>This is used to create threads for incoming connections.
  * <p>A new instance will be constructed for every socket connection the server receives.
- *
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  */
 @SuppressWarnings("WeakerAccess")
 public class EmailReceipt implements Runnable {
@@ -112,8 +110,7 @@ public class EmailReceipt implements Runnable {
             if (opt.isPresent()) {
                 return opt.get().getServer().process(connection, verb);
             }
-        }
-        else {
+        } else {
             errorLimit--;
             if (errorLimit == 0) {
                 log.warn("Error limit reached.");

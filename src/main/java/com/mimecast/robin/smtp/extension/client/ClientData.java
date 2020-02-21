@@ -11,9 +11,6 @@ import java.io.*;
 
 /**
  * DATA extension processor.
- *
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  */
 public class ClientData extends ClientProcessor {
 

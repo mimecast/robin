@@ -8,10 +8,8 @@ import java.util.Map;
 
 /**
  * XCLIENT extension processor.
- * @link http://www.postfix.org/XCLIENT_README.html Postfix XCLIENT
  *
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
+ * @see <a href="http://www.postfix.org/XCLIENT_README.html">Postfix XCLIENT</a>
  */
 public class ClientXclient extends ClientProcessor {
 

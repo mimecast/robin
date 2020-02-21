@@ -8,10 +8,8 @@ import java.util.List;
 
 /**
  * Transaction list.
- * <p>This provides an abstract implementation for SMTP transactions.
  *
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
+ * <p>This provides an abstract implementation for SMTP transactions.
  */
 @SuppressWarnings("squid:S1192")
 public abstract class TransactionList {
@@ -25,7 +23,7 @@ public abstract class TransactionList {
     /**
      * Adds new transaction with response only.
      *
-     * @param command Command string.
+     * @param command  Command string.
      * @param response Response string.
      */
     public void addTransaction(String command, String response) {
@@ -37,8 +35,9 @@ public abstract class TransactionList {
     /**
      * Adds new transaction with response and error only.
      *
-     * @param command Command string.
+     * @param command  Command string.
      * @param response Response string.
+     * @param error    Error boolean.
      */
     public void addTransaction(String command, String response, boolean error) {
         if (!command.equalsIgnoreCase("rcpt") && !getTransactions(command).isEmpty()) return;
@@ -49,8 +48,8 @@ public abstract class TransactionList {
     /**
      * Adds new transaction with payload and response.
      *
-     * @param command Command string.
-     * @param payload Payload string.
+     * @param command  Command string.
+     * @param payload  Payload string.
      * @param response Response string.
      */
     public void addTransaction(String command, String payload, String response) {
@@ -62,10 +61,10 @@ public abstract class TransactionList {
     /**
      * Adds new transaction with payload, response and error.
      *
-     * @param command Command string.
-     * @param payload Payload string.
+     * @param command  Command string.
+     * @param payload  Payload string.
      * @param response Response string.
-     * @param error Is error boolean.
+     * @param error    Is error boolean.
      */
     public void addTransaction(String command, String payload, String response, boolean error) {
         if (!command.equalsIgnoreCase("rcpt") &&

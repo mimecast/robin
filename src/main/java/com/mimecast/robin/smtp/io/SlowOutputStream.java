@@ -9,10 +9,8 @@ import java.io.OutputStream;
 
 /**
  * Slow output stream.
- * <p>Slows down the writing for given miliseconds every given bytes.
  *
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
+ * <p>Slows down the writing for given miliseconds every given bytes.
  */
 @SuppressWarnings("squid:S4349")
 public class SlowOutputStream extends OutputStream {
@@ -48,7 +46,7 @@ public class SlowOutputStream extends OutputStream {
      *
      * @param out   OutputStream instance.
      * @param bytes Size of bytes.
-     * @param wait Time out miliseconds.
+     * @param wait  Time out miliseconds.
      */
     public SlowOutputStream(OutputStream out, int bytes, int wait) {
         this.out = out;
@@ -62,7 +60,7 @@ public class SlowOutputStream extends OutputStream {
             count++;
             if (count == bytes) {
                 count = 0;
-                log.info("Waiting after {} bytes wrote.",  bytes);
+                log.info("Waiting after {} bytes wrote.", bytes);
                 totalWait += wait;
                 Sleep.nap(wait);
             }

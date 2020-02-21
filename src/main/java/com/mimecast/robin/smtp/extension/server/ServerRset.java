@@ -7,9 +7,6 @@ import java.io.IOException;
 
 /**
  * RSET extension processor.
- *
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  */
 public class ServerRset extends ServerProcessor {
 
@@ -17,7 +14,7 @@ public class ServerRset extends ServerProcessor {
      * RSET processor.
      *
      * @param connection Connection instance.
-     * @param verb Verb instance.
+     * @param verb       Verb instance.
      * @return Boolean.
      * @throws IOException Unable to communicate.
      */

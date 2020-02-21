@@ -2,9 +2,6 @@ package com.mimecast.robin.smtp.auth;
 
 /**
  * Digest-MD5 authentication mechanism random generator.
- *
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  */
 interface Random {
 

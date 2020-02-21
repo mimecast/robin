@@ -9,12 +9,11 @@ import java.util.Map;
 
 /**
  * Digest-MD5 utils.
+ *
  * <p>Provides utility methods for processing authentication data.
  *
  * @see DigestMD5Client
  * @see DigestMD5Server
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  */
 class DigestUtils {
 
@@ -88,15 +87,15 @@ class DigestUtils {
         payload.append(",nc=").append(hexadecimal(values.containsKey(NC) ? (String) values.get(NC) : "1"));
 
         payload.append(",nonce=\"").append(values.containsKey(NONCE) ? values.get(NONCE) : "").append("\"");
-        if(values.containsKey(CNONCE)) {
+        if (values.containsKey(CNONCE)) {
             payload.append(",cnonce=\"").append(values.containsKey(CNONCE) ? values.get(CNONCE) : "").append("\"");
         }
 
-        if(values.containsKey(HOST)) {
+        if (values.containsKey(HOST)) {
             payload.append(",digest-uri=\"smtp/").append(values.containsKey(HOST) ? values.get(HOST) : "").append("\"");
         }
 
-        if(values.containsKey(RESPONSE)) {
+        if (values.containsKey(RESPONSE)) {
             payload.append(",response=").append(values.containsKey(RESPONSE) ? values.get(RESPONSE) : "");
         }
 

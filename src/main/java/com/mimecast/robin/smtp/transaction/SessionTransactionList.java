@@ -5,11 +5,10 @@ import java.util.List;
 
 /**
  * Session transaction list.
+ *
  * <p>This provides the implementation for session transactions.
  *
  * @see TransactionList
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  */
 public class SessionTransactionList extends TransactionList {
 

@@ -5,10 +5,6 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * Sleep utility.
- * <p>Some operations require a little bit of waiting.
- *
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  */
 public class Sleep {
     private static final Logger log = LogManager.getLogger(Sleep.class);

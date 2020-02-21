@@ -4,12 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * EnvelopeTransactionList
+ * EnvelopeTransactionList.
+ *
  * <p>This provides the implementation for envelope transactions.
  *
  * @see TransactionList
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  */
 public class EnvelopeTransactionList extends TransactionList {
 

@@ -4,10 +4,9 @@ import com.mimecast.robin.main.Config;
 
 /**
  * SMTP verb.
+ *
  * <p>This implements the basic parsing for SMTP verbs.
  *
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  * @see AuthVerb
  * @see BdatVerb
  * @see EhloVerb
@@ -125,14 +124,14 @@ public class Verb {
                 // Ensures command is at least 4 chars log.
                 command.length() < 4 ||
 
-                // Ensures AUTH is not handled if disabled.
-                (command.equalsIgnoreCase("AUTH") && !Config.getServer().isAuth()) ||
+                        // Ensures AUTH is not handled if disabled.
+                        (command.equalsIgnoreCase("AUTH") && !Config.getServer().isAuth()) ||
 
-                // Ensures STARTTLS is not handled if disabled.
-                (command.equalsIgnoreCase("STARTTLS") && !Config.getServer().isStartTls()) ||
+                        // Ensures STARTTLS is not handled if disabled.
+                        (command.equalsIgnoreCase("STARTTLS") && !Config.getServer().isStartTls()) ||
 
-                // Ensures CHUNKING is not handled if disabled.
-                (command.equalsIgnoreCase("BDAT") && !Config.getServer().isChunking())
+                        // Ensures CHUNKING is not handled if disabled.
+                        (command.equalsIgnoreCase("BDAT") && !Config.getServer().isChunking())
         );
     }
 }

@@ -1,14 +1,11 @@
 package com.mimecast.robin.smtp.security;
 
 import javax.net.ssl.X509TrustManager;
-import java.security.cert.X509Certificate;
 import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 
 /**
  * All trusting manager.
- *
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  */
 @SuppressWarnings("all")
 public class PermissiveTrustManager implements X509TrustManager {
@@ -36,7 +33,7 @@ public class PermissiveTrustManager implements X509TrustManager {
     /**
      * Check if client is trusted.
      *
-     * @param chain Peer certificate chain.
+     * @param chain    Peer certificate chain.
      * @param authType Key exchange algorithm used.
      * @throws CertificateException If the certificate chain is not trusted.
      */
@@ -47,7 +44,7 @@ public class PermissiveTrustManager implements X509TrustManager {
     /**
      * Check if server is trusted.
      *
-     * @param chain Peer certificate chain.
+     * @param chain    Peer certificate chain.
      * @param authType Key exchange algorithm used.
      * @throws CertificateException If the certificate chain is not trusted.
      */

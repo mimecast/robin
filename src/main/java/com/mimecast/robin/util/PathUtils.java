@@ -10,10 +10,7 @@ import java.nio.file.Paths;
 import java.util.Objects;
 
 /**
- * Path handling static utilities.
- *
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
+ * Static utilities for handling files and paths.
  */
 @SuppressWarnings("squid:S1192")
 public final class PathUtils extends File {

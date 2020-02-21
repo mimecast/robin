@@ -7,9 +7,6 @@ import java.io.IOException;
 
 /**
  * STARTTLS extension processor.
- *
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  */
 public class ClientStartTls extends ClientProcessor {
 

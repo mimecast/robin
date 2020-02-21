@@ -8,9 +8,6 @@ import java.io.IOException;
 
 /**
  * HELP extension processor.
- *
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  */
 public class ServerHelp extends ServerProcessor {
 

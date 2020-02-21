@@ -13,13 +13,12 @@ import java.util.regex.Pattern;
 
 /**
  * Magic input stream.
+ *
  * <p>This implements line reading InputStream.
  * <p>It finds and replaces magic tags in lines read given MessageEnvelope provided.
  * <p>It uses LineInputStream to do the actual line reading.
  *
  * @see LineInputStream
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  */
 @SuppressWarnings("squid:MaximumInheritanceDepth")
 public class MagicInputStream extends LineInputStream {
@@ -39,6 +38,7 @@ public class MagicInputStream extends LineInputStream {
      * Simple magic tags patterns.
      */
     private static final Map<String, Pattern> simpleTags = new HashMap<>();
+
     static {
         simpleTags.put("{$msgid}", Pattern.compile("\\{\\$msgid}", Pattern.CASE_INSENSITIVE));
         simpleTags.put("{$date}", Pattern.compile("\\{\\$date}", Pattern.CASE_INSENSITIVE));
@@ -51,7 +51,7 @@ public class MagicInputStream extends LineInputStream {
     /**
      * Constructs a new MagicInputStream instance with given MessageEnvelope.
      *
-     * @param in              InputStream instance.
+     * @param in       InputStream instance.
      * @param envelope MessageEnvelope instance.
      */
     public MagicInputStream(InputStream in, MessageEnvelope envelope) {
@@ -91,13 +91,13 @@ public class MagicInputStream extends LineInputStream {
             String tag = new String(lineBytes).toLowerCase();
             String line = new String(lineBytes);
 
-            if(tag.contains("{$randch")) {
+            if (tag.contains("{$randch")) {
                 String random = randCh(line);
                 changed = !randCh(line).equals(line);
                 line = random;
             }
 
-            if(tag.contains("{$randno")) {
+            if (tag.contains("{$randno")) {
                 String random = randNo(line);
                 changed = !randNo(line).equals(line);
                 line = random;

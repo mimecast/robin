@@ -8,17 +8,16 @@ import org.apache.logging.log4j.Logger;
 import javax.naming.ConfigurationException;
 
 /**
- * Application foundation.
- * <p>This provides the runonce initializer for global configuration.
+ * Run-once initializer for server and client.
+ *
+ * <p>Provides the runonce initializer for global configuration.
  * <p>Both server and client extend this.
- * <p>This loads the config files and annotated plugins.
+ * <p>This loads the config files and annotations.
  *
  * @see Server
  * @see Client
  * @see ConfigLoader
  * @see AnnotationLoader
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  */
 @SuppressWarnings("squid:S1118")
 public abstract class Foundation {
@@ -31,6 +30,9 @@ public abstract class Foundation {
 
     /**
      * Run once initializer.
+     *
+     * @param path Path to configuration file.
+     * @throws ConfigurationException Unable to read/parse config file.
      */
     public static void init(String path) throws ConfigurationException {
         if (runOnce) return;

@@ -7,13 +7,12 @@ import java.util.Map;
 
 /**
  * Client route configuration container.
+ *
  * <p>This is a container for routes defined in the client configuration.
  * <p>One instance will be made for every route defined.
  * <p>This can be used to configure MX, PORT and SMTP AUTH authentication in cases.
  *
  * @see ConfigFoundation
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  */
 @SuppressWarnings("unchecked")
 public class RouteConfig extends ConfigFoundation {

@@ -7,10 +7,11 @@ import java.util.Map;
 
 /**
  * Digest data.
+ *
  * <p>This is a container for challenges and responses.
  *
- * @link https ://tools.ietf.org/html/rfc2831#section-2.1.1 RFC 2831 2.1.1
- * @link https ://tools.ietf.org/html/rfc2831#section-2.1.2 RFC 2831 2.1.2
+ * @see <a href="https://tools.ietf.org/html/rfc2831#section-2.1.1">RFC 2831 #2.1.1</a>
+ * @see <a href="https://tools.ietf.org/html/rfc2831#section-2.1.2">RFC 2831 #2.1.2</a>
  */
 @SuppressWarnings("UnusedReturnValue")
 public class DigestData {
@@ -286,7 +287,7 @@ public class DigestData {
     /**
      * Gets not null map entry.
      *
-     * @param key  Map key.
+     * @param key Map key.
      * @return String.
      */
     private String getNotNull(String key) {

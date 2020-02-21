@@ -21,10 +21,6 @@ import java.util.List;
 
 /**
  * TLS socket.
- * <p>Establishes TLS over given socket.
- *
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  */
 public class DefaultTLSSocket implements TLSSocket {
     private static final Logger log = LogManager.getLogger(DefaultTLSSocket.class);
@@ -99,7 +95,7 @@ public class DefaultTLSSocket implements TLSSocket {
         }
 
         // Trust manager.
-        TrustManager[] tm = new TrustManager[] { Factories.getTrustManager() };
+        TrustManager[] tm = new TrustManager[]{Factories.getTrustManager()};
 
         // Key manager X.509.
         KeyManager[] km = null;
@@ -196,6 +192,7 @@ public class DefaultTLSSocket implements TLSSocket {
 
     /**
      * Gets keystore.
+     *
      * @return Keystore.
      */
     private FileInputStream getKeyStore() {
@@ -212,6 +209,7 @@ public class DefaultTLSSocket implements TLSSocket {
 
     /**
      * Gets keystore password
+     *
      * @return Password.
      */
     private char[] getKeyStorePassword() {

@@ -10,6 +10,7 @@ import java.io.IOException;
 
 /**
  * Email delivery client.
+ *
  * <p>This is the client used to send cases.
  * <p>It takes a configuration directory path and a case JSON path.
  * <p>The configuration path is used to load the global configuration files.
@@ -17,8 +18,6 @@ import java.io.IOException;
  *
  * @see Foundation
  * @see EmailDelivery
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  */
 public class Client extends Foundation {
 
@@ -26,6 +25,7 @@ public class Client extends Foundation {
      * Constructs a new Client instance with given client configuration path.
      *
      * @param configDirPath Directory path.
+     * @throws ConfigurationException Unable to read/parse config file.
      */
     public Client(String configDirPath) throws ConfigurationException {
         init(configDirPath);
@@ -36,6 +36,7 @@ public class Client extends Foundation {
      *
      * @param casePath File path.
      * @throws AssertException Assertion exception.
+     * @throws IOException     Unable to communicate.
      */
     public void send(String casePath) throws AssertException, IOException {
         CaseConfig caseConfig = new CaseConfig(casePath);
