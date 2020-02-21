@@ -1,7 +1,6 @@
 package com.mimecast.robin.assertion;
 
-import com.mimecast.robin.assertion.mta.AssertMta;
-import com.mimecast.robin.assertion.mta.client.LogsClient;
+import com.mimecast.robin.assertion.client.ExternalClient;
 import com.mimecast.robin.main.Factories;
 import com.mimecast.robin.smtp.MessageEnvelope;
 import com.mimecast.robin.smtp.connection.Connection;
@@ -15,21 +14,13 @@ import java.util.regex.Pattern;
 
 /**
  * Assertion engine.
- * <p>This gets called at the end of a client delivery.
- * <p>It will read the assertions from the configuration and try to assert them against SMTP transactions and MTA logs.
- * <p>MTA logs are only assertable given a client that can provide the logs.
- * <p>The SMTP transactions are organized in two lists:
- * <ul>
- *     <li><b>Session transactions</b>
- *         <br>They will track all commands exchanged outside the envelope ones.
- *     <li><b>Envelope transactions</b><i>(MAIL, RCPT, DATA/BDAT)</i>
- *         <br>Having a repeating pattern they are grouped for each envelope within the session list.
- * </ul>
+ * <p>Called at the end of a client delivery.
+ * <p>It will read the assertions from the configuration and try to assert them against SMTP transactions and external logs.
+ * <p>External logs are only assertable given a client that can provide the logs.
+ * <p>The intent of this was initially to fetch and assert MTA logs but was generified.
  *
  * @see Connection
- * @see LogsClient
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
+ * @see ExternalClient
  */
 public class Assert {
 
@@ -39,41 +30,12 @@ public class Assert {
     private final Connection connection;
 
     /**
-     * Client instance.
-     */
-    private final LogsClient client;
-
-    /**
      * Constructs a new Assert instance with given Connection.
      *
      * @param connection Connection instance.
      */
     public Assert(Connection connection) {
-        this(connection, null);
-    }
-
-    /**
-     * Constructs a new Assert instance with given Connection and LogsClient.
-     *
-     * @param connection Session instance.
-     * @param client     LogsClient instance.
-     */
-    public Assert(Connection connection, LogsClient client) {
         this.connection = connection;
-        this.client = client != null ? client : getClient();
-    }
-
-    /**
-     * Gets client from factories.
-     *
-     * @return LogsClient instance.
-     */
-    private LogsClient getClient() {
-        LogsClient logsClient = Factories.getLogsClient();
-        if (logsClient != null && connection.getSession().getMx() != null && !connection.getSession().getMx().isEmpty()) {
-            logsClient.setServer(connection.getSession().getMx().get(0));
-        }
-        return logsClient;
     }
 
     /**
@@ -100,7 +62,7 @@ public class Assert {
             for (List<String> assertion : list) {
                 if (assertion.size() == 2) {
                     List<Transaction> transactions = transactionList.getTransactions(assertion.get(0));
-                    if (transactions.isEmpty()) throw new AssertException("Unable to find transaction for [" + assertion.get(0) + "]");
+                    if (transactions.isEmpty()) throw new AssertException("Assert unable to find transaction for [" + assertion.get(0) + "]");
                     assertTransactions(transactions, assertion.get(1));
                 }
             }
@@ -129,7 +91,7 @@ public class Assert {
             }
         }
 
-        if (!matched) throw new AssertException("Unable to match [" + regex + "]");
+        if (!matched) throw new AssertException("Assert unable to match [" + regex + "]");
     }
 
     /**
@@ -148,27 +110,19 @@ public class Assert {
                         assertSmtp(envelope.getAssertions().getSmtp(), envelopeTransactionList);
                     }
 
-                    // MTA.
-                    if (!envelope.getAssertions().getMta().isEmpty()) {
-                        assertEnvelopeMta(envelope, envelopeTransactionList);
+                    // External.
+                    if (!Factories.getExternalKeys().isEmpty()) {
+                        for (String key : Factories.getExternalKeys()) {
+                            ExternalClient client = Factories.getExternalClient(key, connection, i);
+                            if (client != null) {
+                                new AssertExternal(client, envelope.getAssertions().getExternal(key));
+                            } else {
+                                throw new AssertException("Assert external client not instanciated");
+                            }
+                        }
                     }
                 }
             }
-        }
-    }
-
-    /**
-     * Assert against MTA logs if a logs client was given.
-     *
-     * @param envelope         MessageEnvelope instance.
-     * @param list EnvelopeTransactionList instance.
-     * @throws AssertException Assertion exception.
-     */
-    private void assertEnvelopeMta(MessageEnvelope envelope, EnvelopeTransactionList list) throws AssertException {
-        if (client != null) {
-            new AssertMta(client, envelope.getAssertions().getMta(), list);
-        } else {
-            throw new AssertException("No client given");
         }
     }
 }

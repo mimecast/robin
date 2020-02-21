@@ -12,7 +12,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class AssertMtaConfigTest {
+class AssertExternalConfigTest {
 
     @BeforeAll
     static void before() throws ConfigurationException {
@@ -39,17 +39,17 @@ class AssertMtaConfigTest {
                 "}";
 
         Map<String, Object> map = new Gson().fromJson(json, new TypeToken<HashMap<String, Object>>() {}.getType());
-        AssertMtaConfig assertMtaConfig = new AssertConfig(map).getMta();
+        AssertExternalConfig assertExternalConfig = new AssertExternalConfig(new AssertConfig(map).getMapProperty("mta"));
 
-        assertEquals(5, assertMtaConfig.getWait());
-        assertEquals(30, assertMtaConfig.getDelay());
-        assertEquals(3, assertMtaConfig.getRetry());
-        assertEquals("MTAOUTSUMMARY", assertMtaConfig.getVerify().get(0));
-        assertEquals("MTAEMAILEXPLODE", assertMtaConfig.getMatch().get(0).get(0));
-        assertEquals("Skel=Aph-", assertMtaConfig.getMatch().get(0).get(1));
-        assertEquals("MTASPAMRESULT", assertMtaConfig.getMatch().get(1).get(0));
-        assertEquals("Act=Acc", assertMtaConfig.getMatch().get(1).get(1));
-        assertEquals("java.lang.NullPointerException", assertMtaConfig.getRefuse().get(0).get(0));
+        assertEquals(5, assertExternalConfig.getWait());
+        assertEquals(30, assertExternalConfig.getDelay());
+        assertEquals(3, assertExternalConfig.getRetry());
+        assertEquals("MTAOUTSUMMARY", assertExternalConfig.getVerify().get(0));
+        assertEquals("MTAEMAILEXPLODE", assertExternalConfig.getMatch().get(0).get(0));
+        assertEquals("Skel=Aph-", assertExternalConfig.getMatch().get(0).get(1));
+        assertEquals("MTASPAMRESULT", assertExternalConfig.getMatch().get(1).get(0));
+        assertEquals("Act=Acc", assertExternalConfig.getMatch().get(1).get(1));
+        assertEquals("java.lang.NullPointerException", assertExternalConfig.getRefuse().get(0).get(0));
     }
 
     @Test
@@ -59,10 +59,10 @@ class AssertMtaConfigTest {
         map.put("delay", 5);
         map.put("retry", 1);
 
-        AssertMtaConfig assertMtaConfig = new AssertMtaConfig(map);
-        assertEquals(2, assertMtaConfig.getWait()); // Minimum is 2
-        assertEquals(5, assertMtaConfig.getDelay());
-        assertEquals(1, assertMtaConfig.getRetry());
+        AssertExternalConfig assertExternalConfig = new AssertExternalConfig(map);
+        assertEquals(2, assertExternalConfig.getWait()); // Minimum is 2
+        assertEquals(5, assertExternalConfig.getDelay());
+        assertEquals(1, assertExternalConfig.getRetry());
     }
 
     @Test
@@ -72,10 +72,10 @@ class AssertMtaConfigTest {
         map.put("delay", 5D);
         map.put("retry", 3D);
 
-        AssertMtaConfig assertMtaConfig = new AssertMtaConfig(map);
-        assertEquals(3, assertMtaConfig.getWait());
-        assertEquals(5, assertMtaConfig.getDelay());
-        assertEquals(3, assertMtaConfig.getRetry());
+        AssertExternalConfig assertExternalConfig = new AssertExternalConfig(map);
+        assertEquals(3, assertExternalConfig.getWait());
+        assertEquals(5, assertExternalConfig.getDelay());
+        assertEquals(3, assertExternalConfig.getRetry());
     }
 
     @Test
@@ -85,10 +85,10 @@ class AssertMtaConfigTest {
         map.put("delay", (short) 15);
         map.put("retry", (short) 30);
 
-        AssertMtaConfig assertMtaConfig = new AssertMtaConfig(map);
-        assertEquals(30, assertMtaConfig.getWait());
-        assertEquals(15, assertMtaConfig.getDelay());
-        assertEquals(30, assertMtaConfig.getRetry());
+        AssertExternalConfig assertExternalConfig = new AssertExternalConfig(map);
+        assertEquals(30, assertExternalConfig.getWait());
+        assertEquals(15, assertExternalConfig.getDelay());
+        assertEquals(30, assertExternalConfig.getRetry());
     }
 
     @Test
@@ -98,10 +98,10 @@ class AssertMtaConfigTest {
         map.put("delay", 500L);
         map.put("retry", 100L);
 
-        AssertMtaConfig assertMtaConfig = new AssertMtaConfig(map);
-        assertEquals(100, assertMtaConfig.getWait());
-        assertEquals(500, assertMtaConfig.getDelay());
-        assertEquals(100, assertMtaConfig.getRetry());
+        AssertExternalConfig assertExternalConfig = new AssertExternalConfig(map);
+        assertEquals(100, assertExternalConfig.getWait());
+        assertEquals(500, assertExternalConfig.getDelay());
+        assertEquals(100, assertExternalConfig.getRetry());
     }
 
     @Test
@@ -111,9 +111,9 @@ class AssertMtaConfigTest {
         map.put("delay", "5");
         map.put("retry", "1");
 
-        AssertMtaConfig assertMtaConfig = new AssertMtaConfig(map);
-        assertEquals(2, assertMtaConfig.getWait()); // Minimum is 2
-        assertEquals(5, assertMtaConfig.getDelay());
-        assertEquals(1, assertMtaConfig.getRetry());
+        AssertExternalConfig assertExternalConfig = new AssertExternalConfig(map);
+        assertEquals(2, assertExternalConfig.getWait()); // Minimum is 2
+        assertEquals(5, assertExternalConfig.getDelay());
+        assertEquals(1, assertExternalConfig.getRetry());
     }
 }

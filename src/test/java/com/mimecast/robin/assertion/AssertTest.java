@@ -2,7 +2,7 @@ package com.mimecast.robin.assertion;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.mimecast.robin.assertion.mta.client.LogsClientMock;
+import com.mimecast.robin.assertion.client.ExternalClientMock;
 import com.mimecast.robin.config.assertion.AssertConfig;
 import com.mimecast.robin.main.Factories;
 import com.mimecast.robin.main.Foundation;
@@ -65,7 +65,8 @@ class AssertTest {
         Session session = new Session();
         session.addAssertions(assertConfig);
 
-        new Assert(new Connection(session, sessionTransactionList), new LogsClientMock()).run();
+        Factories.putExternalClient("mta", ExternalClientMock::new);
+        new Assert(new Connection(session, sessionTransactionList)).run();
     }
 
     @SuppressWarnings("rawtypes")
@@ -85,7 +86,7 @@ class AssertTest {
         Session session = new Session();
         session.addEnvelope(envelope);
 
-        Factories.setLogsClient(LogsClientMock::new);
+        Factories.putExternalClient("mta", ExternalClientMock::new);
         new Assert(new Connection(session, sessionTransactionList)).run();
     }
 
@@ -99,7 +100,7 @@ class AssertTest {
         Session session = new Session();
         session.addAssertions(assertConfig);
 
-        Factories.setLogsClient(LogsClientMock::new);
+        Factories.putExternalClient("mta", ExternalClientMock::new);
         new Assert(new Connection(session, new SessionTransactionList())).run();
     }
 }

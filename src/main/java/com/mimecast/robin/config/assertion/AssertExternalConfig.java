@@ -18,20 +18,17 @@ import java.util.Map;
  *     }
  * </pre>
  * <p>This may be present at both envelope level only.
- *
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  */
 @SuppressWarnings("unchecked")
-public class AssertMtaConfig extends ConfigFoundation {
+public class AssertExternalConfig extends ConfigFoundation {
 
     /**
-     * Constructs a new AssertMtaConfig instance.
+     * Constructs a new AssertExternalConfig instance.
      *
      * @param map Configuration map.
      */
     @SuppressWarnings("rawtypes")
-    public AssertMtaConfig(Map map) {
+    public AssertExternalConfig(Map map) {
         super(map);
     }
 

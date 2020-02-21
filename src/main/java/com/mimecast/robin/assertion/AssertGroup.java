@@ -1,4 +1,4 @@
-package com.mimecast.robin.assertion.mta;
+package com.mimecast.robin.assertion;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,9 +8,7 @@ import java.util.regex.Pattern;
  * Assert group.
  * <p>Container class for pattern groups used for MTA assertion.
  *
- * @see AssertMta
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
+ * @see AssertExternal
  */
 @SuppressWarnings("UnusedReturnValue")
 public class AssertGroup {

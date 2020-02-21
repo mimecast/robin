@@ -1,8 +1,7 @@
-package com.mimecast.robin.assertion.mta;
+package com.mimecast.robin.assertion;
 
-import com.mimecast.robin.assertion.AssertException;
-import com.mimecast.robin.assertion.mta.client.LogsClientMock;
-import com.mimecast.robin.config.assertion.AssertMtaConfig;
+import com.mimecast.robin.assertion.client.ExternalClientMock;
+import com.mimecast.robin.config.assertion.AssertExternalConfig;
 import com.mimecast.robin.main.Foundation;
 import com.mimecast.robin.smtp.transaction.EnvelopeTransactionList;
 import org.junit.jupiter.api.BeforeAll;
@@ -13,7 +12,7 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class AssertMtaTest {
+class AssertExternalTest {
 
     private static final EnvelopeTransactionList envelopeTransactionList = new EnvelopeTransactionList();
 
@@ -37,9 +36,7 @@ class AssertMtaTest {
         map.put("retry", 1);
         map.put("match", matches);
 
-        AssertMtaConfig assertions = new AssertMtaConfig(map);
-
-        new AssertMta(new LogsClientMock(), assertions, envelopeTransactionList);
+        new AssertExternal(new ExternalClientMock(), new AssertExternalConfig(map));
     }
 
     @Test
@@ -54,22 +51,7 @@ class AssertMtaTest {
             map.put("retry", 3);
             map.put("match", matches);
 
-            AssertMtaConfig assertions = new AssertMtaConfig(map);
-
-            new AssertMta(new LogsClientMock(), assertions, envelopeTransactionList);
-        });
-    }
-
-    @Test
-    @SuppressWarnings("rawtypes")
-    void assertionNoUID() {
-        assertThrows(AssertException.class, () -> {
-            AssertMtaConfig assertions = new AssertMtaConfig(new HashMap());
-
-            EnvelopeTransactionList envelopeTransactionList = new EnvelopeTransactionList();
-            envelopeTransactionList.addTransaction("MAIL", "250 Sender OK", false);
-
-            new AssertMta(new LogsClientMock(), assertions, envelopeTransactionList);
+            new AssertExternal(new ExternalClientMock(), new AssertExternalConfig(map));
         });
     }
 }

@@ -1,15 +1,11 @@
 package com.mimecast.robin.assertion;
 
-import com.mimecast.robin.assertion.mta.AssertMta;
-
 /**
  * Assertion exception.
- * <p>Thrown by Assert and AssertMta if an assertion doesn't match anything.
+ * <p>Thrown by Assert and AssertExternal if an assertion doesn't match anything.
  *
  * @see Assert
- * @see AssertMta
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
+ * @see AssertExternal
  */
 public class AssertException extends Exception {
 

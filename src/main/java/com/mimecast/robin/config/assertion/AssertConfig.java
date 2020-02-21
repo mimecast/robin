@@ -1,7 +1,8 @@
 package com.mimecast.robin.config.assertion;
 
-import com.mimecast.robin.assertion.mta.client.LogsClient;
+import com.mimecast.robin.assertion.client.ExternalClient;
 import com.mimecast.robin.config.ConfigFoundation;
+import com.mimecast.robin.main.Factories;
 
 import java.util.List;
 import java.util.Map;
@@ -17,7 +18,7 @@ import java.util.Map;
  *             ["DATA", "^250"],
  *             ["DATA", "Received OK"]
  *         ],
- *         "mta": {
+ *         "external": {
  *             "delay": 5,
  *             "retry": 2,
  *             "match": [
@@ -28,12 +29,11 @@ import java.util.Map;
  * </pre>
  * <p>This may be present at both session and envelope level.
  * <p>SMTP assertions are done directly over the SMTP transactions.
- * <p>MTA assertions require a client for fetching the logs.
+ * <p>External assertions require a client for fetching the logs.
  *
- * @see LogsClient
- * @see AssertMtaConfig
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
+ * @see ExternalClient
+ * @see Factories;
+ * @see AssertExternalConfig
  */
 @SuppressWarnings("unchecked")
 public class AssertConfig extends ConfigFoundation {
@@ -65,11 +65,11 @@ public class AssertConfig extends ConfigFoundation {
     }
 
     /**
-     * Gets MTA assertion configuration instance.
+     * Gets external assertion configuration instance.
      *
-     * @return AssertMtaConfig instance.
+     * @return AssertExternalConfig instance.
      */
-    public AssertMtaConfig getMta() {
-        return new AssertMtaConfig(getMapProperty("mta"));
+    public AssertExternalConfig getExternal(String name) {
+        return new AssertExternalConfig(getMapProperty(name));
     }
 }

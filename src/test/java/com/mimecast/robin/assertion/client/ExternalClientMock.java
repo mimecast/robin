@@ -1,16 +1,24 @@
-package com.mimecast.robin.assertion.mta.client;
+package com.mimecast.robin.assertion.client;
 
+import com.mimecast.robin.smtp.connection.Connection;
 import org.json.JSONArray;
 
-public class LogsClientMock implements LogsClient {
+public class ExternalClientMock implements ExternalClient {
 
-    public LogsClientMock() {}
-
-    @Override
-    public void setServer(String server) {}
+    public ExternalClientMock() {}
 
     @Override
-    public JSONArray getLogs(String query) {
+    public ExternalClientMock setConnection(Connection connection) {
+        return this;
+    }
+
+    @Override
+    public ExternalClientMock setTransactionId(int transactionId) {
+        return this;
+    }
+
+    @Override
+    public JSONArray getLogs() {
         JSONArray arr = new JSONArray();
         arr.put("INFO |0810-110152743|SmtpThread-30307|smtp.Receipt|dSuG02ERM-OO1-R2Eawg9A|||||Accepted connection from 8.8.8.8:7575");
         arr.put("INFO |0810-110152748|SmtpThread-30307|smtp.Receipt|dSuG02ERM-OO1-R2Eawg9A|||||> 220 stark.com ESMTP ; Fri, 10 Aug 2018 11:01:52 +0100");

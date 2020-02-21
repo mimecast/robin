@@ -1,7 +1,7 @@
 package com.mimecast.robin.main;
 
 import com.mimecast.robin.annotation.Plugin;
-import com.mimecast.robin.assertion.mta.client.LogsClient;
+import com.mimecast.robin.assertion.client.ExternalClient;
 import com.mimecast.robin.smtp.auth.DigestCache;
 import com.mimecast.robin.smtp.auth.StaticDigestCache;
 import com.mimecast.robin.smtp.connection.Connection;
@@ -17,6 +17,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.net.ssl.X509TrustManager;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 
 /**
@@ -25,8 +29,6 @@ import java.util.concurrent.Callable;
  * <p>You may write a plugin to inject yours.
  *
  * @see Plugin
- * @author "Vlad Marian" <vmarian@mimecast.com>
- * @link http://mimecast.com Mimecast
  */
 public class Factories {
     private static final Logger log = LogManager.getLogger(Factories.class);
@@ -68,10 +70,10 @@ public class Factories {
     private static Callable<StorageClient> storageClient;
 
     /**
-     * MTA logs client.
-     * <p>Used to fetch MTA logs for assertion.
+     * External clients.
+     * <p>Used to fetch external service logs for assertion.
      */
-    private static Callable<LogsClient> logsClient;
+    private static Map<String, Callable<ExternalClient>> externalClients = new HashMap<>();
 
     /**
      * Protected constructor.
@@ -238,28 +240,41 @@ public class Factories {
     }
 
     /**
-     * Sets LogsClient.
+     * Puts ExternalClient.
      *
-     * @param callable LogsClient callable.
+     * @param key      Config map key.
+     * @param callable ExternalClient callable.
      */
-    public static void setLogsClient(Callable<LogsClient> callable) {
-        logsClient = callable;
+    public static void putExternalClient(String key, Callable<ExternalClient> callable) {
+        externalClients.put(key, callable);
     }
 
     /**
-     * Gets LogsClient.
+     * Gets ExternalClient by key.
      *
-     * @return LogsClient instance.
+     * @param key           Config map key.
+     * @param connection    Connection instance.
+     * @param transactionId Transaction ID.
+     * @return ExternalClient instance.
      */
-    public static LogsClient getLogsClient() {
-        if (logsClient != null) {
+    public static ExternalClient getExternalClient(String key, Connection connection, int transactionId) {
+        if (externalClients.get(key) != null) {
             try {
-                return logsClient.call();
+                return externalClients.get(key).call().setConnection(connection).setTransactionId(transactionId);
             } catch (Exception e) {
-                log.error("Error calling logs client: {}", e.getMessage());
+                log.error("Error calling storage client: {}", e.getMessage());
             }
         }
 
         return null;
+    }
+
+    /**
+     * Gets ExternalClient keys.
+     *
+     * @return list of String.
+     */
+    public static List<String> getExternalKeys() {
+        return new ArrayList<>(externalClients.keySet());
     }
 }
