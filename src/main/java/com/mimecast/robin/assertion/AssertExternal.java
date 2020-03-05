@@ -63,16 +63,18 @@ public class AssertExternal {
 
         this.client = client;
 
-        try {
-            compileVerify(); // Precompile verify patterns for performance.
-            findLogs(); // Get the logs for that UID and verify.
-            compilePatterns(assertExternalConfig.getMatch(), matchGroups); // Precompile match patterns for performance.
-            compilePatterns(assertExternalConfig.getRefuse(), refuseGroups); // Precompile refuse patterns for performance.
-            checkPatterns(true); // Match patters to log lines.
-            checkPatterns(false); // Refuse patters to log lines.
-            verifyMatches(); // Evaluate unmatched assertion and except.
-        } catch (Exception e) {
-            throw new AssertException(e);
+        if (!assertExternalConfig.isEmpty()) {
+            try {
+                compileVerify(); // Precompile verify patterns for performance.
+                findLogs(); // Get the logs for that UID and verify.
+                compilePatterns(assertExternalConfig.getMatch(), matchGroups); // Precompile match patterns for performance.
+                compilePatterns(assertExternalConfig.getRefuse(), refuseGroups); // Precompile refuse patterns for performance.
+                checkPatterns(true); // Match patters to log lines.
+                checkPatterns(false); // Refuse patters to log lines.
+                verifyMatches(); // Evaluate unmatched assertion and except.
+            } catch (Exception e) {
+                throw new AssertException(e);
+            }
         }
     }
 
