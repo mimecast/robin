@@ -31,8 +31,12 @@ public class ServerRcpt extends ServerMail {
         Optional<ScenarioConfig> opt = connection.getScenario();
         if (opt.isPresent() && opt.get().getRcpt() != null) {
             for (Map<String, String> entry : opt.get().getRcpt()) {
-                if (getAddress() != null && getAddress().getAddress().equals(entry.get("value"))) {
-                    connection.write(entry.get("response"));
+                if (getAddress() != null && getAddress().getAddress().matches(entry.get("value"))) {
+                    String response = entry.get("response");
+                    if (response.startsWith("2")) {
+                        connection.getSession().addRcpt(getAddress());
+                    }
+                    connection.write(response);
                     break;
                 }
             }

@@ -201,7 +201,10 @@ public class Connection extends SmtpFoundation {
     public Optional<ScenarioConfig> getScenario() {
         return Optional.ofNullable(Config.getServer())
                 .map(ServerConfig::getScenarios)
-                .map(s -> s.get(session.getEhlo()));
+                .map(s -> {
+                    ScenarioConfig c = s.get(session.getEhlo());
+                    return c != null ? c : s.get("*");
+                });
     }
 
     /**

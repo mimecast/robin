@@ -19,6 +19,14 @@
   ],
 
   "scenarios": {
+    "*": {
+      "rcpt": [
+        {
+          "value": "friday\\-[0-9]+@example\\.com",
+          "response": "252 I think I know this user"
+        }
+      ]
+    },
     "reject.com": {
       "ehlo": "501 Not talking to you",
       "mail": "451 I'm not listening to you",

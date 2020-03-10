@@ -20,17 +20,17 @@ class ServerRcptTest {
     }
 
     @Test
-    void process() throws IOException {
+    void processWithScenario() throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
         ConnectionMock connection = new ConnectionMock(stringBuilder);
 
-        Verb verb = new Verb("RCPT TO: <friday@example.com>");
+        Verb verb = new Verb("RCPT TO: <friday-123@example.com>");
 
         ServerRcpt rcpt = new ServerRcpt();
         boolean process = rcpt.process(connection, verb);
 
         assertTrue(process);
-        assertEquals("friday@example.com", rcpt.getAddress().getAddress());
-        assertEquals("friday@example.com", connection.getSession().getRcpts().get(0).getAddress());
+        assertEquals("friday-123@example.com", rcpt.getAddress().getAddress());
+        assertEquals("friday-123@example.com", connection.getSession().getRcpts().get(0).getAddress());
     }
 }

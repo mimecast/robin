@@ -21,6 +21,14 @@
   ],
 
   "scenarios": {
+    "*": {
+      "rcpt": [
+        {
+          "value": ".*",
+          "response": "501 Invalid address"
+        }
+      ]
+    },
     "reject.com": {
       "ehlo": "501 Argument not allowed.",
       "mail": "451 Unable to process email at this time",
