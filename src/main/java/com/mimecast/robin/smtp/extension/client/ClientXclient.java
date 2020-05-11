@@ -29,8 +29,7 @@ public class ClientXclient extends ClientProcessor {
         final String client = "XCLIENT";
 
         StringBuilder params = new StringBuilder();
-        for (Object o : ((XclientSession) connection.getSession()).getXclient().entrySet()) {
-            Map.Entry pair = (Map.Entry) o;
+        for (Map.Entry pair : ((XclientSession) connection.getSession()).getXclient().entrySet()) {
             params.append(" ").append(pair.getKey()).append("=").append(pair.getValue());
         }
         connection.write(client + params.toString());

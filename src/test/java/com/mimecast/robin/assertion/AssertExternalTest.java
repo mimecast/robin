@@ -26,6 +26,7 @@ class AssertExternalTest {
     }
 
     @Test
+    @SuppressWarnings("java:S2699")
     void assertion() throws AssertException {
         List<List<String>> matches = new ArrayList<>();
         matches.add(Arrays.asList("MTAAUTH", "Pass=false"));

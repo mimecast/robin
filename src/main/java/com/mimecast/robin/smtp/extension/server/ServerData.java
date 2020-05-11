@@ -4,6 +4,7 @@ import com.mimecast.robin.config.server.ScenarioConfig;
 import com.mimecast.robin.main.Config;
 import com.mimecast.robin.main.Factories;
 import com.mimecast.robin.smtp.connection.Connection;
+import com.mimecast.robin.smtp.connection.SmtpFoundation;
 import com.mimecast.robin.smtp.verb.BdatVerb;
 import com.mimecast.robin.smtp.verb.Verb;
 import com.mimecast.robin.storage.StorageClient;
@@ -64,14 +65,14 @@ public class ServerData extends ServerProcessor {
         connection.write("354 Ready and willing");
 
         StorageClient storageClient = Factories.getStorageClient(connection);
-        CountingOutputStream cos = new CountingOutputStream(storageClient.getStream());
 
-        try {
-            connection.setTimeout(Connection.EXTENDEDTIMEOUT);
+        try (CountingOutputStream cos = new CountingOutputStream(storageClient.getStream())) {
+            connection.setTimeout(SmtpFoundation.EXTENDEDTIMEOUT);
             connection.readMultiline(cos);
             bytesReceived = cos.getByteCount();
+
         } finally {
-            connection.setTimeout(Connection.DEFAULTTIMEOUT);
+            connection.setTimeout(SmtpFoundation.DEFAULTTIMEOUT);
         }
 
         Optional<ScenarioConfig> opt = connection.getScenario();
@@ -118,10 +119,10 @@ public class ServerData extends ServerProcessor {
      */
     private void binaryRead(BdatVerb verb, CountingOutputStream cos) throws IOException {
         try {
-            connection.setTimeout(Connection.EXTENDEDTIMEOUT);
+            connection.setTimeout(SmtpFoundation.EXTENDEDTIMEOUT);
             connection.readBytes(verb.getSize(), cos);
         } finally {
-            connection.setTimeout(Connection.DEFAULTTIMEOUT);
+            connection.setTimeout(SmtpFoundation.DEFAULTTIMEOUT);
             log.info("<< BYTES {}", cos.getByteCount());
         }
     }

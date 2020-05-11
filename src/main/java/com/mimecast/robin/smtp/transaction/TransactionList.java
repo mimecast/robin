@@ -29,7 +29,10 @@ public abstract class TransactionList {
     public void addTransaction(String command, String response) {
         if (!command.equalsIgnoreCase("rcpt") && !getTransactions(command).isEmpty()) return;
         transactions.add(new Transaction(command).setResponse(response));
-        log.trace("Adding transaction: Command: {}, Response: {}", command, response.replaceAll("[\\n\\r]", ""));
+
+        if (log.isTraceEnabled()) {
+            log.trace("Adding transaction: Command: {}, Response: {}", command, response.replaceAll("[\\n\\r]", ""));
+        }
     }
 
     /**
@@ -42,7 +45,10 @@ public abstract class TransactionList {
     public void addTransaction(String command, String response, boolean error) {
         if (!command.equalsIgnoreCase("rcpt") && !getTransactions(command).isEmpty()) return;
         transactions.add(new Transaction(command).setResponse(response).setError(error));
-        log.trace("Adding transaction: Command: {}, Response: {}, Error: {}", command, response.replaceAll("[\\n\\r]", ""), error);
+
+        if (log.isTraceEnabled()) {
+            log.trace("Adding transaction: Command: {}, Response: {}, Error: {}", command, response.replaceAll("[\\n\\r]", ""), error);
+        }
     }
 
     /**
@@ -55,7 +61,10 @@ public abstract class TransactionList {
     public void addTransaction(String command, String payload, String response) {
         if (!command.equalsIgnoreCase("rcpt") && !getTransactions(command).isEmpty()) return;
         transactions.add(new Transaction(command).setPayload(payload).setResponse(response));
-        log.trace("Adding transaction: Command: {}, Payload: {}, Response: {}", command, payload, response.replaceAll("[\\n\\r]", ""));
+
+        if (log.isTraceEnabled()) {
+            log.trace("Adding transaction: Command: {}, Payload: {}, Response: {}", command, payload, response.replaceAll("[\\n\\r]", ""));
+        }
     }
 
     /**
@@ -71,7 +80,10 @@ public abstract class TransactionList {
                 !command.equalsIgnoreCase("bdat") &&
                 !getTransactions(command).isEmpty()) return;
         transactions.add(new Transaction(command).setPayload(payload).setResponse(response).setError(error));
-        log.trace("Adding transaction: Command: {}, Payload: {}, Response: {}, Error: {}", command, payload, response.replaceAll("[\\n\\r]", ""), error);
+
+        if (log.isTraceEnabled()) {
+            log.trace("Adding transaction: Command: {}, Payload: {}, Response: {}, Error: {}", command, payload, response.replaceAll("[\\n\\r]", ""), error);
+        }
     }
 
     /**

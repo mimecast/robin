@@ -8,6 +8,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 /**
  * Static utilities for handling files and paths.
@@ -43,7 +44,7 @@ public final class PathUtils extends File {
      */
     public static String normalize(String path) {
         Objects.requireNonNull(path, "path must not be null");
-        return FilenameUtils.normalize(path).replaceAll(PathUtils.separator, "");
+        return FilenameUtils.normalize(path).replaceAll(Pattern.quote(File.separator), "");
     }
 
     /**

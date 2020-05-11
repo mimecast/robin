@@ -148,7 +148,9 @@ public class DefaultTLSSocket implements TLSSocket {
         List<String> defaultProtocols = Arrays.asList(sslSocket.getEnabledProtocols());
 
         if (protocols != null && protocols.length > 0) {
-            log.debug("Configured protocols: {}", String.join(", ", protocols));
+            if (log.isDebugEnabled()) {
+                log.debug("Configured protocols: {}", String.join(", ", protocols));
+            }
 
             List<String> supportedProtocols = new ArrayList<>();
             for (String protocol : protocols) {
@@ -156,7 +158,10 @@ public class DefaultTLSSocket implements TLSSocket {
                     supportedProtocols.add(protocol);
                 }
             }
-            log.trace("Supported protocols: {}", String.join(", ", supportedProtocols));
+
+            if (log.isTraceEnabled()) {
+                log.trace("Supported protocols: {}", String.join(", ", supportedProtocols));
+            }
 
             return supportedProtocols.toArray(new String[0]);
         }
@@ -175,14 +180,20 @@ public class DefaultTLSSocket implements TLSSocket {
         List<String> defaultCipherSuites = Arrays.asList(sslSocket.getEnabledCipherSuites());
 
         if (ciphers != null && ciphers.length > 0) {
-            log.debug("Configured cipher suites: {}", String.join(", ", ciphers));
+            if (log.isDebugEnabled()) {
+                log.debug("Configured cipher suites: {}", String.join(", ", ciphers));
+            }
+
             List<String> supportedCipherSuites = new ArrayList<>();
             for (String cipherSuite : ciphers) {
                 if (defaultCipherSuites.contains(cipherSuite)) {
                     supportedCipherSuites.add(cipherSuite);
                 }
             }
-            log.trace("Supported cipher suites: {}", String.join(", ", supportedCipherSuites));
+
+            if (log.isTraceEnabled()) {
+                log.trace("Supported cipher suites: {}", String.join(", ", supportedCipherSuites));
+            }
 
             return supportedCipherSuites.toArray(new String[0]);
         }

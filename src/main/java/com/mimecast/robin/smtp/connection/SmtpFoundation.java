@@ -147,7 +147,9 @@ public abstract class SmtpFoundation {
         try {
             byte[] read;
             while ((read = inc.readLine()) != null) {
-                log.trace("<< {}", StringUtils.stripEnd(new String(read, UTF_8), null));
+                if (log.isTraceEnabled()) {
+                    log.trace("<< {}", StringUtils.stripEnd(new String(read, UTF_8), null));
+                }
 
                 if (expectedCode.length() == 3) {
                     receivedCode = new String(read).trim().substring(0, expectedCode.length());
@@ -317,6 +319,7 @@ public abstract class SmtpFoundation {
      * @param bytes String to write to socket.
      * @throws IOException Unable to communicate.
      */
+    @SuppressWarnings("java:S2629") // Info should always be enabled.
     public void write(byte[] bytes) throws IOException {
         try {
             out.write(bytes);
@@ -337,6 +340,7 @@ public abstract class SmtpFoundation {
      * @param slowWait   Time out miliseconds.
      * @throws IOException Unable to communicate.
      */
+    @SuppressWarnings("java:S3776")
     public void write(byte[] bytes, boolean chunkWrite, int slowBytes, int slowWait) throws IOException {
         OutputStream outStream = slowBytes >= 1 && slowWait >= 100 ? new SlowOutputStream(out, slowBytes, slowWait) : out;
 
@@ -367,11 +371,17 @@ public abstract class SmtpFoundation {
                     write = Arrays.copyOfRange(bytes, from, to);
                     from = to;
                     outStream.write(write);
-                    if (logData) log.trace(LOG_WRITE, StringUtils.stripEnd(new String(write, UTF_8), null));
+
+                    if (logData && log.isTraceEnabled()) {
+                        log.trace(LOG_WRITE, StringUtils.stripEnd(new String(write, UTF_8), null));
+                    }
                 }
             } else {
                 outStream.write(bytes);
-                if (logData) log.trace(LOG_WRITE, StringUtils.stripEnd(new String(bytes, UTF_8), null));
+
+                if (logData && log.isTraceEnabled()) {
+                    log.trace(LOG_WRITE, StringUtils.stripEnd(new String(bytes, UTF_8), null));
+                }
             }
         } catch (IOException e) {
             log.info("Error writing: {}", e.getMessage());
@@ -415,7 +425,8 @@ public abstract class SmtpFoundation {
             }
 
             outStream.write(bytes);
-            if (logData) {
+
+            if (logData && log.isTraceEnabled()) {
                 log.trace(LOG_WRITE, StringUtils.stripEnd(new String(bytes, UTF_8).replaceAll("\\s+$", ""), null));
             }
         }

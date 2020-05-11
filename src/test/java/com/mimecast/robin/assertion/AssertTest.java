@@ -29,35 +29,37 @@ class AssertTest {
 
         String json =
                 "{\n" +
-                "  \"envelopes\": [\n" +
-                "    {\n" +
-                "      \"assertions\": {\n" +
-                "        \"smtp\": [\n" +
-                "          [\"MAIL\", \"250 Sender OK\"],\n" +
-                "          [\"RCPT\", \"250 Recipient OK\"],\n" +
-                "          [\"DATA\", \"^250\"],\n" +
-                "          [\"DATA\", \"Received OK$\"]\n" +
-                "        ],\n" +
-                "        \"mta\": {\n" +
-                "          \"delay\": 5,\n" +
-                "          \"retry\": 2,\n" +
-                "          \"match\": [\n" +
-                "            [\"MTACONNSUMMARY\", \"IP=8.8.8.8\"]\n" +
-                "          ]\n" +
-                "        }\n" +
-                "      }\n" +
-                "    }\n" +
-                "  ],\n" +
-                "  \"smtp\": [\n" +
-                "    [\"SMTP\", \"^220\"]\n" +
-                "  ]\n" +
-                "}";
+                        "  \"envelopes\": [\n" +
+                        "    {\n" +
+                        "      \"assertions\": {\n" +
+                        "        \"smtp\": [\n" +
+                        "          [\"MAIL\", \"250 Sender OK\"],\n" +
+                        "          [\"RCPT\", \"250 Recipient OK\"],\n" +
+                        "          [\"DATA\", \"^250\"],\n" +
+                        "          [\"DATA\", \"Received OK$\"]\n" +
+                        "        ],\n" +
+                        "        \"mta\": {\n" +
+                        "          \"delay\": 5,\n" +
+                        "          \"retry\": 2,\n" +
+                        "          \"match\": [\n" +
+                        "            [\"MTACONNSUMMARY\", \"IP=8.8.8.8\"]\n" +
+                        "          ]\n" +
+                        "        }\n" +
+                        "      }\n" +
+                        "    }\n" +
+                        "  ],\n" +
+                        "  \"smtp\": [\n" +
+                        "    [\"SMTP\", \"^220\"]\n" +
+                        "  ]\n" +
+                        "}";
 
-        Map<String, Object> map = new Gson().fromJson(json, new TypeToken<HashMap<String, Object>>() {}.getType());
+        Map<String, Object> map = new Gson().fromJson(json, new TypeToken<HashMap<String, Object>>() {
+        }.getType());
         assertConfig = new AssertConfig(map);
     }
 
     @Test
+    @SuppressWarnings("java:S2699")
     void session() throws AssertException {
         SessionTransactionList sessionTransactionList = new SessionTransactionList();
         sessionTransactionList.addTransaction("SMTP", "220 example.com ESMTP", false);
@@ -69,8 +71,8 @@ class AssertTest {
         new Assert(new Connection(session, sessionTransactionList)).run();
     }
 
-    @SuppressWarnings("rawtypes")
     @Test
+    @SuppressWarnings({"rawtypes", "java:S2699"})
     void message() throws AssertException {
         SessionTransactionList sessionTransactionList = new SessionTransactionList();
 
@@ -91,10 +93,12 @@ class AssertTest {
     }
 
     @Test
+    @SuppressWarnings("java:S2699")
     void blank() throws AssertException {
         String json = "{}";
 
-        Map<String, Object> map = new Gson().fromJson(json, new TypeToken<HashMap<String, Object>>() {}.getType());
+        Map<String, Object> map = new Gson().fromJson(json, new TypeToken<HashMap<String, Object>>() {
+        }.getType());
         AssertConfig assertConfig = new AssertConfig(map);
 
         Session session = new Session();

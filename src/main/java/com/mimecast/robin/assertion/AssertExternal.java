@@ -215,7 +215,7 @@ public class AssertExternal {
                 // Evaluate if all positive patterns matched.
                 if (positive && group.getMatched().size() == group.getPatterns().size()) {
                     log.debug("AssertExternal LOG: {}", line);
-                    log.info("AssertExternal matched: {}", group.getMatched().toString());
+                    log.info("AssertExternal matched: {}", group.getMatched());
                 }
             }
         }
@@ -238,7 +238,7 @@ public class AssertExternal {
                 // Break on first negative match
                 if (!positive) {
                     log.debug("AssertExternal log: {}", line);
-                    log.error("AssertExternal not matched: {}", group.getMatched().toString());
+                    log.error("AssertExternal not matched: {}", group.getMatched());
                     throw new AssertException("Found refuse pattern " + group.getMatched() + " in logs");
                 }
             }

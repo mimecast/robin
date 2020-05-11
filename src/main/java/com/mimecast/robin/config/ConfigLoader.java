@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
 
 import javax.naming.ConfigurationException;
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -34,7 +35,7 @@ public class ConfigLoader {
     public static void load(String path) throws ConfigurationException {
         log.debug("Working directory: {}", System.getProperty("user.dir"));
 
-        if (path == null) path = "cfg" + PathUtils.separator;
+        if (path == null) path = "cfg" + File.separator;
 
         String propertiesPath = Paths.get(path, "properties.json").toString();
         if (PathUtils.isFile(propertiesPath)) {

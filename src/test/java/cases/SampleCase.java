@@ -20,6 +20,7 @@ class SampleCase {
      * @throws IOException     Communication issues.
      */
     @Test
+    @SuppressWarnings("java:S2699")
     void lipsum() throws AssertException, IOException, ConfigurationException {
         new Client("src/main/resources/")
                 .send("src/test/resources/cases/config/lipsum.json");
@@ -35,6 +36,7 @@ class SampleCase {
      * @throws IOException     Communication issues.
      */
     @Test
+    @SuppressWarnings("java:S2699")
     void pangrams() throws AssertException, IOException, ConfigurationException {
         new Client("src/main/resources/")
                 .send("src/test/resources/cases/config/pangrams.json");
