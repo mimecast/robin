@@ -4,7 +4,7 @@ import com.mimecast.robin.config.ConfigMapper;
 import com.mimecast.robin.config.assertion.AssertConfig;
 import com.mimecast.robin.config.client.CaseConfig;
 import com.mimecast.robin.smtp.MessageEnvelope;
-import com.mimecast.robin.smtp.connection.Connection;
+import com.mimecast.robin.smtp.connection.SmtpFoundation;
 
 import javax.mail.internet.InternetAddress;
 import java.text.SimpleDateFormat;
@@ -49,12 +49,12 @@ public class Session {
     /**
      * [Client] Socket timeout.
      */
-    private int timeout = Connection.DEFAULTTIMEOUT;
+    private int timeout = SmtpFoundation.DEFAULTTIMEOUT;
 
     /**
      * [Client] Extended socket timeout.
      */
-    private int extendedtimeout = Connection.EXTENDEDTIMEOUT;
+    private int extendedtimeout = SmtpFoundation.EXTENDEDTIMEOUT;
 
     /**
      * [Server] Bind interface.
