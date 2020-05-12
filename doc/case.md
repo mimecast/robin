@@ -275,4 +275,4 @@ Configuration
 ----------------
 Example commandline for running cases.
 
-    mvn clean -D test="cases.*Case" test
+    mvn clean -D test="cases.*" test

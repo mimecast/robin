@@ -7,7 +7,7 @@
  * <p>The idea is to have a language agnostic way of configuring smoke tests that can be automated.
  * <br>Cases can be executed via Maven with:
  * <pre>
- *     mvn clean -D test="cases.*Case" test
+ *     mvn clean -D test="cases.*" test
  * </pre>
  *
  * <h2>Example configuration:</h2>

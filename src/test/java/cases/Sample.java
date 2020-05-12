@@ -10,7 +10,7 @@ import java.io.IOException;
 /**
  * Sample test cases.
  */
-class SampleCase {
+class Sample {
 
     /**
      * Sends a "Lorem ipsum" paragraph email to client.json defaults with TLS 1.2.
