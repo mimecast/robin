@@ -4,6 +4,7 @@ import com.mimecast.robin.config.ConfigMapper;
 import com.mimecast.robin.config.assertion.AssertConfig;
 import com.mimecast.robin.config.client.CaseConfig;
 import com.mimecast.robin.smtp.MessageEnvelope;
+import com.mimecast.robin.smtp.connection.Connection;
 
 import javax.mail.internet.InternetAddress;
 import java.text.SimpleDateFormat;
@@ -48,7 +49,12 @@ public class Session {
     /**
      * [Client] Socket timeout.
      */
-    private int timeout = 0;
+    private int timeout = Connection.DEFAULTTIMEOUT;
+
+    /**
+     * [Client] Extended socket timeout.
+     */
+    private int extendedtimeout = Connection.EXTENDEDTIMEOUT;
 
     /**
      * [Server] Bind interface.
@@ -319,6 +325,29 @@ public class Session {
      */
     public Session setTimeout(int timeout) {
         this.timeout = timeout;
+        return this;
+    }
+
+    /**
+     * Gets extended socket timeout.
+     * <p>Used for extendedRead().
+     * <p>Handy for SMTP DATA and BDAT extensions.
+     *
+     * @return Socket timeout.
+     */
+    public int getExtendedTimeout() {
+        return extendedtimeout;
+    }
+
+    /**
+     * Sets extended socket timeout.
+     * <p>In seconds.
+     *
+     * @param extendedtimeout Socket timeout.
+     * @return Self.
+     */
+    public Session setExtendedTimeout(int extendedtimeout) {
+        this.extendedtimeout = extendedtimeout;
         return this;
     }
 

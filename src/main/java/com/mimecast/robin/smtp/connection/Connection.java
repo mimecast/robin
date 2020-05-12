@@ -116,10 +116,11 @@ public class Connection extends SmtpFoundation {
             server = session.getMx().get(i % session.getMx().size());
             try {
                 log.info("Connecting to: {}:{}", server, session.getPort());
-                socket = new Socket();
-                setTimeout(Math.max(session.getTimeout(), DEFAULTTIMEOUT));
-                socket.connect(new InetSocketAddress(server, session.getPort()));
 
+                socket = new Socket();
+                setTimeout(session.getTimeout());
+
+                socket.connect(new InetSocketAddress(server, session.getPort()));
                 buildStreams();
 
                 log.info("Connected to: {}:{}", server, session.getPort());

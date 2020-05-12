@@ -4,7 +4,6 @@ import com.mimecast.robin.config.server.ScenarioConfig;
 import com.mimecast.robin.main.Config;
 import com.mimecast.robin.main.Factories;
 import com.mimecast.robin.smtp.connection.Connection;
-import com.mimecast.robin.smtp.connection.SmtpFoundation;
 import com.mimecast.robin.smtp.verb.BdatVerb;
 import com.mimecast.robin.smtp.verb.Verb;
 import com.mimecast.robin.storage.StorageClient;
@@ -67,12 +66,12 @@ public class ServerData extends ServerProcessor {
         StorageClient storageClient = Factories.getStorageClient(connection);
 
         try (CountingOutputStream cos = new CountingOutputStream(storageClient.getStream())) {
-            connection.setTimeout(SmtpFoundation.EXTENDEDTIMEOUT);
+            connection.setTimeout(connection.getSession().getExtendedTimeout());
             connection.readMultiline(cos);
             bytesReceived = cos.getByteCount();
 
         } finally {
-            connection.setTimeout(SmtpFoundation.DEFAULTTIMEOUT);
+            connection.setTimeout(connection.getSession().getTimeout());
         }
 
         Optional<ScenarioConfig> opt = connection.getScenario();
@@ -119,10 +118,11 @@ public class ServerData extends ServerProcessor {
      */
     private void binaryRead(BdatVerb verb, CountingOutputStream cos) throws IOException {
         try {
-            connection.setTimeout(SmtpFoundation.EXTENDEDTIMEOUT);
+            connection.setTimeout(connection.getSession().getExtendedTimeout());
             connection.readBytes(verb.getSize(), cos);
+
         } finally {
-            connection.setTimeout(SmtpFoundation.DEFAULTTIMEOUT);
+            connection.setTimeout(connection.getSession().getTimeout());
             log.info("<< BYTES {}", cos.getByteCount());
         }
     }
