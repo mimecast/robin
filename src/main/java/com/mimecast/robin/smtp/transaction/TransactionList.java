@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -21,13 +22,19 @@ public abstract class TransactionList {
     private final List<Transaction> transactions = new ArrayList<>();
 
     /**
+     * Repeatable transactions
+     */
+    private final List<String> repeatable = Arrays.asList("SMTP", "RCPT", "BDAT");
+
+    /**
      * Adds new transaction with response only.
      *
      * @param command  Command string.
      * @param response Response string.
      */
     public void addTransaction(String command, String response) {
-        if (!command.equalsIgnoreCase("rcpt") && !getTransactions(command).isEmpty()) return;
+        if (!repeatable.contains(command) && !getTransactions(command).isEmpty()) return;
+
         transactions.add(new Transaction(command).setResponse(response));
 
         if (log.isTraceEnabled()) {
@@ -43,7 +50,8 @@ public abstract class TransactionList {
      * @param error    Error boolean.
      */
     public void addTransaction(String command, String response, boolean error) {
-        if (!command.equalsIgnoreCase("rcpt") && !getTransactions(command).isEmpty()) return;
+        if (!repeatable.contains(command) && !getTransactions(command).isEmpty()) return;
+
         transactions.add(new Transaction(command).setResponse(response).setError(error));
 
         if (log.isTraceEnabled()) {
@@ -59,7 +67,8 @@ public abstract class TransactionList {
      * @param response Response string.
      */
     public void addTransaction(String command, String payload, String response) {
-        if (!command.equalsIgnoreCase("rcpt") && !getTransactions(command).isEmpty()) return;
+        if (!repeatable.contains(command) && !getTransactions(command).isEmpty()) return;
+
         transactions.add(new Transaction(command).setPayload(payload).setResponse(response));
 
         if (log.isTraceEnabled()) {
@@ -76,9 +85,8 @@ public abstract class TransactionList {
      * @param error    Is error boolean.
      */
     public void addTransaction(String command, String payload, String response, boolean error) {
-        if (!command.equalsIgnoreCase("rcpt") &&
-                !command.equalsIgnoreCase("bdat") &&
-                !getTransactions(command).isEmpty()) return;
+        if (!repeatable.contains(command) && !getTransactions(command).isEmpty()) return;
+
         transactions.add(new Transaction(command).setPayload(payload).setResponse(response).setError(error));
 
         if (log.isTraceEnabled()) {

@@ -84,7 +84,9 @@ public abstract class SmtpFoundation {
      * @throws IOException Unable to communicate.
      */
     public void setTimeout(int timeout) throws IOException {
-        socket.setSoTimeout(timeout);
+        if (socket != null) {
+            socket.setSoTimeout(timeout);
+        }
     }
 
     /**
