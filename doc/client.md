@@ -28,7 +28,7 @@ Usage
             .setAuthBeforeTls(false) // Do AUTH before STRTTLS.
             .setAuthLoginCombined(true) // Send username and password in one line for AUTH LOGIN.
             .setAuthLoginRetry(true) // Disable authLoginCombined and retry AUTH LOGIN.
-            .setProtocols(new String[] { "TLS1.2" })
+            .setProtocols(new String[] { "TLSv1.2" })
             .setCiphers(new String[] { "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384", "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384", })
 
             // Hello domain.
@@ -53,10 +53,10 @@ Usage
     envelope.setRcptEjf("friday@example.com");
 
 
-    // Email stream // Preffered when available.
+    // Email stream // Preferred when available.
     envelope.setStream(new FileInputStream(new File("src/test/resources/lipsum.eml")));
 
-    // Email file // Preffered over subject and message.
+    // Email file // Preferred over subject and message.
     envelope.setFile("/Users/john/Documents/lost.eml");
 
     // Email subject and message // If stream and file undefined.

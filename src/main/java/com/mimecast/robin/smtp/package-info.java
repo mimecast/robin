@@ -28,7 +28,7 @@
  *             .setAuthBeforeTls(false) // Do AUTH before STRTTLS.
  *             .setAuthLoginCombined(true) // Send username and password in one line for AUTH LOGIN.
  *             .setAuthLoginRetry(true) // Disable authLoginCombined and retry AUTH LOGIN.
- *             .setProtocols(new String[] { "TLS1.2" })
+ *             .setProtocols(new String[] { "TLSv1.2" })
  *             .setCiphers(new String[] { "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384", "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384", })
  *
  *             // Hello domain.
