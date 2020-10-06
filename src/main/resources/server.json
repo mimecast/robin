@@ -2,6 +2,7 @@
   "bind": "::",
   "port": 25,
   "backlog": 25,
+  "transactionsLimit": 200,
   "errorLimit": 3,
 
   "auth": true,

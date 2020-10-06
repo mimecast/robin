@@ -2,6 +2,7 @@
   "bind": "::",
   "port": 25,
   "backlog": 20,
+  "transactionsLimit": 200,
   "errorLimit": 3,
 
   "auth": true,
@@ -37,6 +38,17 @@
         }
       ],
       "data": "554 Your data is corrupted"
+    },
+    "rejectmail.com": {
+      "rcpt": [
+        {
+          "value": "jane@example.com",
+          "response": "501 Invalid address"
+        }
+      ]
+    },
+    "helo.com": {
+      "helo": "500 ESMTP Error (Try again using SMTP)"
     }
   }
 }

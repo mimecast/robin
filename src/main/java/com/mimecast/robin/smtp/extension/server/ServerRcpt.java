@@ -37,16 +37,14 @@ public class ServerRcpt extends ServerMail {
                         connection.getSession().addRcpt(getAddress());
                     }
                     connection.write(response);
-                    break;
+                    return response.startsWith("2");
                 }
             }
         }
 
         // Accept all.
-        else {
-            connection.getSession().addRcpt(getAddress());
-            connection.write("250 2.1.5 Recipient OK");
-        }
+        connection.getSession().addRcpt(getAddress());
+        connection.write("250 2.1.5 Recipient OK");
 
         return true;
     }

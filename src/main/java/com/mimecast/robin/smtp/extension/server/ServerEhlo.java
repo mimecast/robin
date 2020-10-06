@@ -1,5 +1,7 @@
 package com.mimecast.robin.smtp.extension.server;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.mimecast.robin.config.server.ScenarioConfig;
 import com.mimecast.robin.main.Extensions;
 import com.mimecast.robin.smtp.connection.Connection;
@@ -54,7 +56,7 @@ public class ServerEhlo extends ServerProcessor {
         else {
             connection.write("250-" + welcome);
 
-            List<String> adverts = collectAdverts();
+            List<String> adverts = Lists.newArrayList(Sets.newHashSet(collectAdverts()));
             for (int i = 0; i < adverts.size(); i++) {
                 if (!adverts.get(i).equalsIgnoreCase("STARTLS") || !connection.getSession().isStartTls()) {
                     connection.write("250" + ((adverts.size() - 1) > i ? "-" : " ") + adverts.get(i));
@@ -73,6 +75,7 @@ public class ServerEhlo extends ServerProcessor {
     @SuppressWarnings("WeakerAccess")
     public static List<String> collectAdverts() {
         List<String> adverts = new ArrayList<>();
+        adverts.add("PIPELINING");
         for (String s : Extensions.getExtensions().keySet()) {
 
             Optional<Extension> ept = Extensions.getExtension(s);

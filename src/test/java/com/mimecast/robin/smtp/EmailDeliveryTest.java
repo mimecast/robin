@@ -48,8 +48,7 @@ class EmailDeliveryTest {
         stringBuilder.append("221 2.0.0 Closing connection\r\n");
 
         ConnectionMock connection = getConnection(stringBuilder);
-        EmailDelivery delivery = new EmailDeliveryMock(connection);
-        delivery.send();
+        new EmailDeliveryMock(connection).send();
 
         connection.parseLines();
         assertEquals("EHLO example.com\r\n", connection.getLine(1));
@@ -88,8 +87,7 @@ class EmailDeliveryTest {
         stringBuilder.append("221 2.0.0 Closing connection\r\n");
 
         ConnectionMock connection = getConnection(stringBuilder);
-        EmailDelivery delivery = new EmailDeliveryMock(connection);
-        delivery.send();
+        new EmailDeliveryMock(connection).send();
 
         connection.parseLines();
         assertEquals("EHLO example.com\r\n", connection.getLine(1));
@@ -111,8 +109,7 @@ class EmailDeliveryTest {
         stringBuilder.append("221 2.0.0 Closing connection\r\n");
 
         ConnectionMock connection = getConnection(stringBuilder);
-        EmailDelivery delivery = new EmailDeliveryMock(connection);
-        delivery.send();
+        new EmailDeliveryMock(connection).send();
 
         connection.parseLines();
         assertEquals("EHLO example.com\r\n", connection.getLine(1));
@@ -149,8 +146,7 @@ class EmailDeliveryTest {
         connection.getSession().setEhloBdat(true);
         connection.getSession().getEnvelopes().get(0).setChunkSize(512);
 
-        EmailDelivery delivery = new EmailDeliveryMock(connection);
-        delivery.send();
+        new EmailDeliveryMock(connection).send();
 
         connection.parseLines();
         assertEquals("EHLO example.com\r\n", connection.getLine(1));
@@ -202,8 +198,7 @@ class EmailDeliveryTest {
         connection.getSession().setEhloBdat(true);
         connection.getSession().getEnvelopes().get(0).setChunkSize(512);
 
-        EmailDelivery delivery = new EmailDeliveryMock(connection);
-        delivery.send();
+        new EmailDeliveryMock(connection).send();
 
         connection.parseLines();
         assertEquals("EHLO example.com\r\n", connection.getLine(1));

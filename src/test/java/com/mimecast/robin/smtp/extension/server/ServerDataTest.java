@@ -6,6 +6,8 @@ import com.mimecast.robin.smtp.verb.Verb;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 import javax.naming.ConfigurationException;
 import java.io.IOException;
 import java.net.Socket;
@@ -21,7 +23,7 @@ class ServerDataTest {
     }
 
     @Test
-    void processAscii() throws IOException {
+    void processAscii() throws IOException, AddressException {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("MIME-Version: 1.0\r\n");
         stringBuilder.append("From: <tony@example.com>\r\n");
@@ -33,6 +35,7 @@ class ServerDataTest {
 
         ConnectionMock connection = new ConnectionMock(stringBuilder);
         connection.setSocket(new Socket());
+        connection.getSession().addRcpt(new InternetAddress("john@example.com"));
 
         Verb verb = new Verb("DATA");
 
@@ -48,7 +51,7 @@ class ServerDataTest {
     }
 
     @Test
-    void processAsciiLF() throws IOException {
+    void processAsciiLF() throws IOException, AddressException {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("MIME-Version: 1.0\n");
         stringBuilder.append("From: <tony@example.com>\n");
@@ -60,6 +63,7 @@ class ServerDataTest {
 
         ConnectionMock connection = new ConnectionMock(stringBuilder);
         connection.setSocket(new Socket());
+        connection.getSession().addRcpt(new InternetAddress("john@example.com"));
 
         Verb verb = new Verb("DATA");
 
@@ -75,7 +79,7 @@ class ServerDataTest {
     }
 
     @Test
-    void processAsciiCR() throws IOException {
+    void processAsciiCR() throws IOException, AddressException {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("MIME-Version: 1.0\r");
         stringBuilder.append("From: <tony@example.com>\r");
@@ -87,6 +91,7 @@ class ServerDataTest {
 
         ConnectionMock connection = new ConnectionMock(stringBuilder);
         connection.setSocket(new Socket());
+        connection.getSession().addRcpt(new InternetAddress("john@example.com"));
 
         Verb verb = new Verb("DATA");
 

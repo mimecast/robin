@@ -25,13 +25,29 @@ public class EmailReceipt implements Runnable {
     /**
      * Connection instance.
      */
-    private Connection connection;
+    protected Connection connection;
+
+    /**
+     * Transactions limitation.
+     * <p>Limits how many commands will be processed.
+     */
+    private final int transactionsLimit = Config.getServer().getTransactionsLimit();
 
     /**
      * Error limitation.
      * <p>Limits how many eronious commands will be permitted.
      */
     private int errorLimit = Config.getServer().getErrorLimit();
+
+    /**
+     * Constructs a new EmailReceipt instance with given Connection instance.
+     * <p>For testing purposes only.
+     *
+     * @param connection Connection instance.
+     */
+    EmailReceipt(Connection connection) {
+        this.connection = connection;
+    }
 
     /**
      * Constructs a new EmailReceipt instance with given socket.
@@ -60,12 +76,12 @@ public class EmailReceipt implements Runnable {
 
             boolean loop = true;
             Verb verb;
-            while (loop) {
+            for(int i = 0; i < transactionsLimit; i++) { // TODO Make limit configurable.
                 String read = connection.read().trim();
                 verb = new Verb(read);
 
-                // Don't process if error received.
-                if (!isError(verb)) loop = process(verb);
+                // Don't process if error
+                if (!isError(verb)) process(verb);
 
                 // Break if error limit reached.
                 if (errorLimit <= 0) {

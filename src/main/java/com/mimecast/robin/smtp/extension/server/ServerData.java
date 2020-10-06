@@ -61,7 +61,12 @@ public class ServerData extends ServerProcessor {
      * @throws IOException Unable to communicate.
      */
     private void ascii() throws IOException {
-        connection.write("354 Ready and willing");
+        if (connection.getSession().getRcpts().isEmpty()) {
+            connection.write("554 5.5.1 No valid recipients");
+            return;
+        } else {
+            connection.write("354 Ready and willing");
+        }
 
         StorageClient storageClient = Factories.getStorageClient(connection);
 
