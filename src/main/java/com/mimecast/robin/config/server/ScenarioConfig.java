@@ -29,6 +29,17 @@ public class ScenarioConfig extends ConfigFoundation {
     }
 
     /**
+     * Gets HELO to match.
+     * <p>This is used to select the scenario to run.
+     * <p>Once the specific ehlo is received the server will enact the matching scenario.
+     *
+     * @return HELO string.
+     */
+    public String getHelo() {
+        return getStringProperty("helo");
+    }
+
+    /**
      * Gets EHLO to match.
      * <p>This is used to select the scenario to run.
      * <p>Once the specific ehlo is received the server will enact the matching scenario.

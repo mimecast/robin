@@ -41,6 +41,9 @@ public class ServerEhlo extends ServerProcessor {
         if (opt.isPresent() && opt.get().getEhlo() != null) {
             connection.write(opt.get().getEhlo());
         }
+        else if (opt.isPresent() && opt.get().getHelo() != null) {
+            connection.write(opt.get().getHelo());
+        }
 
         // HELO response.
         else if (verb.getKey().equals("helo")) {

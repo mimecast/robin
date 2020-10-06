@@ -61,6 +61,15 @@ public class ServerConfig extends ConfigFoundation {
         return Math.toIntExact(getLongProperty("backlog", 25L));
     }
 
+    /**
+     * Gets transactions limit.
+     * <p>This defines how many commands will be processed before breaking receipt loop.
+     *
+     * @return Error limit.
+     */
+    public int getTransactionsLimit() {
+        return Math.toIntExact(getLongProperty("transactionsLimit", 200L));
+    }
 
     /**
      * Gets error limit.
