@@ -40,10 +40,10 @@ public class ServerEhlo extends ServerProcessor {
 
         // ScenarioConfig response.
         Optional<ScenarioConfig> opt = connection.getScenario();
-        if (opt.isPresent() && opt.get().getEhlo() != null) {
+        if ("ehlo".equals(verb.getKey()) && opt.isPresent() && opt.get().getEhlo() != null) {
             connection.write(opt.get().getEhlo());
         }
-        else if (opt.isPresent() && opt.get().getHelo() != null) {
+        else if ("helo".equals(verb.getKey()) && opt.isPresent() && opt.get().getHelo() != null) {
             connection.write(opt.get().getHelo());
         }
 

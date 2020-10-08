@@ -48,7 +48,7 @@
       ]
     },
     "helo.com": {
-      "helo": "500 ESMTP Error (Try again using SMTP)"
+      "ehlo": "500 ESMTP Error (Try again using SMTP)"
     }
   }
 }
