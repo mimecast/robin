@@ -1,4 +1,6 @@
 {
+  "$schema": "schema/client.schema.json",
+
   "mx": [
     "127.0.0.1"
   ],

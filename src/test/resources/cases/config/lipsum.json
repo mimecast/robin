@@ -1,4 +1,6 @@
 {
+  "$schema": "/schema/case.schema.json",
+
   "tls": true,
 
   "protocols": [

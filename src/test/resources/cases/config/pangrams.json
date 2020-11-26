@@ -1,4 +1,6 @@
 {
+  "$schema": "/schema/case.schema.json",
+
   "envelopes": [
     {
       "chunkSize": 2048,

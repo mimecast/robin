@@ -1,4 +1,6 @@
 {
+  "$schema": "/schema/client.schema.json",
+
   "mx": [
     "example.com"
   ],

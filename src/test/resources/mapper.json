@@ -1,4 +1,6 @@
 {
+  "$schema": "/schema/case.schema.json",
+
   "route": "net",
   "timeout": 30,
 

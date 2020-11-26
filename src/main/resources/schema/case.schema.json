@@ -1,0 +1,243 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://mimecast.com/json-schema/messaging/robin/case",
+  "title": "Robin Case JSON",
+  "description": "This provides the deviations from the defaults for each case",
+  "type": "object",
+  "required": [
+    "envelopes"
+  ],
+  "properties": {
+    "retry": {
+      "description": "How many times to attempt connection",
+      "type": "integer",
+      "default": 1
+    },
+    "delay": {
+      "description": "Delay between connection retries",
+      "type": "integer",
+      "default": 0
+    },
+    "timeout": {
+      "description": "Socket timeout in seconds",
+      "type": "integer",
+      "default": 30
+    },
+    "mx": {
+      "description": "MX Records",
+      "type": "array",
+      "items": {
+        "description": "TLDs or IP addresses",
+        "type": "string"
+      },
+      "default": [
+        "localhost"
+      ]
+    },
+    "port": {
+      "description": "SMTP port",
+      "type": "integer",
+      "default": 25
+    },
+    "route": {
+      "description": "Predefine route name from client.json",
+      "type": "string"
+    },
+    "tls": {
+      "description": "Enables TLS support",
+      "type": "boolean",
+      "default": false
+    },
+    "protocols": {
+      "description": "Java TLS protocols",
+      "type": "array",
+      "items": {
+        "description": "Java protocol name",
+        "type": "string"
+      }
+    },
+    "ciphers": {
+      "description": "Java Cipher Suites",
+      "type": "array",
+      "items": {
+        "description": "Java cipher suite name",
+        "type": "string"
+      }
+    },
+    "auth": {
+      "description": "Enable authentication",
+      "type": "boolean",
+      "default": false
+    },
+    "authBeforeTls": {
+      "description": "Enable authentication before STARTTLS",
+      "type": "boolean",
+      "default": false
+    },
+    "authLoginCombined": {
+      "description": "Send username and password in one line",
+      "type": "boolean",
+      "default": false
+    },
+    "authLoginRetry": {
+      "description": "Disable authLoginCombined and retry authentication",
+      "type": "boolean",
+      "default": false
+    },
+    "user": {
+      "description": "Authentication username",
+      "type": "string"
+    },
+    "pass": {
+      "description": "Authentication password",
+      "type": "string"
+    },
+    "ehlo": {
+      "description": "EHLO",
+      "type": "string",
+      "default": "mimecast.net"
+    },
+    "mail": {
+      "description": "MAIL FROM",
+      "type": "string",
+      "pattern": "^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$"
+    },
+    "rcpt": {
+      "description": "RCPT TO list",
+      "type": "array",
+      "items": {
+        "description": "Email addresses",
+        "type": "string",
+        "pattern": "^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$"
+      }
+    },
+    "envelopes": {
+      "description": "List of email envelopes to deliver",
+      "type": "array",
+      "items": {
+        "description": "Supports: mail, rcpt, file, header, message, assertions",
+        "properties": {
+          "chunkSize": {
+            "description": "Enables CHUNKING if grater than minimum 128",
+            "type": "integer",
+            "default": 2048
+          },
+          "chunkBdat": {
+            "description": "Writes BDAT command to socket along with the first chunk",
+            "type": "boolean",
+            "default": false
+          },
+          "chunkWrite": {
+            "description": "Writes to socket in uneven chunks between 1024 and 2048 bytes if chunkSize at least 2048",
+            "type": "boolean",
+            "default": false
+          },
+          "terminateAfterBytes": {
+            "description": "Terminates connection after transfering given bytes of DATA when greater. Enables terminateBeforeDot",
+            "type": "integer",
+            "default": 0
+          },
+          "terminateBeforeDot": {
+            "description": "Terminates connection right before transfering DATA terminator <CRLF>.<CRLF>",
+            "type": "boolean",
+            "default": false
+          },
+          "terminateAfterDot": {
+            "description": "Terminates connection right after transfering DATA terminator <CRLF>.<CRLF>",
+            "type": "boolean",
+            "default": false
+          },
+          "slowBytes": {
+            "description": "Adds a write delay every given number of bytes",
+            "type": "integer",
+            "default": 1
+          },
+          "slowWait": {
+            "description": "Wait time in milliseconds",
+            "type": "integer",
+            "default": 0,
+            "maximum": 100
+          },
+          "mail": {
+            "description": "MAIL FROM",
+            "type": "string",
+            "pattern": "^([\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4})|$"
+          },
+          "rcpt": {
+            "description": "RCPT TO list",
+            "type": "array",
+            "items": {
+              "description": "Email addresses",
+              "type": "string",
+              "pattern": "^([\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4})|$"
+            }
+          },
+          "mailEjf": {
+            "description": "EJF MAIL FROM",
+            "type": "string",
+            "pattern": "^([\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4})|([\\w}{$]{4,}})|$"
+          },
+          "rcptEjf": {
+            "description": "EFJ RCPT TO",
+            "type": "string",
+            "pattern": "^([\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4})|([\\w}{$]{4,}})|$"
+          },
+          "subject": {
+            "description": "Message subject",
+            "type": "string"
+          },
+          "message": {
+            "description": "Message content",
+            "type": "string"
+          },
+          "file": {
+            "description": "Path to eml file; Alternative to subject & message",
+            "type": "string"
+          },
+          "assertions": {
+            "description": "Post delivery assertions",
+            "type": "object",
+            "items": {
+              "description": "Assertion group",
+              "properties": {
+                "smtp": {
+                  "description": "SMTP transaction assertions",
+                  "type": "array"
+                },
+                "mta": {
+                  "description": "MTA logs assertion by FFS",
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "dependencies": {
+          "subject": {
+            "required": [
+              "message"
+            ]
+          },
+          "message": {
+            "required": [
+              "subject"
+            ]
+          }
+        },
+        "oneOf": [
+          {
+            "required": [
+              "subject",
+              "message"
+            ]
+          },
+          {
+            "required": [
+              "file"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

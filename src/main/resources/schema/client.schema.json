@@ -1,0 +1,114 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://mimecast.com/json-schema/messaging/robin/client",
+  "title": "Robin Client JSON",
+  "description": "This provides the defaults for client mode operandy",
+  "type": "object",
+  "required": [
+    "mx",
+    "port",
+    "tls",
+    "protocols",
+    "ciphers",
+    "ehlo",
+    "mail",
+    "rcpt",
+    "routes"
+  ],
+  "properties": {
+    "mx": {
+      "description": "Default MX Records",
+      "type": "array",
+      "items": {
+        "description": "TLDs or IP addresses",
+        "type": "string"
+      },
+      "default": [
+        "localhost"
+      ]
+    },
+    "port": {
+      "description": "Default SMTP port",
+      "type": "integer",
+      "default": 25
+    },
+    "protocols": {
+      "description": "Java TLS protocols",
+      "type": "array",
+      "items": {
+        "description": "Java protocol name",
+        "type": "string"
+      }
+    },
+    "ciphers": {
+      "description": "Java Cipher Suites",
+      "type": "array",
+      "items": {
+        "description": "Java cipher suite name",
+        "type": "string"
+      }
+    },
+    "ehlo": {
+      "description": "Default EHLO",
+      "type": "string",
+      "default": "mimecast.net"
+    },
+    "mail": {
+      "description": "Default MAIL FROM",
+      "type": "string",
+      "pattern": "^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$"
+    },
+    "rcpt": {
+      "description": "Default RCPT TO list",
+      "type": "array",
+      "items": {
+        "description": "Email addresses",
+        "type": "string",
+        "pattern": "^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$"
+      }
+    },
+    "routes": {
+      "description": "Predefined delivery routes",
+      "type": "array",
+      "items": {
+        "description": "Supports: mx, port, auth, user, pass",
+        "required": [
+          "name",
+          "mx"
+        ],
+        "properties": {
+          "name": {
+            "description": "Name of the route",
+            "type": "string"
+          },
+          "mx": {
+            "description": "MX Records",
+            "type": "array",
+            "items": {
+              "description": "TLDs or IP addresses",
+              "type": "string"
+            }
+          },
+          "port": {
+            "description": "Port number",
+            "type": "integer",
+            "default": 25
+          },
+          "auth": {
+            "description": "Enable authentication",
+            "type": "boolean",
+            "default": false
+          },
+          "user": {
+            "description": "Authentication username",
+            "type": "string"
+          },
+          "pass": {
+            "description": "Authentication password",
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
