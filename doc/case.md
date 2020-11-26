@@ -57,7 +57,7 @@ Glossary
 
 #### Transfer
 ##### BDAT Config
-- **chunkSize** - _(Integer, Bytes)_ [default: 1400, min: 128] Enables _CHUNKING_ if grater than minimum.
+- **chunkSize** - _(Integer, Bytes)_ [default: 2048, min: 128] Enables _CHUNKING_ if grater than minimum.
 - **chunkBdat**  - _(Boolean)_ [default: false] Writes _BDAT_ command to socket along with the first chunk.
 - **chunkWrite** - _(Boolean)_ [default: false] Writes to socket in uneven chunks between 1024 and 2048 bytes if _chunkSize_ at least 2048.
 

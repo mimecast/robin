@@ -21,7 +21,7 @@ public class ChunkedInputStream extends MagicInputStream {
     /**
      * Default chunk size.
      */
-    private int chunkSize = 1400;
+    private int chunkSize = 2048;
 
     /**
      * Headers ended boolean.

@@ -52,7 +52,7 @@ class ChunkedInputStreamTest {
 
     @Test
     void getChunkZero() throws IOException {
-        envelope.setChunkSize(0); // Defaults to 1400 as size has to be > 0.
+        envelope.setChunkSize(0); // Defaults to 2048 as size has to be > 0.
 
         ChunkedInputStream stream = getStream();
         List<ByteArrayOutputStream> chunks = new ArrayList<>();
@@ -60,11 +60,9 @@ class ChunkedInputStreamTest {
             chunks.add(stream.getChunk());
         }
 
-        assertEquals(3, chunks.size());
-        for (int i = 0; i < chunks.size() - 1; i++) {
-            assertEquals(1400, chunks.get(i).size());
-        }
-        assertEquals(5, chunks.get(2).size());
+        assertEquals(2, chunks.size());
+        assertEquals(2048, chunks.get(0).size());
+        assertEquals(757, chunks.get(1).size());
     }
 
     @Test
@@ -77,11 +75,9 @@ class ChunkedInputStreamTest {
             chunks.add(stream.getChunk());
         }
 
-        assertEquals(3, chunks.size());
-        for (int i = 0; i < chunks.size() - 1; i++) {
-            assertEquals(1400, chunks.get(i).size());
-        }
-        assertEquals(5, chunks.get(2).size());
+        assertEquals(2, chunks.size());
+        assertEquals(2048, chunks.get(0).size());
+        assertEquals(757, chunks.get(1).size());
     }
 
     @Test
