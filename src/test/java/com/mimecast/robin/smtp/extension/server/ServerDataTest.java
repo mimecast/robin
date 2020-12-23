@@ -127,7 +127,7 @@ class ServerDataTest {
         assertTrue(process);
 
         connection.parseLines();
-        assertEquals("250 2.0.0 Chunk OK\r\n", connection.getLine(1));
+        assertTrue(connection.getLine(1).startsWith("250 2.0.0 Chunk OK"), "startsWith(\"250 2.0.0 Chunk OK\")");
         assertEquals(stringBuilder.toString().length() - 2, data.getBytesReceived());
     }
 }

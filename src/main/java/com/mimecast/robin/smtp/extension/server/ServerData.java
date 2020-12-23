@@ -81,6 +81,7 @@ public class ServerData extends ServerProcessor {
 
         Optional<ScenarioConfig> opt = connection.getScenario();
         if (opt.isPresent() && opt.get().getData() != null) {
+            storageClient.save();
             connection.write(opt.get().getData() + " [" + storageClient.getUID() + "]");
         } else {
             storageClient.save();
@@ -105,12 +106,13 @@ public class ServerData extends ServerProcessor {
             binaryRead(bdatVerb, cos);
             bytesReceived = cos.getByteCount();
 
-            // Scenario response or accept.
-            scenarioResponse();
-
             if (bdatVerb.isLast()) {
                 log.debug("Last chunk received.");
+                storageClient.save();
             }
+
+            // Scenario response or accept.
+            scenarioResponse(storageClient.getUID());
         }
     }
 
@@ -135,17 +137,18 @@ public class ServerData extends ServerProcessor {
     /**
      * Scenario response.
      *
+     * @param uid UID.
      * @throws IOException Unable to communicate.
      */
-    private void scenarioResponse() throws IOException {
+    private void scenarioResponse(String uid) throws IOException {
         Optional<ScenarioConfig> opt = connection.getScenario();
         if (opt.isPresent() && opt.get().getData() != null) {
-            connection.write(opt.get().getData());
+            connection.write(opt.get().getData() + " [" + uid + "]");
         }
 
         // Accept all.
         else {
-            connection.write("250 2.0.0 Chunk OK");
+            connection.write("250 2.0.0 Chunk OK [" + uid + "]");
         }
     }
 
