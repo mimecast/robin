@@ -74,14 +74,16 @@ public class EmailReceipt implements Runnable {
         try {
             connection.write("220 " + connection.getSession().getRdns() + " ESMTP; " + connection.getSession().getDate());
 
-            boolean loop = true;
             Verb verb;
-            for(int i = 0; i < transactionsLimit; i++) { // TODO Make limit configurable.
+            for (int i = 0; i < transactionsLimit; i++) { // TODO Make limit configurable.
                 String read = connection.read().trim();
                 verb = new Verb(read);
 
                 // Don't process if error
                 if (!isError(verb)) process(verb);
+
+                // Break the loop
+                if (verb.getCommand().equalsIgnoreCase("quit")) break;
 
                 // Break if error limit reached.
                 if (errorLimit <= 0) {
