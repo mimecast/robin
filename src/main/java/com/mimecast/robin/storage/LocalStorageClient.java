@@ -23,6 +23,11 @@ public class LocalStorageClient implements StorageClient {
     private static final Logger log = LogManager.getLogger(LocalStorageClient.class);
 
     /**
+     * UID.
+     */
+    protected final String uid = UUID.randomUUID().toString();
+
+    /**
      * Connection instance.
      */
     protected Connection connection;
@@ -44,7 +49,6 @@ public class LocalStorageClient implements StorageClient {
 
     public LocalStorageClient() {
         String now = new SimpleDateFormat("yyyyMMdd", Locale.UK).format(new Date());
-        String uid = UUID.randomUUID().toString();
 
         fileName = now + "." + uid + ".eml";
         path = Config.getServer().getStorageDir();
@@ -99,6 +103,16 @@ public class LocalStorageClient implements StorageClient {
     @Override
     public String getToken() {
         return Paths.get(path, fileName).toString();
+    }
+
+    /**
+     * Gets UID.
+     *
+     * @return String.
+     */
+    @Override
+    public String getUID() {
+        return uid;
     }
 
     /**

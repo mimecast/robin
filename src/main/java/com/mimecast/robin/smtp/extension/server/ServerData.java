@@ -81,10 +81,10 @@ public class ServerData extends ServerProcessor {
 
         Optional<ScenarioConfig> opt = connection.getScenario();
         if (opt.isPresent() && opt.get().getData() != null) {
-            connection.write(opt.get().getData());
+            connection.write(opt.get().getData() + " [" + storageClient.getUID() + "]");
         } else {
             storageClient.save();
-            connection.write("250 2.0.0 Received OK");
+            connection.write("250 2.0.0 Received OK [" + storageClient.getUID() + "]");
         }
     }
 
