@@ -46,7 +46,7 @@ class ServerDataTest {
 
         connection.parseLines();
         assertEquals("354 Ready and willing\r\n", connection.getLine(1));
-        assertEquals("250 2.0.0 Received OK\r\n", connection.getLine(2));
+        assertTrue(connection.getLine(2).startsWith("250 2.0.0 Received OK"), "startsWith(\"250 2.0.0 Received OK\")");
         assertEquals(stringBuilder.toString().length() - (5 + 4), data.getBytesReceived());
     }
 
@@ -74,7 +74,7 @@ class ServerDataTest {
 
         connection.parseLines();
         assertEquals("354 Ready and willing\r\n", connection.getLine(1));
-        assertEquals("250 2.0.0 Received OK\r\n", connection.getLine(2));
+        assertTrue(connection.getLine(2).startsWith("250 2.0.0 Received OK"), "startsWith(\"250 2.0.0 Received OK\")");
         assertEquals(stringBuilder.toString().length() - (3 + 2), data.getBytesReceived());
     }
 
@@ -102,7 +102,7 @@ class ServerDataTest {
 
         connection.parseLines();
         assertEquals("354 Ready and willing\r\n", connection.getLine(1));
-        assertEquals("250 2.0.0 Received OK\r\n", connection.getLine(2));
+        assertTrue(connection.getLine(2).startsWith("250 2.0.0 Received OK"), "startsWith(\"250 2.0.0 Received OK\")");
         assertEquals(stringBuilder.toString().length() - (3 + 2), data.getBytesReceived());
     }
 

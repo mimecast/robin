@@ -75,7 +75,7 @@ class EmailReceiptTest {
         assertEquals("250 2.1.0 Sender OK\r\n", connection.getLine(8));
         assertEquals("250 2.1.5 Recipient OK\r\n", connection.getLine(9));
         assertEquals("354 Ready and willing\r\n", connection.getLine(10));
-        assertEquals("250 2.0.0 Received OK\r\n", connection.getLine(11));
+        assertTrue(connection.getLine(11).startsWith("250 2.0.0 Received OK"), "startsWith(\"250 2.0.0 Received OK\")");
         assertEquals("221 2.0.0 Closing connection\r\n", connection.getLine(12));
     }
 
