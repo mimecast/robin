@@ -20,7 +20,7 @@ public class ServerData extends ServerProcessor {
     /**
      * Number of MIME bytes received.
      */
-    private long bytesReceived = 0L;
+    protected long bytesReceived = 0L;
 
     /**
      * CHUNKING advert.
@@ -46,11 +46,12 @@ public class ServerData extends ServerProcessor {
 
         if (verb.getKey().equals("bdat")) {
             binary();
+            log.debug("Received: {} bytes", bytesReceived);
 
-        } else {
+        } else if (verb.getKey().equals("data")) {
             ascii();
+            log.debug("Received: {} bytes", bytesReceived);
         }
-        log.debug("Received: {} bytes", bytesReceived);
 
         return true;
     }
@@ -64,11 +65,30 @@ public class ServerData extends ServerProcessor {
         if (connection.getSession().getRcpts().isEmpty()) {
             connection.write("554 5.5.1 No valid recipients");
             return;
-        } else {
-            connection.write("354 Ready and willing");
         }
 
-        StorageClient storageClient = Factories.getStorageClient(connection);
+        // Read email lines and store to disk.
+        StorageClient storageClient = asciiRead("eml");
+
+        Optional<ScenarioConfig> opt = connection.getScenario();
+        if (opt.isPresent() && opt.get().getData() != null) {
+            connection.write(opt.get().getData() + " [" + storageClient.getUID() + "]");
+        } else {
+            connection.write("250 2.0.0 Received OK [" + storageClient.getUID() + "]");
+        }
+    }
+
+    /**
+     * ASCII read.
+     *
+     * @param extension File extension.
+     * @return StorageClient StorageClient instance.
+     * @throws IOException Unable to communicate.
+     */
+    protected StorageClient asciiRead(String extension) throws IOException {
+        connection.write("354 Ready and willing");
+
+        StorageClient storageClient = Factories.getStorageClient(connection, extension);
 
         try (CountingOutputStream cos = new CountingOutputStream(storageClient.getStream())) {
             connection.setTimeout(connection.getSession().getExtendedTimeout());
@@ -79,14 +99,9 @@ public class ServerData extends ServerProcessor {
             connection.setTimeout(connection.getSession().getTimeout());
         }
 
-        Optional<ScenarioConfig> opt = connection.getScenario();
-        if (opt.isPresent() && opt.get().getData() != null) {
-            storageClient.save();
-            connection.write(opt.get().getData() + " [" + storageClient.getUID() + "]");
-        } else {
-            storageClient.save();
-            connection.write("250 2.0.0 Received OK [" + storageClient.getUID() + "]");
-        }
+        storageClient.save();
+
+        return storageClient;
     }
 
     /**
@@ -101,7 +116,7 @@ public class ServerData extends ServerProcessor {
             connection.write("501 5.5.4 Invalid arguments");
         } else {
             // Read bytes.
-            StorageClient storageClient = Factories.getStorageClient(connection);
+            StorageClient storageClient = Factories.getStorageClient(connection, "eml");
             CountingOutputStream cos = new CountingOutputStream(storageClient.getStream());
             binaryRead(bdatVerb, cos);
             bytesReceived = cos.getByteCount();
@@ -123,7 +138,7 @@ public class ServerData extends ServerProcessor {
      * @param cos  CountingOutputStream instance.
      * @throws IOException Unable to communicate.
      */
-    private void binaryRead(BdatVerb verb, CountingOutputStream cos) throws IOException {
+    protected void binaryRead(BdatVerb verb, CountingOutputStream cos) throws IOException {
         try {
             connection.setTimeout(connection.getSession().getExtendedTimeout());
             connection.readBytes(verb.getSize(), cos);

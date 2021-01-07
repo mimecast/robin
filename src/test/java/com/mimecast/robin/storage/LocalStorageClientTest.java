@@ -14,33 +14,34 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class LocalStorageClientTest {
 
     @Test
     void simple() {
-        LocalStorageClient localStorageClient = new LocalStorageClient();
+        LocalStorageClient localStorageClient = new LocalStorageClient("dat");
 
         assertTrue(localStorageClient.getToken().contains("/tmp/store/"));
         assertTrue(localStorageClient.getToken().contains(new SimpleDateFormat("yyyyMMdd", Locale.UK).format(new Date()) + "."));
-        assertTrue(localStorageClient.getToken().contains(".eml"));
+        assertTrue(localStorageClient.getToken().contains(".dat"));
     }
 
     @Test
     void conenction() throws AddressException {
         Connection connection = new Connection(new Session().addRcpt(new InternetAddress("vmarian@mimecast.com")));
-        LocalStorageClient localStorageClient = new LocalStorageClient().setConnection(connection);
+        LocalStorageClient localStorageClient = new LocalStorageClient("dat").setConnection(connection);
 
         assertTrue(localStorageClient.getToken().contains("/tmp/store/mimecast.com/vmarian/"));
         assertTrue(localStorageClient.getToken().contains(new SimpleDateFormat("yyyyMMdd", Locale.UK).format(new Date()) + "."));
-        assertTrue(localStorageClient.getToken().contains(".eml"));
+        assertTrue(localStorageClient.getToken().contains(".dat"));
     }
 
     @Test
     void stream() throws AddressException, IOException {
         Connection connection = new Connection(new Session().addRcpt(new InternetAddress("vmarian@mimecast.com")));
-        LocalStorageClient localStorageClient = new LocalStorageClient().setConnection(connection);
+        LocalStorageClient localStorageClient = new LocalStorageClient("eml").setConnection(connection);
 
         String content = "Mime-Version: 1.0\r\n";
         localStorageClient.getStream().write(content.getBytes());

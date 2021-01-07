@@ -47,10 +47,19 @@ public class LocalStorageClient implements StorageClient {
      */
     protected OutputStream stream = new NullOutputStream();
 
-    public LocalStorageClient() {
+    /**
+     * @param extension File extension.
+     */
+    public LocalStorageClient(String extension) {
         String now = new SimpleDateFormat("yyyyMMdd", Locale.UK).format(new Date());
 
-        fileName = now + "." + uid + ".eml";
+        if (extension == null) {
+            extension = ".dat";
+        } else if (!extension.startsWith(".")) {
+            extension = "." + extension;
+        }
+
+        fileName = now + "." + uid + extension;
         path = Config.getServer().getStorageDir();
     }
 
@@ -87,7 +96,6 @@ public class LocalStorageClient implements StorageClient {
     public OutputStream getStream() throws FileNotFoundException {
         if (PathUtils.makePath(path)) {
             stream = new FileOutputStream(new File(Paths.get(path, fileName).toString()));
-
         } else {
             log.error("Storage path could not be created");
         }

@@ -225,10 +225,11 @@ public class Factories {
     /**
      * Gets StorageClient.
      *
+     * @param extension File extension.
      * @param connection Connection instance.
      * @return StorageClient instance.
      */
-    public static StorageClient getStorageClient(Connection connection) {
+    public static StorageClient getStorageClient(Connection connection, String extension) {
         if (storageClient != null) {
             try {
                 return storageClient.call().setConnection(connection);
@@ -237,7 +238,7 @@ public class Factories {
             }
         }
 
-        return new LocalStorageClient().setConnection(connection);
+        return new LocalStorageClient(extension).setConnection(connection);
     }
 
     /**

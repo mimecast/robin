@@ -17,12 +17,12 @@ public class ClientData extends ClientProcessor {
     /**
      * MessageEnvelope instance.
      */
-    private MessageEnvelope envelope;
+    protected MessageEnvelope envelope;
 
     /**
      * EnvelopeTransactionList instance.
      */
-    private EnvelopeTransactionList envelopeTransactions;
+    protected EnvelopeTransactionList envelopeTransactions;
 
     /**
      * DATA processor.
@@ -42,30 +42,6 @@ public class ClientData extends ClientProcessor {
         envelope = connection.getSession().getEnvelopes().get(messageID);
         envelopeTransactions = connection.getSessionTransactionList().getEnvelopes().get(messageID);
 
-        if (connection.getSession().isEhloBdat() && envelope.getChunkSize() >= 128) {
-            return processBdat();
-        } else {
-            return processData();
-        }
-    }
-
-    /**
-     * DATA processor.
-     *
-     * @return Boolean.
-     * @throws IOException Unable to communicate.
-     */
-    private boolean processData() throws IOException {
-        String write = "DATA";
-        connection.write(write);
-
-        String read;
-        read = connection.read("354");
-        if (!read.startsWith("354")) {
-            envelopeTransactions.addTransaction(write, write, read, true);
-            return false;
-        }
-
         // Configure data stream
         InputStream inputStream = null;
 
@@ -82,15 +58,40 @@ public class ClientData extends ClientProcessor {
             inputStream = new ByteArrayInputStream((envelope.getHeaders() + "\r\n" + envelope.getMessage()).getBytes());
         }
 
-        // Send data
-        if (envelope.getTerminateAfterBytes() > 0) {
-            log.debug("Terminating after {} bytes.", envelope.getTerminateAfterBytes());
-            envelope.setTerminateBeforeDot(true);
-            inputStream = new BoundedInputStream(inputStream, envelope.getTerminateAfterBytes());
+        if (connection.getSession().isEhloBdat() && envelope.getChunkSize() >= 128) {
+            return processBdat();
+        } else {
+            return processData("DATA", inputStream);
+        }
+    }
+
+    /**
+     * DATA processor.
+     *
+     * @param verb Verb.
+     * @param inputStream InputStream instance.
+     * @return Boolean.
+     * @throws IOException Unable to communicate.
+     */
+    protected boolean processData(String verb, InputStream inputStream) throws IOException {
+        String write = verb != null ? verb : "DATA";
+        connection.write(write);
+
+        String read;
+        read = connection.read("354");
+        if (!read.startsWith("354")) {
+            envelopeTransactions.addTransaction(write, write, read, true);
+            return false;
         }
 
         // Send data
         if (inputStream != null) {
+            if (envelope.getTerminateAfterBytes() > 0) {
+                log.debug("Terminating after {} bytes.", envelope.getTerminateAfterBytes());
+                envelope.setTerminateBeforeDot(true);
+                inputStream = new BoundedInputStream(inputStream, envelope.getTerminateAfterBytes());
+            }
+
             connection.stream(
                     new MagicInputStream(inputStream, envelope),
                     envelope.getSlowBytes(),
