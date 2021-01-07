@@ -75,7 +75,7 @@ public class EmailReceipt implements Runnable {
             connection.write("220 " + connection.getSession().getRdns() + " ESMTP; " + connection.getSession().getDate());
 
             Verb verb;
-            for (int i = 0; i < transactionsLimit; i++) { // TODO Make limit configurable.
+            for (int i = 0; i < transactionsLimit; i++) {
                 String read = connection.read().trim();
                 verb = new Verb(read);
 
