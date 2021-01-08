@@ -6,7 +6,6 @@ package com.mimecast.robin.assertion;
  * <p>Thrown by Assert and AssertExternal if an assertion doesn't match anything.
  *
  * @see Assert
- * @see AssertExternal
  */
 public class AssertException extends Exception {
 

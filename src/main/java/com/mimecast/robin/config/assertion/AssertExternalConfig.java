@@ -13,8 +13,12 @@ import java.util.Map;
  *     "mta": {
  *         "delay": 5,
  *         "retry": 2,
+ *         "verify": ["SPAMRESULT"],
  *         "match": [
  *             ["SPAMRESULT", "Action=Accept"]
+ *         ],
+ *         "refuse": [
+ *             ["java.lang.NullPointerException"]
  *         ]
  *     }
  * </pre>

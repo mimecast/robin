@@ -8,8 +8,6 @@ import java.util.regex.Pattern;
  * Assert external group.
  *
  * <p>Container class for pattern groups used for external logs assertion.
- *
- * @see AssertExternal
  */
 @SuppressWarnings("UnusedReturnValue")
 public class AssertExternalGroup {
