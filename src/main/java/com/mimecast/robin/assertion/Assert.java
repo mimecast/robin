@@ -129,9 +129,9 @@ public class Assert {
     private void assertExternal(MessageEnvelope envelope, int transactionId) throws AssertException {
         if (!Factories.getExternalKeys().isEmpty()) {
             for (String key : Factories.getExternalKeys()) {
-                ExternalClient client = Factories.getExternalClient(key, connection, transactionId);
+                ExternalClient client = Factories.getExternalClient(key, connection, envelope.getAssertions().getExternal(key), transactionId);
                 if (client != null) {
-                    new AssertExternal(client, envelope.getAssertions().getExternal(key));
+                    client.run();
                 } else {
                     throw new AssertException("Assert external client not instanciated");
                 }

@@ -1,16 +1,15 @@
 package com.mimecast.robin.assertion.client;
 
 import com.mimecast.robin.assertion.Assert;
-import com.mimecast.robin.assertion.AssertExternal;
+import com.mimecast.robin.assertion.AssertException;
+import com.mimecast.robin.config.assertion.AssertExternalConfig;
 import com.mimecast.robin.main.Factories;
 import com.mimecast.robin.smtp.connection.Connection;
-import org.json.JSONArray;
 
 /**
  * Interface for external logs client.
  *
  * @see Assert
- * @see AssertExternal
  * @see Factories
  */
 public interface ExternalClient {
@@ -24,6 +23,14 @@ public interface ExternalClient {
     ExternalClient setConnection(Connection connection);
 
     /**
+     * Sets Config.
+     *
+     * @param config AssertExternalConfig instance.
+     * @return Self.
+     */
+    ExternalClient setConfig(AssertExternalConfig config);
+
+    /**
      * Sets Transaction ID.
      *
      * @param transactionId Transaction ID.
@@ -32,11 +39,7 @@ public interface ExternalClient {
     ExternalClient setTransactionId(int transactionId);
 
     /**
-     * Gets server logs.
-     *
-     * <p>This is called by AssertExternal to get the logs.
-     *
-     * @return JSONArray instance.
+     * Runs assertions.
      */
-    JSONArray getLogs();
+    void run() throws AssertException;
 }
