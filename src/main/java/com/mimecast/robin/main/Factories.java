@@ -2,7 +2,7 @@ package com.mimecast.robin.main;
 
 import com.mimecast.robin.annotation.Plugin;
 import com.mimecast.robin.assertion.client.ExternalClient;
-import com.mimecast.robin.config.assertion.AssertExternalConfig;
+import com.mimecast.robin.config.Config;
 import com.mimecast.robin.smtp.auth.DigestCache;
 import com.mimecast.robin.smtp.auth.StaticDigestCache;
 import com.mimecast.robin.smtp.connection.Connection;
@@ -260,7 +260,7 @@ public class Factories {
      * @param transactionId Transaction ID.
      * @return ExternalClient instance.
      */
-    public static ExternalClient getExternalClient(String key, Connection connection, AssertExternalConfig config, int transactionId) {
+    public static ExternalClient getExternalClient(String key, Connection connection, Config config, int transactionId) {
         if (externalClients.get(key) != null) {
             try {
                 return externalClients.get(key).call().setConnection(connection)

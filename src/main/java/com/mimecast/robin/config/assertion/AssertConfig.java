@@ -1,6 +1,7 @@
 package com.mimecast.robin.config.assertion;
 
 import com.mimecast.robin.assertion.client.ExternalClient;
+import com.mimecast.robin.config.Config;
 import com.mimecast.robin.config.ConfigFoundation;
 import com.mimecast.robin.main.Factories;
 
@@ -17,7 +18,7 @@ import java.util.Map;
  *
  * @see ExternalClient
  * @see Factories
- * @see AssertExternalConfig
+ * @see Config
  */
 @SuppressWarnings("unchecked")
 public class AssertConfig extends ConfigFoundation {
@@ -54,7 +55,7 @@ public class AssertConfig extends ConfigFoundation {
      * @param key Config map key.
      * @return AssertExternalConfig instance.
      */
-    public AssertExternalConfig getExternal(String key) {
-        return new AssertExternalConfig(getMapProperty(key));
+    public Config getExternal(String key) {
+        return new Config(getMapProperty(key));
     }
 }
