@@ -53,7 +53,7 @@ public class AssertConfig extends ConfigFoundation {
      * Gets external assertion configuration instance.
      *
      * @param key Config map key.
-     * @return AssertExternalConfig instance.
+     * @return Config instance.
      */
     public Config getExternal(String key) {
         return new Config(getMapProperty(key));

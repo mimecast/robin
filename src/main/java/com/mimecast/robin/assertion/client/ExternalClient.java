@@ -25,7 +25,7 @@ public interface ExternalClient {
     /**
      * Sets Config.
      *
-     * @param config AssertExternalConfig instance.
+     * @param config Config instance.
      * @return Self.
      */
     ExternalClient setConfig(Config config);
