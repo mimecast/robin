@@ -2,7 +2,7 @@ package com.mimecast.robin.assertion.client;
 
 import com.mimecast.robin.assertion.Assert;
 import com.mimecast.robin.assertion.AssertException;
-import com.mimecast.robin.config.Config;
+import com.mimecast.robin.config.BasicConfig;
 import com.mimecast.robin.main.Factories;
 import com.mimecast.robin.smtp.connection.Connection;
 
@@ -28,7 +28,7 @@ public interface ExternalClient {
      * @param config Config instance.
      * @return Self.
      */
-    ExternalClient setConfig(Config config);
+    ExternalClient setConfig(BasicConfig config);
 
     /**
      * Sets Transaction ID.

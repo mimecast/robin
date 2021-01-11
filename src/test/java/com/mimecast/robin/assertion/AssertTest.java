@@ -35,14 +35,7 @@ class AssertTest {
                         "          [\"RCPT\", \"250 Recipient OK\"],\n" +
                         "          [\"DATA\", \"^250\"],\n" +
                         "          [\"DATA\", \"Received OK$\"]\n" +
-                        "        ],\n" +
-                        "        \"mta\": {\n" +
-                        "          \"delay\": 5,\n" +
-                        "          \"retry\": 2,\n" +
-                        "          \"match\": [\n" +
-                        "            [\"MTACONNSUMMARY\", \"IP=8.8.8.8\"]\n" +
-                        "          ]\n" +
-                        "        }\n" +
+                        "        ]\n" +
                         "      }\n" +
                         "    }\n" +
                         "  ],\n" +

@@ -7,7 +7,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class ConfigTest {
+class BasicConfigTest {
 
     @Test
     void numbers() {
@@ -18,7 +18,7 @@ class ConfigTest {
         map.put("long", 7L);
         map.put("string", "7");
 
-        Config config = new Config(map);
+        BasicConfig config = new BasicConfig(map);
         assertEquals(7, config.getLongProperty("integer"));
         assertEquals(7, config.getLongProperty("double"));
         assertEquals(7, config.getLongProperty("short"));

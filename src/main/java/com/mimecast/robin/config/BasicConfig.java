@@ -5,7 +5,7 @@ import java.util.Map;
 /**
  * Config generic implemetation.
  */
-public class Config extends ConfigFoundation {
+public class BasicConfig extends ConfigFoundation {
 
     /**
      * Constructs a new BasicConfig instance.
@@ -13,7 +13,7 @@ public class Config extends ConfigFoundation {
      * @param map Configuration map.
      */
     @SuppressWarnings("rawtypes")
-    public Config(Map map) {
+    public BasicConfig(Map map) {
         super(map);
     }
 }
