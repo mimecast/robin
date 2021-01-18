@@ -40,6 +40,8 @@ public interface ExternalClient {
 
     /**
      * Runs assertions.
+     *
+     * @throws AssertException Assertion exception.
      */
     void run() throws AssertException;
 }

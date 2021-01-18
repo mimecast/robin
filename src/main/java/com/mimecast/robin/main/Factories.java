@@ -257,6 +257,7 @@ public class Factories {
      *
      * @param key           Config map key.
      * @param connection    Connection instance.
+     * @param config        BasicConfig instance.
      * @param transactionId Transaction ID.
      * @return ExternalClient instance.
      */
