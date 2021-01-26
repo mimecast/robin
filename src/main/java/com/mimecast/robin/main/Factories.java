@@ -255,18 +255,16 @@ public class Factories {
     /**
      * Gets ExternalClient by key.
      *
-     * @param key           Config map key.
-     * @param connection    Connection instance.
-     * @param config        BasicConfig instance.
-     * @param transactionId Transaction ID.
+     * @param key        Config map key.
+     * @param connection Connection instance.
+     * @param config     BasicConfig instance.
      * @return ExternalClient instance.
      */
-    public static ExternalClient getExternalClient(String key, Connection connection, BasicConfig config, int transactionId) {
+    public static ExternalClient getExternalClient(String key, Connection connection, BasicConfig config) {
         if (externalClients.get(key) != null) {
             try {
                 return externalClients.get(key).call().setConnection(connection)
-                        .setConfig(config)
-                        .setTransactionId(transactionId);
+                        .setConfig(config);
             } catch (Exception e) {
                 log.error("Error calling storage client: {}", e.getMessage());
             }

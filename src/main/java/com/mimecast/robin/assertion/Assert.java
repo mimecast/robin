@@ -50,6 +50,7 @@ public class Assert {
             assertSmtp(connection.getSession().getAssertions().getSmtp(), connection.getSessionTransactionList());
         }
         assertEnvelopes();
+        assertExternal();
     }
 
     /**
@@ -114,27 +115,52 @@ public class Assert {
                     }
 
                     // External.
-                    assertExternal(envelope, i);
+                    assertEnvelopesExternal(envelope, i);
                 }
             }
         }
     }
 
     /**
-     * Assert external logs if any.
+     * Assert external envelope logs if any.
      *
-     * @param envelope MessageEnvelope instance.
+     * @param envelope      MessageEnvelope instance.
      * @param transactionId Transaction ID.
      * @throws AssertException Assertion exception.
      */
-    private void assertExternal(MessageEnvelope envelope, int transactionId) throws AssertException {
+    private void assertEnvelopesExternal(MessageEnvelope envelope, int transactionId) throws AssertException {
         if (!Factories.getExternalKeys().isEmpty()) {
             for (String key : Factories.getExternalKeys()) {
 
                 BasicConfig basicConfig = envelope.getAssertions().getExternal(key);
                 if (!basicConfig.isEmpty()) {
 
-                    ExternalClient client = Factories.getExternalClient(key, connection, basicConfig, transactionId);
+                    ExternalClient client = Factories.getExternalClient(key, connection, basicConfig);
+                    if (client != null) {
+                        client.setTransactionId(transactionId)
+                                .run();
+
+                    } else {
+                        throw new AssertException("Assert external client not instanciated");
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Assert external overall logs if any.
+     *
+     * @throws AssertException Assertion exception.
+     */
+    private void assertExternal() throws AssertException {
+        if (!Factories.getExternalKeys().isEmpty()) {
+            for (String key : Factories.getExternalKeys()) {
+
+                BasicConfig basicConfig = connection.getSession().getAssertions().getExternal(key);
+                if (!basicConfig.isEmpty()) {
+
+                    ExternalClient client = Factories.getExternalClient(key, connection, basicConfig);
                     if (client != null) {
                         client.run();
 
