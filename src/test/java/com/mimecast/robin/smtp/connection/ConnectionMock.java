@@ -4,6 +4,7 @@ import com.mimecast.robin.main.Factories;
 import com.mimecast.robin.smtp.io.LineInputStream;
 import com.mimecast.robin.smtp.session.Session;
 import com.mimecast.robin.smtp.transaction.SessionTransactionList;
+import com.mimecast.robin.util.StreamUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -57,12 +58,7 @@ public class ConnectionMock extends Connection {
     }
 
     public void parseLines() throws IOException {
-        LineInputStream stream = new LineInputStream(new ByteArrayInputStream(output.toByteArray()));
-
-        byte[] bytes;
-        while ((bytes = stream.readLine()) != null) {
-            lines.put(stream.getLineNumber(), new String(bytes));
-        }
+        lines.putAll(StreamUtils.parseLines(output));
     }
 
     public String getLine(int lineNo) {
