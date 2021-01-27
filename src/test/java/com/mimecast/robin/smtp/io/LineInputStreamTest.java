@@ -5,7 +5,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import javax.naming.ConfigurationException;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
@@ -27,7 +26,7 @@ class LineInputStreamTest {
         Map<Integer, String> lines = new HashMap<>();
 
         byte[] bytes;
-        LineInputStream stream = new LineInputStream(new FileInputStream(new File("src/test/resources/lipsum.mixed.eol.eml")));
+        LineInputStream stream = new LineInputStream(new FileInputStream("src/test/resources/lipsum.mixed.eol.eml"));
         while ((bytes = stream.readLine()) != null) {
             lines.put(stream.getLineNumber(), new String(bytes));
         }

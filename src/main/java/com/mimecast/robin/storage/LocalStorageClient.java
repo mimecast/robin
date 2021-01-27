@@ -7,7 +7,10 @@ import org.apache.commons.io.output.NullOutputStream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.*;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -95,7 +98,7 @@ public class LocalStorageClient implements StorageClient {
     @Override
     public OutputStream getStream() throws FileNotFoundException {
         if (PathUtils.makePath(path)) {
-            stream = new FileOutputStream(new File(Paths.get(path, fileName).toString()));
+            stream = new FileOutputStream(Paths.get(path, fileName).toString());
         } else {
             log.error("Storage path could not be created");
         }

@@ -79,15 +79,15 @@ public class EmailReceipt implements Runnable {
                 String read = connection.read().trim();
                 verb = new Verb(read);
 
-                // Don't process if error
+                // Don't process if error.
                 if (!isError(verb)) process(verb);
 
-                // Break the loop
-                if (verb.getCommand().equalsIgnoreCase("quit")) break;
-
+                // Break the loop.
                 // Break if error limit reached.
-                if (errorLimit <= 0) {
-                    log.warn("Error limit reached.");
+                if (verb.getCommand().equalsIgnoreCase("quit") || errorLimit <= 0) {
+                    if (errorLimit <= 0) {
+                        log.warn("Error limit reached.");
+                    }
                     break;
                 }
             }

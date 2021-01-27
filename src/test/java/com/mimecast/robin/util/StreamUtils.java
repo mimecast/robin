@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Streanm utils.
+ * Stream utils.
  */
 public class StreamUtils {
 

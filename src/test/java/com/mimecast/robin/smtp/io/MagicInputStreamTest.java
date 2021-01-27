@@ -29,7 +29,7 @@ class MagicInputStreamTest {
         envelope.setMailEjf("peter@example.com");
         envelope.setRcptEjf("gamora@example.com");
 
-        FileInputStream file = new FileInputStream(new File(envelope.getFile()));
+        FileInputStream file = new FileInputStream(envelope.getFile());
         magic = new MagicInputStream(file, envelope);
     }
 

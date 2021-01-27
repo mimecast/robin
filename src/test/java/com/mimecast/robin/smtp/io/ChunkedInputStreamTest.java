@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 
 import javax.naming.ConfigurationException;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,7 +28,7 @@ class ChunkedInputStreamTest {
     }
 
     ChunkedInputStream getStream() throws IOException {
-        FileInputStream file = new FileInputStream(new File(envelope.getFile()));
+        FileInputStream file = new FileInputStream(envelope.getFile());
         return new ChunkedInputStream(file, envelope);
     }
 

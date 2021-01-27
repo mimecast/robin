@@ -47,7 +47,7 @@ public class ClientData extends ClientProcessor {
 
         if (envelope.getFile() != null) {
             log.debug("Sending email from file: {}", envelope.getFile());
-            inputStream = new FileInputStream(new File(envelope.getFile()));
+            inputStream = new FileInputStream(envelope.getFile());
 
         } else if (envelope.getStream() != null) {
             log.debug("Sending email from stream.");
@@ -136,7 +136,7 @@ public class ClientData extends ClientProcessor {
 
             // Choose file or stream
             if (envelope.getFile() != null) {
-                inputStream = new FileInputStream(new File(envelope.getFile()));
+                inputStream = new FileInputStream(envelope.getFile());
 
             } else if (envelope.getStream() != null) {
                 inputStream = envelope.getStream();

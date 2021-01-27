@@ -42,8 +42,7 @@ public class ServerEhlo extends ServerProcessor {
         Optional<ScenarioConfig> opt = connection.getScenario();
         if ("ehlo".equals(verb.getKey()) && opt.isPresent() && opt.get().getEhlo() != null) {
             connection.write(opt.get().getEhlo());
-        }
-        else if ("helo".equals(verb.getKey()) && opt.isPresent() && opt.get().getHelo() != null) {
+        } else if ("helo".equals(verb.getKey()) && opt.isPresent() && opt.get().getHelo() != null) {
             connection.write(opt.get().getHelo());
         }
 
@@ -55,16 +54,24 @@ public class ServerEhlo extends ServerProcessor {
         // EHLO response.
         else {
             connection.write("250-" + welcome);
-
-            List<String> adverts = Lists.newArrayList(Sets.newHashSet(collectAdverts()));
-            for (int i = 0; i < adverts.size(); i++) {
-                if (!adverts.get(i).equalsIgnoreCase("STARTLS") || !connection.getSession().isStartTls()) {
-                    connection.write("250" + ((adverts.size() - 1) > i ? "-" : " ") + adverts.get(i));
-                }
-            }
+            writeAdverts();
         }
 
         return true;
+    }
+
+    /**
+     * Writes adverts to socket.
+     *
+     * @throws IOException Unable to communicate.
+     */
+    public void writeAdverts() throws IOException {
+        List<String> adverts = Lists.newArrayList(Sets.newHashSet(collectAdverts()));
+        for (int i = 0; i < adverts.size(); i++) {
+            if (!adverts.get(i).equalsIgnoreCase("STARTLS") || !connection.getSession().isStartTls()) {
+                connection.write("250" + ((adverts.size() - 1) > i ? "-" : " ") + adverts.get(i));
+            }
+        }
     }
 
     /**
