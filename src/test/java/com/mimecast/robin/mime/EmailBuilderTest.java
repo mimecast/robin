@@ -37,9 +37,9 @@ class EmailBuilderTest {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
         EmailBuilder emailBuilder = new EmailBuilder(new MessageEnvelope())
-                .addHeader("Subject", "Robin built a nest")
-                .addHeader("To", "Sir Robin <sir.robin@example.com>")
-                .addHeader("From", "Lady Robin <lady.robin@example.com>")
+                .addHeader("Subject", "Robin wrote")
+                .addHeader("To", "Lady Robin <lady.robin@example.com>")
+                .addHeader("From", "Sir Robin <sir.robin@example.com>")
                 .addMissingHeaders()
 
                 .addPart(new TextMimePart("Mon chéri,\r\n" +
@@ -55,9 +55,9 @@ class EmailBuilderTest {
 
         Map<Integer, String> lines = StreamUtils.parseLines(outputStream);
         assertEquals("MIME-Version: 1.0\r\n", lines.get(1));
-        assertEquals("Subject: Robin built a nest\r\n", lines.get(2));
-        assertEquals("To: Sir Robin <sir.robin@example.com>\r\n", lines.get(3));
-        assertEquals("From: Lady Robin <lady.robin@example.com>\r\n", lines.get(4));
+        assertEquals("Subject: Robin wrote\r\n", lines.get(2));
+        assertEquals("To: Lady Robin <lady.robin@example.com>\r\n", lines.get(3));
+        assertEquals("From: Sir Robin <sir.robin@example.com>\r\n", lines.get(4));
         assertTrue(lines.get(5).startsWith("Date: "));
         assertTrue(lines.get(6).startsWith("Message-ID: "));
         assertEquals("Content-Type: text/plain; charset=\"ISO-8859-1\"\r\n", lines.get(7));
@@ -71,7 +71,7 @@ class EmailBuilderTest {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
         EmailBuilder emailBuilder = new EmailBuilder(new MessageEnvelope())
-                .addHeader("Subject", "Robin built a nest")
+                .addHeader("Subject", "Robin wrote")
                 .addHeader("To", "Sir Robin <sir.robin@example.com>")
                 .addHeader("From", "Lady Robin <lady.robin@example.com>")
                 .addMissingHeaders()
@@ -101,7 +101,7 @@ class EmailBuilderTest {
 
         Map<Integer, String> lines = StreamUtils.parseLines(outputStream);
         assertEquals("MIME-Version: 1.0\r\n", lines.get(1));
-        assertEquals("Subject: Robin built a nest\r\n", lines.get(2));
+        assertEquals("Subject: Robin wrote\r\n", lines.get(2));
         assertEquals("To: Sir Robin <sir.robin@example.com>\r\n", lines.get(3));
         assertEquals("From: Lady Robin <lady.robin@example.com>\r\n", lines.get(4));
         assertTrue(lines.get(5).startsWith("Date: "));

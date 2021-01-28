@@ -16,6 +16,17 @@ public class MimeHeader {
     protected final String value;
 
     /**
+     * Constructs a new MimeHeader instance with given header string.
+     *
+     * @param header Complete header.
+     */
+    public MimeHeader(String header) {
+        String[] splits = header.trim().split(":", 2);
+        this.name = splits.length > 0 ? splits[0].trim() : "x-unknown";
+        this.value = splits.length > 1 ? splits[1].trim() : "";
+    }
+
+    /**
      * Constructs a new MimeHeader instance with given name and value.
      *
      * @param name  Header name.

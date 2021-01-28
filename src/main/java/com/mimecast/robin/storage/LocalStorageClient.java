@@ -1,20 +1,21 @@
 package com.mimecast.robin.storage;
 
 import com.mimecast.robin.main.Config;
+import com.mimecast.robin.mime.EmailParser;
+import com.mimecast.robin.mime.headers.MimeHeader;
 import com.mimecast.robin.smtp.connection.Connection;
 import com.mimecast.robin.util.PathUtils;
 import org.apache.commons.io.output.NullOutputStream;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -23,7 +24,7 @@ import java.util.UUID;
  * <p>Saves files on disk.
  */
 public class LocalStorageClient implements StorageClient {
-    private static final Logger log = LogManager.getLogger(LocalStorageClient.class);
+    protected static final Logger log = LogManager.getLogger(LocalStorageClient.class);
 
     /**
      * UID.
@@ -38,7 +39,7 @@ public class LocalStorageClient implements StorageClient {
     /**
      * Save file name.
      */
-    protected final String fileName;
+    protected String fileName;
 
     /**
      * Save file path.
@@ -51,6 +52,8 @@ public class LocalStorageClient implements StorageClient {
     protected OutputStream stream = new NullOutputStream();
 
     /**
+     * Local storage client.
+     *
      * @param extension File extension.
      */
     public LocalStorageClient(String extension) {
@@ -131,12 +134,41 @@ public class LocalStorageClient implements StorageClient {
      */
     @Override
     public void save() {
-        // TODO Store token in connection session.
+        // TODO Store token in connection session envelope.
         try {
             stream.flush();
             stream.close();
+            rename();
+
         } catch (IOException e) {
             log.error("Storage file not flushed/closed: {}", e.getMessage());
+        }
+    }
+
+    /**
+     * Rename filename.
+     * <p>Will parse and lookup if a X-Robin-Filename header exists and use it's value as a filename.
+     */
+    private void rename() {
+        try {
+            EmailParser parser = new EmailParser(getToken())
+                    .parse(true);
+
+            Optional<MimeHeader> optional = parser.getHeader("x-robin-filename");
+            if (optional.isPresent()) {
+                MimeHeader header = optional.get();
+
+                String source = getToken();
+                String target = Paths.get(path, header.getValue()).toString();
+
+                if (StringUtils.isNotBlank(header.getName()) && new File(source).renameTo(new File(target))) {
+                    fileName = header.getValue();
+                    log.info("Storage moved file to: {}", getToken());
+                }
+            }
+
+        } catch (IOException e) {
+            log.error("Storage unable to parse email: {}", e.getMessage());
         }
     }
 }

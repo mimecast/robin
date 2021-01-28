@@ -50,4 +50,23 @@ class LocalStorageClientTest {
         assertEquals(content, PathUtils.readFile(localStorageClient.getToken(), Charset.defaultCharset()));
         assertTrue(new File(localStorageClient.getToken()).delete());
     }
+
+    @Test
+    void filename() throws AddressException, IOException {
+        Connection connection = new Connection(new Session().addRcpt(new InternetAddress("vmarian@mimecast.com")));
+        LocalStorageClient localStorageClient = new LocalStorageClient("dat").setConnection(connection);
+
+        String content = "Mime-Version: 1.0\r\n" +
+                "X-Robin-Filename: robin.eml\r\n" +
+                "\r\n";
+        localStorageClient.getStream().write(content.getBytes());
+
+        assertTrue(localStorageClient.getToken().endsWith(".dat"));
+
+        localStorageClient.save();
+
+        assertTrue(localStorageClient.getToken().endsWith("robin.eml"));
+        assertEquals(content, PathUtils.readFile(localStorageClient.getToken(), Charset.defaultCharset()));
+        assertTrue(new File(localStorageClient.getToken()).delete());
+    }
 }
