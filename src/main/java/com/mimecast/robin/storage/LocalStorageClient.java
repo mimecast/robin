@@ -161,7 +161,7 @@ public class LocalStorageClient implements StorageClient {
                 String source = getToken();
                 String target = Paths.get(path, header.getValue()).toString();
 
-                if (StringUtils.isNotBlank(header.getName())) {
+                if (StringUtils.isNotBlank(header.getValue())) {
                     if (new File(target).delete()) {
                         log.info("Storage deleted existing file before rename");
                     }
