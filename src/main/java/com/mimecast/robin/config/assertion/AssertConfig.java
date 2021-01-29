@@ -5,6 +5,7 @@ import com.mimecast.robin.config.BasicConfig;
 import com.mimecast.robin.config.ConfigFoundation;
 import com.mimecast.robin.main.Factories;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -52,10 +53,16 @@ public class AssertConfig extends ConfigFoundation {
     /**
      * Gets external assertion configuration instance.
      *
-     * @param key Config map key.
-     * @return Config instance.
+     * @return List of BasicConfig instance.
      */
-    public BasicConfig getExternal(String key) {
-        return new BasicConfig(getMapProperty(key));
+    public List<BasicConfig> getExternal() {
+        List<BasicConfig> external = new ArrayList<>();
+        for (Object map : getListProperty("external")) {
+            if (map instanceof Map) {
+                external.add(new BasicConfig((Map) map));
+            }
+        }
+
+        return external;
     }
 }
