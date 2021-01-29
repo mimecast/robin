@@ -1,6 +1,7 @@
 package com.mimecast.robin.mime;
 
 import com.mimecast.robin.mime.headers.MimeHeader;
+import com.mimecast.robin.mime.headers.MimeHeaders;
 import com.mimecast.robin.mime.parts.MimePart;
 import com.mimecast.robin.smtp.io.LineInputStream;
 import org.apache.commons.lang3.StringUtils;
@@ -10,7 +11,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Basic email MIME parser.
@@ -25,7 +25,7 @@ public class EmailParser {
     /**
      * Parsed headers.
      */
-    private final List<MimeHeader> headers = new ArrayList<>();
+    private final MimeHeaders headers = new MimeHeaders();
 
     /**
      * Parsed parts.
@@ -84,7 +84,7 @@ public class EmailParser {
             // we need to produce a header from what we got so far
             // if any.
             if (!Character.isWhitespace(bytes[0]) && header.length() > 0) {
-                headers.add(new MimeHeader(header.toString()));
+                headers.put(new MimeHeader(header.toString()));
                 header = new StringBuilder();
             }
 
@@ -98,7 +98,7 @@ public class EmailParser {
 
         // Last header
         if (header.length() > 0) {
-            headers.add(new MimeHeader(header.toString()));
+            headers.put(new MimeHeader(header.toString()));
         }
     }
 
@@ -112,25 +112,10 @@ public class EmailParser {
     /**
      * Gets headers.
      *
-     * @return List of MimeHeader.
+     * @return MimeHeaders instance.
      */
-    public List<MimeHeader> getHeaders() {
+    public MimeHeaders getHeaders() {
         return headers;
-    }
-
-    /**
-     * Gets header by name.
-     *
-     * @param name Header name.
-     * @return Optional of MimeHeader.
-     */
-    public Optional<MimeHeader> getHeader(String name) {
-        for (MimeHeader header : headers) {
-            if (header.getName().equalsIgnoreCase(name)) {
-                return Optional.of(header);
-            }
-        }
-        return Optional.empty();
     }
 
     /**

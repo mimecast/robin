@@ -1,6 +1,7 @@
 package com.mimecast.robin.mime.parts;
 
 import com.mimecast.robin.mime.headers.MimeHeader;
+import com.mimecast.robin.mime.headers.MimeHeaders;
 import org.apache.commons.codec.binary.Base64OutputStream;
 import org.apache.commons.io.IOUtils;
 import org.apache.geronimo.mail.util.QuotedPrintableEncoderStream;
@@ -8,8 +9,6 @@ import org.apache.geronimo.mail.util.QuotedPrintableEncoderStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * MIME part container abstract.
@@ -19,7 +18,7 @@ public abstract class MimePart {
     /**
      * Part headers.
      */
-    protected final List<MimeHeader> headers = new ArrayList<>();
+    protected final MimeHeaders headers = new MimeHeaders();
 
     /**
      * Part body as input stream.
@@ -34,7 +33,7 @@ public abstract class MimePart {
      * @return Self.
      */
     public MimePart addHeader(String name, String value) {
-        headers.add(new MimeHeader(name, value));
+        headers.put(new MimeHeader(name, value));
         return this;
     }
 
@@ -46,7 +45,7 @@ public abstract class MimePart {
      * @return Self.
      */
     public MimeHeader getHeader(String name) {
-        for (MimeHeader header : headers) {
+        for (MimeHeader header : headers.get()) {
             if (header.getName().equalsIgnoreCase(name)) {
                 return header;
             }
@@ -64,7 +63,7 @@ public abstract class MimePart {
      */
     public MimePart writeTo(OutputStream outputStream) throws IOException {
         // Write headers.
-        for (MimeHeader header : headers) {
+        for (MimeHeader header : headers.get()) {
             outputStream.write(header.toString().getBytes());
         }
 

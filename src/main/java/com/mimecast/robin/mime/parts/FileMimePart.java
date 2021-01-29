@@ -33,7 +33,7 @@ public class FileMimePart extends MimePart {
         // Ensure we have a Content-Type header.
         MimeHeader contentType = getHeader("Content-Type");
         if (contentType == null) {
-            headers.add(new MimeHeader("Content-Type", "application/octet-stream"));
+            headers.put(new MimeHeader("Content-Type", "application/octet-stream"));
         }
 
         super.writeTo(outputStream);

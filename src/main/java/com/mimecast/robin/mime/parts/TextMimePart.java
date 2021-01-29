@@ -32,7 +32,7 @@ public class TextMimePart extends MimePart {
         // Ensure we have a Content-Type header.
         MimeHeader contentType = getHeader("Content-Type");
         if (contentType == null) {
-            headers.add(new MimeHeader("Content-Type", "text/plain; charset=\"ISO-8859-1\""));
+            headers.put(new MimeHeader("Content-Type", "text/plain; charset=\"ISO-8859-1\""));
         }
 
         super.writeTo(outputStream);

@@ -154,7 +154,7 @@ public class LocalStorageClient implements StorageClient {
             EmailParser parser = new EmailParser(getToken())
                     .parse(true);
 
-            Optional<MimeHeader> optional = parser.getHeader("x-robin-filename");
+            Optional<MimeHeader> optional = parser.getHeaders().get("x-robin-filename");
             if (optional.isPresent()) {
                 MimeHeader header = optional.get();
 
