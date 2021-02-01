@@ -20,7 +20,6 @@ class EmailBuilderTest {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
         EmailBuilder emailBuilder = new EmailBuilder(new MessageEnvelope())
-                .addMissingHeaders()
                 .writeTo(outputStream);
 
         Map<Integer, String> lines = StreamUtils.parseLines(outputStream);
@@ -40,7 +39,6 @@ class EmailBuilderTest {
                 .addHeader("Subject", "Robin wrote")
                 .addHeader("To", "Lady Robin <lady.robin@example.com>")
                 .addHeader("From", "Sir Robin <sir.robin@example.com>")
-                .addMissingHeaders()
 
                 .addPart(new TextMimePart("Mon chéri,\r\n" +
                         "\r\n" +
@@ -74,7 +72,6 @@ class EmailBuilderTest {
                 .addHeader("Subject", "Robin wrote")
                 .addHeader("To", "Sir Robin <sir.robin@example.com>")
                 .addHeader("From", "Lady Robin <lady.robin@example.com>")
-                .addMissingHeaders()
 
                 .addPart(new TextMimePart("Mon chéri,\r\n" +
                         "\r\n" +

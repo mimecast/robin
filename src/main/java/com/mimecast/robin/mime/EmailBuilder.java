@@ -58,10 +58,8 @@ public class EmailBuilder {
 
     /**
      * Adds missing required headers.
-     *
-     * @return Self.
      */
-    public EmailBuilder addMissingHeaders() {
+    private void addMissingHeaders() {
         List<String> addedHeaders = headers.stream()
                 .map(h -> h.getName().toLowerCase())
                 .collect(Collectors.toList());
@@ -92,8 +90,6 @@ public class EmailBuilder {
         if (!addedHeaders.contains("to")) {
             headers.add(new MimeHeader("To", "<" + String.join(">, <", envelope.getRcpts()) + ">"));
         }
-
-        return this;
     }
 
     /**
@@ -125,6 +121,8 @@ public class EmailBuilder {
      * @throws IOException Unable to write to output stream.
      */
     public EmailBuilder writeTo(OutputStream outputStream) throws IOException {
+        addMissingHeaders();
+
         // Write haaders
         for (MimeHeader header : headers) {
             outputStream.write(header.toString().getBytes());
