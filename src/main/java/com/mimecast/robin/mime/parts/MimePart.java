@@ -38,6 +38,15 @@ public abstract class MimePart {
     }
 
     /**
+     * Gets headers container.
+     *
+     * @return MimeHeaders instance.
+     */
+    public MimeHeaders getHeaders() {
+        return headers;
+    }
+
+    /**
      * Gets header by name.
      * <p>Case insensitive.
      *

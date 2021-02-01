@@ -4,7 +4,10 @@ import com.mimecast.robin.mime.headers.MimeHeader;
 import com.mimecast.robin.mime.parts.MimePart;
 import com.mimecast.robin.smtp.MessageEnvelope;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+import javax.mail.internet.ParseException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.DateFormat;
@@ -16,6 +19,7 @@ import java.util.stream.Collectors;
  * Basic email MIME generator.
  */
 public class EmailBuilder {
+    static final Logger log = LogManager.getLogger(EmailBuilder.class);
 
     /**
      * MessageEnvelope instance.
@@ -37,11 +41,38 @@ public class EmailBuilder {
     /**
      * Constructs a new EmailBuilder instance with given MessageEnvelope instance.
      *
-     * @param envelope the envelope
+     * @param envelope MessageEnvelope instance.
      */
     public EmailBuilder(MessageEnvelope envelope) {
         this.envelope = envelope;
         headers.add(new MimeHeader("MIME-Version", "1.0"));
+    }
+
+    /**
+     * Builds email from MimeConfig on demand.
+     *
+     * @return Self.
+     */
+    public EmailBuilder buildMime() {
+        if (envelope.getMime() != null && !envelope.getMime().isEmpty()) {
+            headers.addAll(envelope.getMime().getHeaders());
+
+            for (MimePart part : envelope.getMime().getParts()) {
+                try {
+                    if (part.getHeader("Content-ID") != null) {
+                        related.add(part);
+                    } else if (part.getHeader("Content-Type").getCleanValue().startsWith("text/")) {
+                        alternative.add(part);
+                    } else {
+                        mixed.add(part);
+                    }
+                } catch (ParseException e) {
+                    log.error("Unable to parse header value; skipping part: {}", e.getMessage());
+                }
+            }
+        }
+
+        return this;
     }
 
     /**

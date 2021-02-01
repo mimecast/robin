@@ -76,8 +76,8 @@ public class ConfigMapper {
      */
     private void addEnvelope(Session session, EnvelopeConfig envelopeConfig, CaseConfig caseConfig) {
         // Message object.
-        MessageEnvelope envelope = new MessageEnvelope();
-        envelope.setAssertions(envelopeConfig.getAssertions());
+        MessageEnvelope envelope = new MessageEnvelope()
+            .setAssertions(envelopeConfig.getAssertions());
 
         // Set MAIL FROM and RCPT TO.
         envelope.setMail(envelopeConfig.getMail() != null ? magicReplace(envelopeConfig.getMail()) : caseConfig.getMail());
@@ -86,26 +86,34 @@ public class ConfigMapper {
             envelope.getRcpts().add(magicReplace(rcpt));
         }
 
-        // EJF
-        envelope.setMailEjf(magicReplace(envelopeConfig.getMailEjf()));
-        envelope.setRcptEjf(magicReplace(envelopeConfig.getRcptEjf()));
+        // EJF.
+        envelope.setMailEjf(magicReplace(envelopeConfig.getMailEjf()))
+            .setRcptEjf(magicReplace(envelopeConfig.getRcptEjf()));
 
-        // Transfer config
+        // Transfer config.
         if (envelopeConfig.getChunkSize() > 128) {
             envelope.setChunkSize(envelopeConfig.getChunkSize());
         }
-        envelope.setChunkBdat(envelopeConfig.isChunkBdat());
-        envelope.setChunkWrite(envelopeConfig.isChunkWrite());
+        envelope.setChunkBdat(envelopeConfig.isChunkBdat())
+            .setChunkWrite(envelopeConfig.isChunkWrite())
 
-        envelope.setTerminateAfterBytes(envelopeConfig.getTerminateAfterBytes());
-        envelope.setTerminateBeforeDot(envelopeConfig.isTerminateBeforeDot());
-        envelope.setTerminateAfterDot(envelopeConfig.isTerminateAfterDot());
+            .setTerminateAfterBytes(envelopeConfig.getTerminateAfterBytes())
+            .setTerminateBeforeDot(envelopeConfig.isTerminateBeforeDot())
+            .setTerminateAfterDot(envelopeConfig.isTerminateAfterDot())
 
-        envelope.setSlowBytes(envelopeConfig.getSlowBytes());
-        envelope.setSlowWait(envelopeConfig.getSlowWait());
+            .setSlowBytes(envelopeConfig.getSlowBytes())
+            .setSlowWait(envelopeConfig.getSlowWait());
+
+        // Set MIME.
+        if (!envelopeConfig.getMime().isEmpty()) {
+            envelope.setMime(envelopeConfig.getMime());
+
+            // Add message to delivery.
+            session.addEnvelope(envelope);
+        }
 
         // Set EML file.
-        if (StringUtils.isNotBlank(envelopeConfig.getFile())) {
+        else if (StringUtils.isNotBlank(envelopeConfig.getFile())) {
             envelope.setFile(envelopeConfig.getFile());
 
             // Add message to delivery.
@@ -114,8 +122,8 @@ public class ConfigMapper {
 
         // If EML is null set subject and message.
         else if (StringUtils.isNotBlank(envelopeConfig.getSubject()) && StringUtils.isNotBlank(envelopeConfig.getMessage())) {
-            envelope.setSubject(envelopeConfig.getSubject());
-            envelope.setMessage(envelopeConfig.getMessage());
+            envelope.setSubject(envelopeConfig.getSubject())
+                .setMessage(envelopeConfig.getMessage());
 
             // Add message to delivery.
             session.addEnvelope(envelope);

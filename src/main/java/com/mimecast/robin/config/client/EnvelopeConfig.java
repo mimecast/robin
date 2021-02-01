@@ -2,6 +2,7 @@ package com.mimecast.robin.config.client;
 
 import com.mimecast.robin.config.ConfigFoundation;
 import com.mimecast.robin.config.assertion.AssertConfig;
+import com.mimecast.robin.config.assertion.MimeConfig;
 import com.mimecast.robin.smtp.MessageEnvelope;
 
 import java.util.List;
@@ -154,6 +155,15 @@ public class EnvelopeConfig extends ConfigFoundation {
      */
     public String getFile() {
         return getStringProperty("file");
+    }
+
+    /**
+     * Gets MimeConfig.
+     *
+     * @return MimeConfig instance.
+     */
+    public MimeConfig getMime() {
+        return new MimeConfig(getMapProperty("mime"));
     }
 
     /**

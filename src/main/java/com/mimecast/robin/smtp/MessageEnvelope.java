@@ -1,6 +1,7 @@
 package com.mimecast.robin.smtp;
 
 import com.mimecast.robin.config.assertion.AssertConfig;
+import com.mimecast.robin.config.assertion.MimeConfig;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.InputStream;
@@ -21,6 +22,9 @@ public class MessageEnvelope {
     private String rcpt = null;
     private String rcptEjf = null;
     private List<String> rcpts = new ArrayList<>();
+
+    // Set MimeConfig.
+    private MimeConfig mime = null;
 
     // Set EML file or null.
     private String file = null;
@@ -142,9 +146,11 @@ public class MessageEnvelope {
      * Sets MAIL.
      *
      * @param mail MAIL address.
+     * @return Self.
      */
-    public void setMail(String mail) {
+    public MessageEnvelope setMail(String mail) {
         this.mail = mail;
+        return this;
     }
 
     /**
@@ -160,9 +166,11 @@ public class MessageEnvelope {
      * Sets MAIL for EJF.
      *
      * @param mailEjf MAIL address.
+     * @return Self.
      */
-    public void setMailEjf(String mailEjf) {
+    public MessageEnvelope setMailEjf(String mailEjf) {
         this.mailEjf = mailEjf;
+        return this;
     }
 
     /**
@@ -178,9 +186,11 @@ public class MessageEnvelope {
      * Sets RCPT.
      *
      * @param rcpt RCPT address.
+     * @return Self.
      */
-    public void setRcpt(String rcpt) {
+    public MessageEnvelope setRcpt(String rcpt) {
         this.rcpt = rcpt;
+        return this;
     }
 
     /**
@@ -196,9 +206,11 @@ public class MessageEnvelope {
      * Sets RCPT for EJF.
      *
      * @param rcptEjf RCPT address.
+     * @return Self.
      */
-    public void setRcptEjf(String rcptEjf) {
+    public MessageEnvelope setRcptEjf(String rcptEjf) {
         this.rcptEjf = rcptEjf;
+        return this;
     }
 
     /**
@@ -218,9 +230,11 @@ public class MessageEnvelope {
      * Sets recipients addresses.
      *
      * @param rcpts Recipients address list.
+     * @return Self.
      */
-    public void setRcpts(List<String> rcpts) {
+    public MessageEnvelope setRcpts(List<String> rcpts) {
         this.rcpts = rcpts;
+        return this;
     }
 
     /**
@@ -236,9 +250,31 @@ public class MessageEnvelope {
      * Sets path to eml file.
      *
      * @param file File path.
+     * @return Self.
      */
-    public void setFile(String file) {
+    public MessageEnvelope setFile(String file) {
         this.file = file;
+        return this;
+    }
+
+    /**
+     * Gets MimeConfig.
+     *
+     * @return MimeConfig instance.
+     */
+    public MimeConfig getMime() {
+        return mime;
+    }
+
+    /**
+     * Sets MimeConfig.
+     *
+     * @param mime MimeConfig instance.
+     * @return Self.
+     */
+    public MessageEnvelope setMime(MimeConfig mime) {
+        this.mime = mime;
+        return this;
     }
 
     /**
@@ -254,9 +290,11 @@ public class MessageEnvelope {
      * Sets eml stream.
      *
      * @param stream Eml stream.
+     * @return Self.
      */
-    public void setStream(InputStream stream) {
+    public MessageEnvelope setStream(InputStream stream) {
         this.stream = stream;
+        return this;
     }
 
     /**
@@ -274,9 +312,11 @@ public class MessageEnvelope {
      * <p>Basic plain/text eml will be generated.
      *
      * @param subject Subject string.
+     * @return Self.
      */
-    public void setSubject(String subject) {
+    public MessageEnvelope setSubject(String subject) {
         this.subject = subject;
+        return this;
     }
 
     /**
@@ -294,9 +334,11 @@ public class MessageEnvelope {
      * Sets email body.
      *
      * @param message Body string.
+     * @return Self.
      */
-    public void setMessage(String message) {
+    public MessageEnvelope setMessage(String message) {
         this.message = message;
+        return this;
     }
 
     /**
@@ -331,9 +373,11 @@ public class MessageEnvelope {
      * Sets chunk size.
      *
      * @param chunkSize Chunk size.
+     * @return Self.
      */
-    public void setChunkSize(int chunkSize) {
+    public MessageEnvelope setChunkSize(int chunkSize) {
         this.chunkSize = chunkSize;
+        return this;
     }
 
     /**
@@ -351,9 +395,11 @@ public class MessageEnvelope {
      * Sets chunk BDAT command.
      *
      * @param chunkBdat Boolean.
+     * @return Self.
      */
-    public void setChunkBdat(boolean chunkBdat) {
+    public MessageEnvelope setChunkBdat(boolean chunkBdat) {
         this.chunkBdat = chunkBdat;
+        return this;
     }
 
     /**
@@ -371,9 +417,11 @@ public class MessageEnvelope {
      * Sets chunk write.
      *
      * @param chunkWrite Boolean.
+     * @return Self.
      */
-    public void setChunkWrite(boolean chunkWrite) {
+    public MessageEnvelope setChunkWrite(boolean chunkWrite) {
         this.chunkWrite = chunkWrite;
+        return this;
     }
 
     /**
@@ -390,9 +438,11 @@ public class MessageEnvelope {
      * Sets chunk size.
      *
      * @param terminateAfterBytes Size in bytes.
+     * @return Self.
      */
-    public void setTerminateAfterBytes(int terminateAfterBytes) {
+    public MessageEnvelope setTerminateAfterBytes(int terminateAfterBytes) {
         this.terminateAfterBytes = terminateAfterBytes;
+        return this;
     }
 
     /**
@@ -409,9 +459,11 @@ public class MessageEnvelope {
      * Sets terminate after dot.
      *
      * @param terminateBeforeDot Boolean.
+     * @return Self.
      */
-    public void setTerminateBeforeDot(boolean terminateBeforeDot) {
+    public MessageEnvelope setTerminateBeforeDot(boolean terminateBeforeDot) {
         this.terminateBeforeDot = terminateBeforeDot;
+        return this;
     }
 
     /**
@@ -428,9 +480,11 @@ public class MessageEnvelope {
      * Sets terminate after dot.
      *
      * @param terminateAfterDot Boolean.
+     * @return Self.
      */
-    public void setTerminateAfterDot(boolean terminateAfterDot) {
+    public MessageEnvelope setTerminateAfterDot(boolean terminateAfterDot) {
         this.terminateAfterDot = terminateAfterDot;
+        return this;
     }
 
     /**
@@ -449,9 +503,11 @@ public class MessageEnvelope {
      * Sets slow bytes.
      *
      * @param slowBytes Chunk size.
+     * @return Self.
      */
-    public void setSlowBytes(int slowBytes) {
+    public MessageEnvelope setSlowBytes(int slowBytes) {
         this.slowBytes = slowBytes;
+        return this;
     }
 
     /**
@@ -469,9 +525,11 @@ public class MessageEnvelope {
      * Sets slow wait.
      *
      * @param slowWait Slow wait.
+     * @return Self.
      */
-    public void setSlowWait(int slowWait) {
+    public MessageEnvelope setSlowWait(int slowWait) {
         this.slowWait = slowWait;
+        return this;
     }
 
     /**
@@ -488,7 +546,8 @@ public class MessageEnvelope {
      *
      * @param assertConfig AssertConfig instance.
      */
-    public void setAssertions(AssertConfig assertConfig) {
+    public MessageEnvelope setAssertions(AssertConfig assertConfig) {
         this.assertConfig = assertConfig;
+        return this;
     }
 }

@@ -11,6 +11,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -159,14 +161,14 @@ public class LocalStorageClient implements StorageClient {
                 MimeHeader header = optional.get();
 
                 String source = getToken();
-                String target = Paths.get(path, header.getValue()).toString();
+                Path target = Paths.get(path, header.getValue());
 
                 if (StringUtils.isNotBlank(header.getValue())) {
-                    if (new File(target).delete()) {
+                    if (Files.deleteIfExists(target)) {
                         log.info("Storage deleted existing file before rename");
                     }
 
-                    if (new File(source).renameTo(new File(target))) {
+                    if (new File(source).renameTo(new File(target.toString()))) {
                         fileName = header.getValue();
                         log.info("Storage moved file to: {}", getToken());
                     }

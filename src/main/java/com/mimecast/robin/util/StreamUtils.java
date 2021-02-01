@@ -4,6 +4,7 @@ import com.mimecast.robin.smtp.io.LineInputStream;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,6 +13,13 @@ import java.util.Map;
  * Stream utils.
  */
 public class StreamUtils {
+
+    /**
+     * Protected constructor.
+     */
+    private StreamUtils() {
+        throw new IllegalStateException("Static class");
+    }
 
     /**
      * Parses lines into map of numbered lines.
@@ -31,5 +39,20 @@ public class StreamUtils {
         }
 
         return lines;
+    }
+
+    /**
+     * Closes a Closeable unconditionally.
+     *
+     * @param closeable Object to close.
+     */
+    public static void closeQuietly(final Closeable closeable) {
+        try {
+            if (closeable != null) {
+                closeable.close();
+            }
+        } catch (final IOException ioe) {
+            // Ignore exception on purpose.
+        }
     }
 }

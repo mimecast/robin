@@ -1,13 +1,17 @@
 package com.mimecast.robin.smtp.extension.client;
 
+import com.mimecast.robin.mime.EmailBuilder;
 import com.mimecast.robin.smtp.MessageEnvelope;
 import com.mimecast.robin.smtp.connection.Connection;
 import com.mimecast.robin.smtp.io.ChunkedInputStream;
 import com.mimecast.robin.smtp.io.MagicInputStream;
 import com.mimecast.robin.smtp.transaction.EnvelopeTransactionList;
+import com.mimecast.robin.util.StreamUtils;
 import org.apache.commons.io.input.BoundedInputStream;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * DATA extension processor.
@@ -42,10 +46,25 @@ public class ClientData extends ClientProcessor {
         envelope = connection.getSession().getEnvelopes().get(messageID);
         envelopeTransactions = connection.getSessionTransactionList().getEnvelopes().get(messageID);
 
-        // Configure data stream
+        // Evaluate is BDAT enabled.
+        boolean bdat = connection.getSession().isEhloBdat() && envelope.getChunkSize() >= 128;
+
+        // Configure data stream.
         InputStream inputStream = null;
 
-        if (envelope.getFile() != null) {
+        if (envelope.getMime() != null && !envelope.getMime().isEmpty()) {
+            log.debug("Sending email from MIME.");
+
+            Path path = Files.createTempFile("robin-", ".eml");
+            try (Closeable onClose = () -> Files.delete(path)) {
+                new EmailBuilder(envelope)
+                        .buildMime()
+                        .writeTo(new FileOutputStream(path.toFile()));
+
+                inputStream = new FileInputStream(path.toFile());
+            }
+
+        } else if (envelope.getFile() != null) {
             log.debug("Sending email from file: {}", envelope.getFile());
             inputStream = new FileInputStream(envelope.getFile());
 
@@ -53,26 +72,33 @@ public class ClientData extends ClientProcessor {
             log.debug("Sending email from stream.");
             inputStream = envelope.getStream();
 
-        } else if (envelope.getMessage() != null) {
+        } else if (envelope.getMessage() != null && !bdat) {
             log.debug("Sending email from headers and body.");
             inputStream = new ByteArrayInputStream((envelope.getHeaders() + "\r\n" + envelope.getMessage()).getBytes());
         }
 
-        if (connection.getSession().isEhloBdat() && envelope.getChunkSize() >= 128) {
-            return processBdat();
+        boolean result;
+        if (bdat) {
+            result = processBdat(inputStream);
+
         } else {
-            return processData("DATA", inputStream);
+            result = processData("DATA", inputStream);
         }
+
+        StreamUtils.closeQuietly(inputStream);
+
+        return result;
     }
 
     /**
      * DATA processor.
      *
-     * @param verb Verb.
+     * @param verb        Verb.
      * @param inputStream InputStream instance.
      * @return Boolean.
      * @throws IOException Unable to communicate.
      */
+    @SuppressWarnings("SameParameterValue")
     protected boolean processData(String verb, InputStream inputStream) throws IOException {
         String write = verb != null ? verb : "DATA";
         connection.write(write);
@@ -125,23 +151,14 @@ public class ClientData extends ClientProcessor {
     /**
      * BDAT processor.
      *
+     * @param inputStream InputStream instance.
      * @return Boolean.
      * @throws IOException Unable to communicate.
      */
-    private boolean processBdat() throws IOException {
-        String read;
+    private boolean processBdat(InputStream inputStream) throws IOException {
+        String read = "";
 
-        if (envelope.getFile() != null || envelope.getStream() != null) {
-            InputStream inputStream = null;
-
-            // Choose file or stream
-            if (envelope.getFile() != null) {
-                inputStream = new FileInputStream(envelope.getFile());
-
-            } else if (envelope.getStream() != null) {
-                inputStream = envelope.getStream();
-            }
-
+        if (inputStream != null) {
             try (ChunkedInputStream chunks = new ChunkedInputStream(inputStream, envelope)) {
                 ByteArrayOutputStream chunk;
                 while (chunks.hasChunks()) {
@@ -155,16 +172,13 @@ public class ClientData extends ClientProcessor {
         } else if (envelope.getMessage() != null) {
             // Write headers
             read = writeChunk((envelope.getHeaders() + "\r\n").getBytes(), false);
-            if (!read.startsWith("250")) {
-                return false;
-            }
+            if (!read.startsWith("250")) return false;
 
             // Write body
             read = writeChunk((envelope.getMessage() + "\r\n").getBytes(), true);
-            return read.startsWith("250");
         }
 
-        return false;
+        return read.startsWith("250");
     }
 
     /**

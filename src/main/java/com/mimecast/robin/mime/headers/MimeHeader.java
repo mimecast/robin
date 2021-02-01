@@ -142,11 +142,11 @@ public class MimeHeader {
         for (int i = 0; i < tokens.size(); i++) {
             String token = tokens.get(i);
             if (i > 0 && token.equals("=")) {
-                String name = tokens.get(i - 1);
+                String headerName = tokens.get(i - 1);
 
                 if (tokens.size() > i + 1) {
-                    String value = tokens.get(i + 1);
-                    parameters.put(name, value);
+                    String headerValue = tokens.get(i + 1);
+                    parameters.put(headerName, headerValue);
                 }
             }
         }
