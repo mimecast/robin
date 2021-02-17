@@ -8,7 +8,7 @@ import java.util.Map;
 public class BasicConfig extends ConfigFoundation {
 
     /**
-     * Constructs a new BasicConfig instance.
+     * Constructs a new BasicConfig instance with given map.
      *
      * @param map Configuration map.
      */

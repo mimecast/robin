@@ -12,6 +12,13 @@ import java.io.OutputStream;
 public class FileMimePart extends MimePart {
 
     /**
+     * Constructs a new FileMimePart instance.
+     */
+    public FileMimePart() {
+        // Do nothing.
+    }
+
+    /**
      * Constructs a new FileMimePart instance with given path.
      *
      * @param path Path to file.
@@ -40,4 +47,6 @@ public class FileMimePart extends MimePart {
 
         return this;
     }
+
+
 }

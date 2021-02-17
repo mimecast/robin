@@ -124,7 +124,7 @@ class EmailBuilderTest {
         assertEquals("Content-Type: application/octet-stream\r\n", lines.get(30));
         assertEquals("\r\n", lines.get(31));
         assertEquals("/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIf\r\n", lines.get(32));
-        assertEquals("30HPqs0RAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQf/\r\n", lines.get(83));
+        assertEquals("30HPqs0RAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQf/2Q==\r\n", lines.get(83));
         assertEquals("--robinRelated--\r\n", lines.get(84));
         assertEquals("--robinMixed\r\n", lines.get(85));
         assertEquals("Content-Transfer-Encoding: base64\r\n", lines.get(86));

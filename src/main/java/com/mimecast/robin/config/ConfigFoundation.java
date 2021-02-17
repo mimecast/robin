@@ -1,7 +1,6 @@
 package com.mimecast.robin.config;
 
 import com.google.gson.Gson;
-import com.google.json.JsonSanitizer;
 import com.mimecast.robin.config.client.ClientConfig;
 import com.mimecast.robin.config.server.ServerConfig;
 import com.mimecast.robin.util.PathUtils;
@@ -40,10 +39,10 @@ public abstract class ConfigFoundation {
      * @param path File path.
      * @throws IOException Unable to read file.
      */
-    protected ConfigFoundation(String path) throws IOException {
+    public ConfigFoundation(String path) throws IOException {
         if (PathUtils.isFile(path)) {
             String props = PathUtils.readFile(path, Charset.defaultCharset());
-            map = new Gson().fromJson(JsonSanitizer.sanitize(props), Map.class);
+            map = new Gson().fromJson(props, Map.class);
         }
     }
 
@@ -205,7 +204,6 @@ public abstract class ConfigFoundation {
      *
      * @return Boolean.
      */
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean isEmpty() {
         return map == null || map.isEmpty();
     }

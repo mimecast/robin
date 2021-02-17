@@ -127,7 +127,7 @@ public class Assert {
      * @param assertions List of BasicConfig instances.
      * @throws AssertException Assertion exception.
      */
-    private void assertExternal(List<BasicConfig> assertions) throws AssertException {
+    protected void assertExternal(List<BasicConfig> assertions) throws AssertException {
         assertExternal(assertions, -1);
     }
 

@@ -1,18 +1,21 @@
 package com.mimecast.robin.mime.headers;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.mail.internet.HeaderTokenizer;
 import javax.mail.internet.ParseException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * MIME header container.
  */
 public class MimeHeader {
+    private static final Logger log = LogManager.getLogger(MimeHeader.class);
 
     /**
      * Header name.
@@ -32,7 +35,7 @@ public class MimeHeader {
     /**
      * Header parameters.
      */
-    protected final Map<String, String> parameters = new HashMap<>();
+    protected final Map<String, String> parameters = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     /**
      * Constructs a new MimeHeader instance with given header string.
@@ -78,9 +81,8 @@ public class MimeHeader {
      * Gets header clean value.
      *
      * @return Header value.
-     * @throws ParseException Invalid heder value.
      */
-    public String getCleanValue() throws ParseException {
+    public String getCleanValue() {
         parseValue();
         return cleanValue;
     }
@@ -90,43 +92,44 @@ public class MimeHeader {
      *
      * @param name Parameter name.
      * @return Header value.
-     * @throws ParseException Invalid heder value.
      */
-    public String getParameter(String name) throws ParseException {
+    public String getParameter(String name) {
         parseValue();
         return parameters.get(name);
     }
 
     /**
      * Gets header parameter with given name.
-     *
-     * @throws ParseException Invalid heder value.
      */
-    public void parseValue() throws ParseException {
+    public void parseValue() {
         if (cleanValue == null) {
             List<String> tokens = new ArrayList<>();
 
-            HeaderTokenizer tokenizer = new HeaderTokenizer(value, " ,;:\"'\t=\\", true);
-            HeaderTokenizer.Token htt = tokenizer.next();
-            while (HeaderTokenizer.Token.EOF != htt.getType()) {
-                String tokenValue = htt.getValue().trim();
+            try {
+                HeaderTokenizer tokenizer = new HeaderTokenizer(value, " ,;:\"'\t=\\", true);
+                HeaderTokenizer.Token htt = tokenizer.next();
+                while (HeaderTokenizer.Token.EOF != htt.getType()) {
+                    String tokenValue = htt.getValue().trim();
 
-                // Save clean value.
-                if (cleanValue == null) {
-                    cleanValue = tokenValue;
+                    // Save clean value.
+                    if (cleanValue == null) {
+                        cleanValue = tokenValue;
+                        htt = tokenizer.next();
+                        continue;
+                    }
+
+                    // Save parameter.
+                    if (StringUtils.isNotBlank(tokenValue) &&
+                            !tokenValue.equals(",") &&
+                            !tokenValue.equals(";") &&
+                            !tokenValue.equals("'")) {
+
+                        tokens.add(tokenValue);
+                    }
                     htt = tokenizer.next();
-                    continue;
                 }
-
-                // Save parameter.
-                if (StringUtils.isNotBlank(tokenValue) &&
-                        !tokenValue.equals(",") &&
-                        !tokenValue.equals(";") &&
-                        !tokenValue.equals("'")) {
-
-                    tokens.add(tokenValue);
-                }
-                htt = tokenizer.next();
+            } catch (ParseException e) {
+                log.error("Parse exception: {}", e.getMessage());
             }
 
             getParameters(tokens);

@@ -136,12 +136,10 @@ public class MimeConfig extends ConfigFoundation {
                     // Fallback to message or dummy else if file errors.
                     if (mimePart == null && message != null) {
                         mimePart = new TextMimePart(message);
-
-                    } else {
-                        mimePart = new TextMimePart("I got nothing!");
                     }
 
                     // Add headers to part.
+                    assert mimePart != null;
                     getHeaders(mimePart.getHeaders().get(), config.getListProperty("headers"));
 
                     parts.add(mimePart);

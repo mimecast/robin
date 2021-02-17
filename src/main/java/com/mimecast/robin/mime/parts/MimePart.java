@@ -1,14 +1,16 @@
 package com.mimecast.robin.mime.parts;
 
+import com.mimecast.robin.mime.HashType;
 import com.mimecast.robin.mime.headers.MimeHeader;
 import com.mimecast.robin.mime.headers.MimeHeaders;
-import org.apache.commons.codec.binary.Base64OutputStream;
 import org.apache.commons.io.IOUtils;
+import org.apache.geronimo.mail.util.Base64EncoderStream;
 import org.apache.geronimo.mail.util.QuotedPrintableEncoderStream;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
 
 /**
  * MIME part container abstract.
@@ -18,12 +20,22 @@ public abstract class MimePart {
     /**
      * Part headers.
      */
-    protected final MimeHeaders headers = new MimeHeaders();
+    protected MimeHeaders headers = new MimeHeaders();
 
     /**
      * Part body as input stream.
      */
     protected InputStream body;
+
+    /**
+     * Part size.
+     */
+    protected long size;
+
+    /**
+     * Part hashes.
+     */
+    protected HashMap<String, String> hashes = new HashMap<>();
 
     /**
      * Adds header with given anme and value.
@@ -35,6 +47,10 @@ public abstract class MimePart {
     public MimePart addHeader(String name, String value) {
         headers.put(new MimeHeader(name, value));
         return this;
+    }
+
+    public void setHeaders(MimeHeaders headers) {
+        this.headers = headers;
     }
 
     /**
@@ -87,16 +103,64 @@ public abstract class MimePart {
             if (contentEncoding.getValue().toLowerCase().contains("quoted-printable")) {
                 writeStream = new QuotedPrintableEncoderStream(outputStream);
             } else if (contentEncoding.getValue().toLowerCase().contains("base64")) {
-                writeStream = new Base64OutputStream(outputStream);
+                writeStream = new Base64EncoderStream(outputStream);
             }
         }
 
         // Write content.
         IOUtils.copy(body, writeStream);
+        writeStream.flush();
 
         // Ensure empty line at the end.
         outputStream.write("\r\n".getBytes());
 
         return this;
+    }
+
+    /**
+     * Gets size.
+     *
+     * @return Long.
+     */
+    public long getSize() {
+        return size;
+    }
+
+    /**
+     * Sets size.
+     *
+     * @param size Long.
+     */
+    public void setSize(long size) {
+        this.size = size;
+    }
+
+    /**
+     * Gets hash by type.
+     *
+     * @return HashType instance.
+     */
+    public String getHash(HashType hashType) {
+        return hashes.get(hashType.getKey());
+    }
+
+    /**
+     * Sets hash by type.
+     *
+     * @param key   HashType instance.
+     * @param value Hash value.
+     */
+    public void setHash(HashType key, String value) {
+        hashes.put(key.getKey(), value);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("len=").append(getSize());
+        for (String key : hashes.keySet()) {
+            builder.append(",").append(key).append("=").append(hashes.get(key));
+        }
+        return builder.toString();
     }
 }

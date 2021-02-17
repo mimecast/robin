@@ -7,7 +7,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.mail.internet.ParseException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.DateFormat;
@@ -58,16 +57,14 @@ public class EmailBuilder {
             headers.addAll(envelope.getMime().getHeaders());
 
             for (MimePart part : envelope.getMime().getParts()) {
-                try {
-                    if (part.getHeader("Content-ID") != null) {
-                        related.add(part);
-                    } else if (part.getHeader("Content-Type").getCleanValue().startsWith("text/")) {
-                        alternative.add(part);
-                    } else {
-                        mixed.add(part);
-                    }
-                } catch (ParseException e) {
-                    log.error("Unable to parse header value; skipping part: {}", e.getMessage());
+                if (part.getHeader("Content-ID") != null) {
+                    related.add(part);
+
+                } else if (part.getHeader("Content-Type").getCleanValue().startsWith("text/")) {
+                    alternative.add(part);
+
+                } else {
+                    mixed.add(part);
                 }
             }
         }
