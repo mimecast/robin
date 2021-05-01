@@ -8,9 +8,11 @@ import com.mimecast.robin.main.Config;
 import com.mimecast.robin.main.Factories;
 import com.mimecast.robin.smtp.EmailDelivery;
 import com.mimecast.robin.smtp.EmailReceipt;
+import com.mimecast.robin.smtp.MessageEnvelope;
 import com.mimecast.robin.smtp.io.LineInputStream;
 import com.mimecast.robin.smtp.session.Session;
 import com.mimecast.robin.smtp.transaction.SessionTransactionList;
+import com.mimecast.robin.smtp.transaction.Transaction;
 import com.mimecast.robin.util.Sleep;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -20,7 +22,11 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Connection controller.
@@ -46,6 +52,11 @@ public class Connection extends SmtpFoundation {
      * Connection server.
      */
     private String server = null;
+
+    /**
+     * Transaction response pattern.
+     */
+    private final static Pattern transactionPattern = Pattern.compile("(250.*)\\s\\[[a-z0-9\\-_]+\\.[a-z]+[0-9]+?]", Pattern.CASE_INSENSITIVE);
 
     /**
      * [Client] Constructs a new Connection instance with given Session.
@@ -117,14 +128,12 @@ public class Connection extends SmtpFoundation {
             try {
                 log.info("Connecting to: {}:{}", server, session.getPort());
 
-                socket = new Socket();
-                setTimeout(session.getTimeout());
-
-                socket.connect(new InetSocketAddress(server, session.getPort()));
+                socket.connect(new InetSocketAddress(server, session.getPort()), this.session.getConnectTimeout());
                 buildStreams();
 
                 log.info("Connected to: {}:{}", server, session.getPort());
 
+                setTimeout(session.getTimeout());
                 String read = read("220");
                 if (!read.startsWith("220")) {
                     if (i == retry - 1) {
@@ -178,6 +187,17 @@ public class Connection extends SmtpFoundation {
     /**
      * Gets connection server.
      *
+     * @param server Server name.
+     * @return Server string.
+     */
+    public Connection setServer(String server) {
+        this.server = server;
+        return this;
+    }
+
+    /**
+     * Gets connection server.
+     *
      * @return Server string.
      */
     public String getServer() {
@@ -214,5 +234,42 @@ public class Connection extends SmtpFoundation {
     @SuppressWarnings("EmptyMethod")
     public void reset() {
         // TODO Implement reset.
+    }
+
+    /**
+     * Gets magic variables.
+     *
+     * @param transactionId Transaction id.
+     * @return Map of String, String.
+     */
+    public Map<String, String> getMagicVariables(int transactionId) {
+        Map<String, String> magicVariables = new HashMap<>();
+
+        if (!sessionTransactionList.getEnvelopes().isEmpty() && transactionId >= 0) {
+            // Select transaction.
+            Transaction transaction = sessionTransactionList.getEnvelopes().get(transactionId).getData();
+
+            // Match UID pattern to transaction response.
+            String transactionResponse = null;
+            if (transaction != null && transaction.getResponse().startsWith("250 ")) {
+                Matcher m = transactionPattern.matcher(transaction.getResponse());
+                if (m.find()) {
+                    transactionResponse = m.group(1);
+                }
+            }
+
+            // Register magic variables.
+            MessageEnvelope envelope = session.getEnvelopes().get(transactionId);
+
+            magicVariables.put("transactionid", transactionResponse);
+            magicVariables.put("msgid", envelope.getMessageId());
+            magicVariables.put("date", envelope.getDate());
+            magicVariables.put("mailfrom", envelope.getMail());
+            magicVariables.put("mailejffrom", envelope.getMailEjfFrom());
+            magicVariables.put("rcptto", envelope.getRcpt());
+            magicVariables.put("rcptejfto", envelope.getRcptEjfTo());
+        }
+
+        return magicVariables;
     }
 }

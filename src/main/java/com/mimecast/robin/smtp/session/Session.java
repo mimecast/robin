@@ -8,10 +8,7 @@ import com.mimecast.robin.smtp.connection.SmtpFoundation;
 
 import javax.mail.internet.InternetAddress;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 /**
  * Session.
@@ -55,6 +52,11 @@ public class Session {
      * [Client] Extended socket timeout.
      */
     private int extendedtimeout = SmtpFoundation.EXTENDEDTIMEOUT;
+
+    /**
+     * [Client] Connect socket timeout.
+     */
+    private int connectTimeout = SmtpFoundation.DEFAULTTIMEOUT;
 
     /**
      * [Server] Bind interface.
@@ -190,6 +192,12 @@ public class Session {
      * AssertConfig.
      */
     private AssertConfig assertConfig = new AssertConfig();
+
+    /**
+     * List of magic variables.
+     * <p>Handy palce to store external data for reuse.
+     */
+    private final Map<String, Object> magic = new HashMap<>();
 
     /**
      * Constructs a new Session instance.
@@ -348,6 +356,28 @@ public class Session {
      */
     public Session setExtendedTimeout(int extendedtimeout) {
         this.extendedtimeout = extendedtimeout;
+        return this;
+    }
+
+    /**
+     * Gets connect socket timeout.
+     * <p>Used for initial connection.
+     *
+     * @return Socket timeout.
+     */
+    public int getConnectTimeout() {
+        return connectTimeout;
+    }
+
+    /**
+     * Sets cinnect socket timeout.
+     * <p>In seconds.
+     *
+     * @param connectTimeout Socket timeout.
+     * @return Self.
+     */
+    public Session setConnectTimeout(int connectTimeout) {
+        this.connectTimeout = connectTimeout;
         return this;
     }
 
@@ -676,7 +706,6 @@ public class Session {
      *
      * @return TLS enablement.
      */
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean isStartTls() {
         return startTls;
     }
@@ -889,6 +918,28 @@ public class Session {
      */
     public Session addAssertions(AssertConfig assertConfig) {
         this.assertConfig = assertConfig;
+        return this;
+    }
+
+    /**
+     * Gets magic by key.
+     *
+     * @param key Magic key.
+     * @return Map of String, Object.
+     */
+    public Object getMagic(String key) {
+        return magic.get(key);
+    }
+
+    /**
+     * Puts magic by key.
+     *
+     * @param key Magic key.
+     * @param value Magic value of String or List of Strings.
+     * @return Self.
+     */
+    public Session putMagic(String key, Object value) {
+        magic.put(key, value);
         return this;
     }
 }
