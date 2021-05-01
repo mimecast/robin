@@ -1,12 +1,32 @@
 {
   "$schema": "/schema/case.schema.json",
 
+  "retry": 1,
+  "delay": 2,
+
   "envelopes": [
     {
-      "chunkSize": 2048,
-      "chunkBdat": true,
+      "chunkSize": 8192,
 
-      "file": "src/test/resources/cases/sources/pangrams.eml"
+      "file": "src/test/resources/cases/sources/pangrams.eml",
+
+      "assertions": {
+        "smtp": [
+          ["MAIL", "250 Sender OK"],
+          ["RCPT", "250 Recipient OK"],
+          ["BDAT", "^250"],
+          ["BDAT", "Received OK"]
+        ]
+      }
     }
-  ]
+  ],
+
+  "assertions": {
+    "smtp": [
+      [ "SMTP", "^220" ],
+      [ "EHLO", "STARTTLS" ],
+      [ "SHLO", "250 HELP" ],
+      [ "QUIT" ]
+    ]
+  }
 }

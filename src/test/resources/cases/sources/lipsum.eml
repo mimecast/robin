@@ -5,7 +5,7 @@ Date: {$DATE}
 Message-ID: <{$MSGID}{$MAILFROM}>
 Subject: Lipsum
 Content-Type: multipart/alternative;
-	boundary="MCBoundary11505141140170031"
+	BoundarY="MCBoundary11505141140170031"
 
 --MCBoundary11505141140170031
 Content-Type: text/plain; charset=UTF-8

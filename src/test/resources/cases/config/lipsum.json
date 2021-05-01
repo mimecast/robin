@@ -1,22 +1,32 @@
 {
   "$schema": "/schema/case.schema.json",
 
+  "retry": 1,
+  "delay": 2,
+
   "tls": true,
-
-  "protocols": [
-    "TLSv1.2"
-  ],
-
-  "ciphers": [
-    "TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384",
-    "TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384",
-    "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
-    "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384"
-  ],
 
   "envelopes": [
     {
-      "file": "src/test/resources/cases/sources/lipsum.eml"
+      "file": "src/test/resources/cases/sources/lipsum.eml",
+
+      "assertions": {
+        "smtp": [
+          ["MAIL", "250 Sender OK"],
+          ["RCPT", "250 Recipient OK"],
+          ["DATA", "^250"],
+          ["DATA", "Received OK"]
+        ]
+      }
     }
-  ]
+  ],
+
+  "assertions": {
+    "smtp": [
+      [ "SMTP", "^220" ],
+      [ "EHLO", "STARTTLS" ],
+      [ "SHLO", "250 HELP" ],
+      [ "QUIT" ]
+    ]
+  }
 }
