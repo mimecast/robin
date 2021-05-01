@@ -70,7 +70,7 @@ _Only one may be used at the same time (Order of priority)._
 
 
 ##### Speed
-- **slowBytes** - _(Integer, Bytes)_ [default: 1, min: 1]  Adds a write delay every given number of bytes.
+- **slowBytes** - _(Integer, Bytes)_ [default: 1, min: 128]  Adds a write delay every given number of bytes.
 - **slowWait** - _(Integer, Milliseconds)_ [default: 0, min: 100]  Wait time in milliseconds.
 
 
