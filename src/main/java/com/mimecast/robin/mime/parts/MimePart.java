@@ -10,7 +10,9 @@ import org.apache.geronimo.mail.util.QuotedPrintableEncoderStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * MIME part container abstract.
@@ -26,6 +28,11 @@ public abstract class MimePart {
      * Part body as input stream.
      */
     protected InputStream body;
+
+    /**
+     * Part body as string.
+     */
+    protected String content;
 
     /**
      * Part size.
@@ -133,6 +140,15 @@ public abstract class MimePart {
      */
     public void setSize(long size) {
         this.size = size;
+    }
+
+    /**
+     * Gets hash by type.
+     *
+     * @return HashType instance.
+     */
+    public List<String> getHashesList() {
+        return new ArrayList<String>(hashes.values());
     }
 
     /**

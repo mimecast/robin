@@ -1,12 +1,12 @@
 package com.mimecast.robin.mime.parts;
 
 import com.mimecast.robin.mime.headers.MimeHeader;
+import com.mimecast.robin.util.CharsetDetector;
 import org.apache.commons.io.IOUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
 
 /**
  * MIME part container from string.
@@ -18,8 +18,8 @@ public class TextMimePart extends MimePart {
      *
      * @param content Body content.
      */
-    public TextMimePart(String content) {
-        this.body = new ByteArrayInputStream(content.getBytes());
+    public TextMimePart(byte[] content) {
+        this.body = new ByteArrayInputStream(content);
     }
 
     /**
@@ -48,7 +48,12 @@ public class TextMimePart extends MimePart {
      * @throws IOException Unable to read stream.
      */
     public String getContent() throws IOException {
-        String text = IOUtils.toString(body, StandardCharsets.UTF_8.name());
-        return text;
+        byte[] bytes = IOUtils.toByteArray(body);
+
+        if (content == null) {
+            content = IOUtils.toString(bytes, CharsetDetector.getCharset(bytes));
+        }
+
+        return content;
     }
 }

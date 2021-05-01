@@ -7,9 +7,9 @@ import com.mimecast.robin.mime.parts.MimePart;
 import com.mimecast.robin.mime.parts.MultipartMimePart;
 import com.mimecast.robin.mime.parts.TextMimePart;
 import com.mimecast.robin.smtp.io.LineInputStream;
+import com.mimecast.robin.util.QuotedPrintableDecoder;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.codec.net.QuotedPrintableCodec;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,6 +26,8 @@ import java.util.Optional;
 
 /**
  * Basic email MIME parser.
+ * Documented here:
+ * https://mimecast.jira.com/wiki/spaces/MESSAGINGSERVICES/pages/1990066238/Robin+Mime+Parser
  */
 public class EmailParser {
     private static final Logger log = LogManager.getLogger(EmailParser.class);
@@ -44,11 +46,6 @@ public class EmailParser {
      * Parsed parts.
      */
     private final List<MimePart> parts = new ArrayList<>();
-
-    /**
-     * Quoted-printable decoder instance.
-     */
-    final QuotedPrintableCodec quotedPrintableCodec = new QuotedPrintableCodec();
 
     /**
      * Constructs new EmailParser instance with given path.
@@ -161,16 +158,11 @@ public class EmailParser {
             if (hdr.getValue().startsWith("multipart/")) {
                 part = new MultipartMimePart();
 
+            } else if (hdr.getValue().startsWith("text/")) {
+                part = parsePartContent(true, headers, boundary);
+
             } else {
-                if (headers.get("Content-Disposition").isPresent()) {
-                    part = parsePartContent(false, headers, boundary);
-
-                } else if (hdr.getValue().startsWith("text")) {
-                    part = parsePartContent(true, headers, boundary);
-
-                } else {
-                    part = parsePartContent(false, headers, boundary);
-                }
+                part = parsePartContent(false, headers, boundary);
             }
 
             part.addHeader(hdr.getName(), hdr.getValue());
@@ -308,81 +300,72 @@ public class EmailParser {
      * @throws IOException File read/write issue.
      */
     private MimePart parsePartContent(boolean isTextPart, MimeHeaders headers, String boundary) throws IOException {
-        long totalSize = 0;
-        StringBuilder text = new StringBuilder();
-
-        boolean isSavefromBase64 = false;
+        boolean isBase64 = false;
         boolean isQuotedPrintable = false;
 
+        // Get encoding.
         if (headers.get("content-transfer-encoding").isPresent()) {
             String encoding = headers.get("content-transfer-encoding").get().getValue();
 
-            if (encoding.compareToIgnoreCase("base64") == 0) {
-                isSavefromBase64 = true;
-            }
-
-            if (encoding.compareToIgnoreCase("quoted-printable") == 0) {
-                isQuotedPrintable = true;
-            }
+            isBase64 = encoding.compareToIgnoreCase("base64") == 0;
+            isQuotedPrintable = encoding.compareToIgnoreCase("quoted-printable") == 0;
         }
 
         try {
+            // Buid digests.
             MessageDigest digestSha1 = MessageDigest.getInstance(HashType.SHA_1.getKey());
             MessageDigest digestSha256 = MessageDigest.getInstance(HashType.SHA_256.getKey());
             MessageDigest digestMD5 = MessageDigest.getInstance(HashType.MD_5.getKey());
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ByteArrayOutputStream content = new ByteArrayOutputStream();
 
             byte[] bytes;
             while ((bytes = stream.readLine()) != null) {
-                String partLine = new String(bytes);
-                if (boundary != null && boundary.length() > 0 && partLine.contains(boundary)) {
+                String line = new String(bytes);
+                if (boundary != null && boundary.length() > 0 && line.contains(boundary)) {
                     break;
                 }
 
-                if (isSavefromBase64) {
-                    partLine = new String(Base64.decodeBase64(bytes));
-                    bos.write(partLine.getBytes());
-
-                } else if (isQuotedPrintable) {
-                    try {
-                        partLine = new String(quotedPrintableCodec.decode(bytes));
-                        bos.write(partLine.getBytes());
-
-                    } catch (DecoderException de) {
-                        log.error("decoder exception", de);
-                        bos.write(partLine.getBytes());
-                    }
-
-                } else {
-                    bos.write(bytes);
-                }
-
-                if (isTextPart) {
-                    text.append(partLine);
-                }
-
-                byte[] arr = bos.toByteArray();
-                digestSha1.update(arr);
-                digestSha256.update(arr);
-                digestMD5.update(arr);
-                totalSize += arr.length;
-
-                bos = new ByteArrayOutputStream();
+                baos.write(bytes);
             }
-            bos.close();
 
+            // Decode if needed.
+            if (isBase64) {
+                content.write(Base64.decodeBase64(baos.toByteArray()));
+
+            } else if (isQuotedPrintable) {
+                try {
+                    content.write(QuotedPrintableDecoder.decode(baos.toByteArray()));
+
+                } catch (DecoderException de) {
+                    log.error("EmailParser decoder exception:", de);
+                    content.write(baos.toByteArray());
+                }
+            } else {
+                content.write(baos.toByteArray());
+            }
+            baos.close();
+
+            // Construct part.
             MimePart part;
             if (isTextPart) {
-                part = new TextMimePart(text.toString());
+                part = new TextMimePart(content.toByteArray());
 
             } else {
                 part = new FileMimePart();
             }
 
-            part.setSize(totalSize);
+            // Set part details.
+            digestSha1.update(content.toByteArray());
             part.setHash(HashType.SHA_1, Base64.encodeBase64String(digestSha1.digest()));
+
+            digestSha256.update(content.toByteArray());
             part.setHash(HashType.SHA_256, Base64.encodeBase64String(digestSha256.digest()));
+
+            digestMD5.update(content.toByteArray());
             part.setHash(HashType.MD_5, Base64.encodeBase64String(digestMD5.digest()));
+
+            part.setSize(content.size());
 
             return part;
 

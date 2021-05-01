@@ -47,6 +47,4 @@ public class FileMimePart extends MimePart {
 
         return this;
     }
-
-
 }

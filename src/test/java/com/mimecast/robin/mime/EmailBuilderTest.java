@@ -40,13 +40,13 @@ class EmailBuilderTest {
                 .addHeader("To", "Lady Robin <lady.robin@example.com>")
                 .addHeader("From", "Sir Robin <sir.robin@example.com>")
 
-                .addPart(new TextMimePart("Mon chéri,\r\n" +
+                .addPart(new TextMimePart(("Mon chéri,\r\n" +
                         "\r\n" +
                         "Please review this lovely blog post I have written about myself.\r\n" +
                         "Huge ego, right?\r\n" +
                         "\r\n" +
                         "Kisses,\r\n" +
-                        "Your Robin.")
+                        "Your Robin.").getBytes())
                         .addHeader("Content-Type", "text/plain; charset=\"ISO-8859-1\"")
                 )
                 .writeTo(outputStream);
@@ -73,13 +73,13 @@ class EmailBuilderTest {
                 .addHeader("To", "Sir Robin <sir.robin@example.com>")
                 .addHeader("From", "Lady Robin <lady.robin@example.com>")
 
-                .addPart(new TextMimePart("Mon chéri,\r\n" +
+                .addPart(new TextMimePart(("Mon chéri,\r\n" +
                         "\r\n" +
                         "Please review this lovely blog post i have written about myself.\r\n" +
                         "Huge ego, right?\r\n" +
                         "\r\n" +
                         "Kisses,\r\n" +
-                        "Your Robin.")
+                        "Your Robin.").getBytes())
                         .addHeader("Content-Type", "text/plain; charset=\"ISO-8859-1\"")
                         .addHeader("Content-Transfer-Encoding", "quoted-printable")
                 )
