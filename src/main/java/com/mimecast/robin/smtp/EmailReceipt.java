@@ -72,7 +72,7 @@ public class EmailReceipt implements Runnable {
      */
     public void run() {
         try {
-            connection.write("220 " + connection.getSession().getRdns() + " ESMTP; " + connection.getSession().getDate());
+            connection.write("220 Robin ready at " + connection.getSession().getRdns() + " with ESMTP; " + connection.getSession().getDate());
 
             Verb verb;
             for (int i = 0; i < transactionsLimit; i++) {
