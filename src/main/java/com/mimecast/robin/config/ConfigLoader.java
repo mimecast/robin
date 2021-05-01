@@ -32,7 +32,7 @@ public class ConfigLoader {
      * @param path Path to configuration file.
      * @throws ConfigurationException Unable to read/parse config file.
      */
-    public static void load(String path) throws ConfigurationException {
+    public static synchronized void load(String path) throws ConfigurationException {
         log.debug("Working directory: {}", System.getProperty("user.dir"));
 
         if (path == null) path = "cfg" + File.separator;

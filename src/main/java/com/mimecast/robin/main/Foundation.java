@@ -36,8 +36,17 @@ public abstract class Foundation {
      */
     public static void init(String path) throws ConfigurationException {
         if (runOnce) return;
+        load(path);
         runOnce = true;
+    }
 
+    /**
+     * Load config and annotation.
+     *
+     * @param path Path to configuration file.
+     * @throws ConfigurationException Unable to read/parse config file.
+     */
+    public static synchronized void load(String path) throws ConfigurationException {
         ConfigLoader.load(path);
         AnnotationLoader.load();
     }
