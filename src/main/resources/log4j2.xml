@@ -13,7 +13,7 @@
     </Appenders>
 
     <Loggers>
-        <Logger name="com.mimecast.robin" level="trace" additivity="false">
+        <Logger name="com.mimecast.robin" level="debug" additivity="false">
             <AppenderRef ref="appender"/>
             <AppenderRef ref="console"/>
         </Logger>
