@@ -43,6 +43,8 @@ public abstract class ConfigFoundation {
         if (PathUtils.isFile(path)) {
             String props = PathUtils.readFile(path, Charset.defaultCharset());
             map = new Gson().fromJson(props, Map.class);
+        } else {
+            throw new IOException("File not found: " + path);
         }
     }
 
@@ -88,7 +90,8 @@ public abstract class ConfigFoundation {
      * @return String.
      */
     public String getStringProperty(String name) {
-        return (String) map.get(name);
+        // TODO Make string never null and update allc ases where != null checks need to be turned to StringUtils.isNotBlank() - Darren
+        return map.get(name) != null ? (String) map.get(name) : null;
     }
 
     /**
