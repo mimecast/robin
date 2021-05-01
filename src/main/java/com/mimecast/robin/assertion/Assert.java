@@ -10,7 +10,6 @@ import com.mimecast.robin.smtp.transaction.Transaction;
 import com.mimecast.robin.smtp.transaction.TransactionList;
 
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -87,9 +86,7 @@ public class Assert {
         boolean matched = false;
         for (Transaction transaction : transactions) {
             String response = transaction.getResponse();
-            Matcher m = p.matcher(response);
-
-            if (m.find()) {
+            if (p.matcher(response).find()) {
                 matched = true;
                 break;
             }
