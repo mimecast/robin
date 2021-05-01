@@ -5,14 +5,27 @@ import com.mimecast.robin.assertion.AssertException;
 import com.mimecast.robin.config.BasicConfig;
 import com.mimecast.robin.main.Factories;
 import com.mimecast.robin.smtp.connection.Connection;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
- * Interface for external logs client.
+ * Abstract for external logs client.
  *
  * @see Assert
  * @see Factories
  */
-public interface ExternalClient {
+public abstract class ExternalClient {
+    protected static final Logger log = LogManager.getLogger(ExternalClient.class);
+
+    /**
+     * Connection instance.
+     */
+    protected Connection connection;
+
+    /**
+     * Transaction ID.
+     */
+    protected int transactionId = -1;
 
     /**
      * Sets Connection.
@@ -20,7 +33,10 @@ public interface ExternalClient {
      * @param connection Connection instance.
      * @return Self.
      */
-    ExternalClient setConnection(Connection connection);
+    public ExternalClient setConnection(Connection connection) {
+        this.connection = connection;
+        return this;
+    }
 
     /**
      * Sets Config.
@@ -28,7 +44,7 @@ public interface ExternalClient {
      * @param config Config instance.
      * @return Self.
      */
-    ExternalClient setConfig(BasicConfig config);
+    public abstract ExternalClient setConfig(BasicConfig config);
 
     /**
      * Sets Transaction ID.
@@ -36,12 +52,15 @@ public interface ExternalClient {
      * @param transactionId Transaction ID.
      * @return Self.
      */
-    ExternalClient setTransactionId(int transactionId);
+    public ExternalClient setTransactionId(int transactionId) {
+        this.transactionId = transactionId;
+        return this;
+    }
 
     /**
      * Runs assertions.
      *
      * @throws AssertException Assertion exception.
      */
-    void run() throws AssertException;
+    public abstract void run() throws AssertException;
 }
