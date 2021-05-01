@@ -40,9 +40,7 @@ public class Client extends Foundation {
      * @throws IOException     Unable to communicate.
      */
     public void send(String casePath) throws AssertException, IOException {
-        CaseConfig caseConfig = new CaseConfig(casePath);
-
-        send(caseConfig);
+        send(new CaseConfig(casePath));
     }
 
     /**
