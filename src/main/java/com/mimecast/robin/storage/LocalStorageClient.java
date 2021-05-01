@@ -77,6 +77,7 @@ public class LocalStorageClient implements StorageClient {
      * @param connection Connection instance.
      * @return Self.
      */
+    @Override
     public LocalStorageClient setConnection(Connection connection) {
         this.connection = connection;
 
