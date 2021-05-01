@@ -34,7 +34,7 @@ class ScenarioConfigTest {
     @Test
     void getRcpt() {
         assertFalse(scenarioConfig.getRcpt().isEmpty());
-        assertEquals("ultron@reject.com", scenarioConfig.getRcpt().get(0).get("value"));
+        assertEquals("ultron@reject\\.com", scenarioConfig.getRcpt().get(0).get("value"));
         assertEquals("501 Heart not found", scenarioConfig.getRcpt().get(0).get("response"));
     }
 

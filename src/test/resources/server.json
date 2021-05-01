@@ -33,7 +33,7 @@
       "mail": "451 I'm not listening to you",
       "rcpt": [
         {
-          "value": "ultron@reject.com",
+          "value": "ultron@reject\\.com",
           "response": "501 Heart not found"
         }
       ],
@@ -42,7 +42,7 @@
     "rejectmail.com": {
       "rcpt": [
         {
-          "value": "jane@example.com",
+          "value": "jane@example\\.com",
           "response": "501 Invalid address"
         }
       ]
