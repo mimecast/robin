@@ -60,6 +60,16 @@ public class AssertExternalGroup {
     }
 
     /**
+     * Clears matched.
+     *
+     * @return Self.
+     */
+    public AssertExternalGroup clearMatched() {
+        matched.clear();
+        return this;
+    }
+
+    /**
      * Gets patterns.
      *
      * @return Patterns list.
