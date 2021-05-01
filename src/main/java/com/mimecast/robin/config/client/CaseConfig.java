@@ -50,6 +50,16 @@ public class CaseConfig extends ConfigFoundation {
     }
 
     /**
+     * Constructs a new CaseConfig instance with given map.
+     *
+     * @param map Configuration map.
+     */
+    @SuppressWarnings("rawtypes")
+    public CaseConfig(Map map) {
+        super(map);
+    }
+
+    /**
      * Gets retry count.
      *
      * @return Retry count.
