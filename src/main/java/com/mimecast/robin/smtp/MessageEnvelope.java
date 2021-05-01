@@ -545,6 +545,7 @@ public class MessageEnvelope {
      * Sets AssertConfig.
      *
      * @param assertConfig AssertConfig instance.
+     * @return MessageEnvelope instance.
      */
     public MessageEnvelope setAssertions(AssertConfig assertConfig) {
         this.assertConfig = assertConfig;
