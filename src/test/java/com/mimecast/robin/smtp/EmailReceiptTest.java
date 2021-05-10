@@ -38,7 +38,7 @@ class EmailReceiptTest {
         new EmailReceipt(connection).run();
 
         connection.parseLines();
-        assertTrue(connection.getLine(1).startsWith("220 example.com ESMTP; "));
+        assertTrue(connection.getLine(1).startsWith("220 Robin ready at example.com with ESMTP; "));
         assertEquals("500 ESMTP Error (Try again using SMTP)\r\n", connection.getLine(2));
         assertEquals("250 Welcome [example.net (127.0.0.1)]\r\n", connection.getLine(3));
         assertEquals("221 2.0.0 Closing connection\r\n", connection.getLine(4));
@@ -65,7 +65,7 @@ class EmailReceiptTest {
         new EmailReceipt(connection).run();
 
         connection.parseLines();
-        assertTrue(connection.getLine(1).startsWith("220 example.com ESMTP; "));
+        assertTrue(connection.getLine(1).startsWith("220 Robin ready at example.com with ESMTP; "));
         assertEquals("250-Welcome [example.net (127.0.0.1)]\r\n", connection.getLine(2));
         assertEquals("250-HELP\r\n", connection.getLine(3));
         assertEquals("250-PIPELINING\r\n", connection.getLine(4));
@@ -91,7 +91,7 @@ class EmailReceiptTest {
         new EmailReceipt(connection).run();
 
         connection.parseLines();
-        assertTrue(connection.getLine(1).startsWith("220 example.com ESMTP; "));
+        assertTrue(connection.getLine(1).startsWith("220 Robin ready at example.com with ESMTP; "));
         assertEquals("250-Welcome [example.net (127.0.0.1)]\r\n", connection.getLine(2));
         assertEquals("250-HELP\r\n", connection.getLine(3));
         assertEquals("250-PIPELINING\r\n", connection.getLine(4));
@@ -116,7 +116,7 @@ class EmailReceiptTest {
         new EmailReceipt(connection).run();
 
         connection.parseLines();
-        assertTrue(connection.getLine(1).startsWith("220 example.com ESMTP; "));
+        assertTrue(connection.getLine(1).startsWith("220 Robin ready at example.com with ESMTP; "));
         assertEquals("250-Welcome [example.net (127.0.0.1)]\r\n", connection.getLine(2));
         assertEquals("250-HELP\r\n", connection.getLine(3));
         assertEquals("250-PIPELINING\r\n", connection.getLine(4));
