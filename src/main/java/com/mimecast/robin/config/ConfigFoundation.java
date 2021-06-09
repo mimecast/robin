@@ -90,7 +90,7 @@ public abstract class ConfigFoundation {
      * @return String.
      */
     public String getStringProperty(String name) {
-        // TODO Make string never null and update allc ases where != null checks need to be turned to StringUtils.isNotBlank() - Darren
+        // TODO Make string never null and update all cases where != null checks need to be turned to StringUtils.isNotBlank().
         return map.get(name) != null ? (String) map.get(name) : null;
     }
 
