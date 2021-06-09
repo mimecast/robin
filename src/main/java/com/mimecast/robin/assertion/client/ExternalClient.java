@@ -8,6 +8,10 @@ import com.mimecast.robin.smtp.connection.Connection;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Abstract for external logs client.
  *
@@ -44,7 +48,10 @@ public abstract class ExternalClient {
      * @param config Config instance.
      * @return Self.
      */
-    public abstract ExternalClient setConfig(BasicConfig config);
+    public ExternalClient setConfig(BasicConfig config) {
+        magicReplace(config.getMap());
+        return this;
+    }
 
     /**
      * Sets Transaction ID.
@@ -63,4 +70,38 @@ public abstract class ExternalClient {
      * @throws AssertException Assertion exception.
      */
     public abstract void run() throws AssertException;
+
+    /**
+     * Magic replace.
+     *
+     * @param map Map of String, Object.
+     */
+    @SuppressWarnings("unchecked")
+    protected void magicReplace(Map<String, Object> map) {
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            if (entry.getValue() instanceof String) {
+                map.put(entry.getKey(), connection.getSession().magicReplace((String) entry.getValue()));
+
+            } else if (entry.getValue() instanceof List) {
+                List<Object> list = new ArrayList<>();
+
+                List<Object> value = (List<Object>) entry.getValue();
+                for (Object object : value) {
+                    if (object instanceof String) {
+                        object = connection.getSession().magicReplace((String) object);
+
+                    } else if (object instanceof Map) {
+                        magicReplace((Map<String, Object>) object);
+                    }
+
+                    list.add(object);
+                }
+
+                map.put(entry.getKey(), list);
+
+            } else if (entry.getValue() instanceof Map) {
+                magicReplace((Map<String, Object>) entry.getValue());
+            }
+        }
+    }
 }
