@@ -9,6 +9,7 @@ import com.mimecast.robin.smtp.connection.SmtpFoundation;
 import javax.mail.internet.InternetAddress;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Matcher;
 
 /**
  * Session.
@@ -922,6 +923,16 @@ public class Session {
     }
 
     /**
+     * Is key magic?
+     *
+     * @param key Magic key.
+     * @return Boolean.
+     */
+    public boolean isMagic(String key) {
+        return magic.containsKey(key);
+    }
+
+    /**
      * Gets magic by key.
      *
      * @param key Magic key.
@@ -929,6 +940,27 @@ public class Session {
      */
     public Object getMagic(String key) {
         return magic.get(key);
+    }
+
+    /**
+     * Magic replace.
+     *
+     * @param magicString Magic string.
+     * @return Map of String, Object.
+     */
+    public String magicReplace(String magicString) {
+        if (magicString != null) {
+            for (String key : magic.keySet()) {
+                if (magicString.contains("{$" + key + "}")) {
+                    Object val = magic.get(key);
+                    if (val instanceof String) {
+                        magicString = magicString.replaceAll("\\{\\$" + key + "}", Matcher.quoteReplacement((String) magic.get(key)));
+                    }
+                }
+            }
+        }
+
+        return magicString;
     }
 
     /**
