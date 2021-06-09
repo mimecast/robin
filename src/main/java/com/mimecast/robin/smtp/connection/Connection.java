@@ -243,7 +243,7 @@ public class Connection extends SmtpFoundation {
      * @param transactionId Transaction id.
      * @return Map of String, String.
      */
-    public Map<String, String> getMagicVariables(int transactionId) {
+    public Map<String, String> getMagic(int transactionId) {
         Map<String, String> magicVariables = new HashMap<>();
 
         if (!sessionTransactionList.getEnvelopes().isEmpty() && transactionId >= 0) {
