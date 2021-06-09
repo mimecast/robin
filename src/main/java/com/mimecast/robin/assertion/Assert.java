@@ -28,7 +28,7 @@ public class Assert {
     /**
      * Session instance.
      */
-    private final Connection connection;
+    protected final Connection connection;
 
     /**
      * Constructs a new Assert instance with given Connection.
