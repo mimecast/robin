@@ -19,7 +19,7 @@ public class TextMimePart extends MimePart {
      * @param content Body content.
      */
     public TextMimePart(byte[] content) {
-        this.body = new ByteArrayInputStream(content);
+        body = new ByteArrayInputStream(content);
     }
 
     /**
@@ -47,7 +47,19 @@ public class TextMimePart extends MimePart {
      * @return Content String.
      * @throws IOException Unable to read stream.
      */
+    public byte[] getBytes() throws IOException {
+        body.reset();
+        return IOUtils.toByteArray(body);
+    }
+
+    /**
+     * Gets content.
+     *
+     * @return Content String.
+     * @throws IOException Unable to read stream.
+     */
     public String getContent() throws IOException {
+        body.reset();
         byte[] bytes = IOUtils.toByteArray(body);
 
         if (content == null) {
