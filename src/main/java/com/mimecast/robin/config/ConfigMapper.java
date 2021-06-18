@@ -7,7 +7,9 @@ import com.mimecast.robin.smtp.MessageEnvelope;
 import com.mimecast.robin.smtp.session.Session;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Mapper of CaseConfig to Session.
@@ -34,6 +36,8 @@ public class ConfigMapper {
      * @param session Session instance.
      */
     public void mapTo(Session session) {
+        addMagic(session);
+
         // Set MTA and PORT.
         session.setMx(config.getMx())
                 .setRetry(config.getRetry())
@@ -68,6 +72,35 @@ public class ConfigMapper {
     }
 
     /**
+     * Add magic variables.
+     *
+     * @param session Session instance.
+     */
+    @SuppressWarnings("unchecked")
+    private void addMagic(Session session) {
+        if (config.hasProperty("route")) {
+            config.getMap().put("route", session.magicReplace(config.getStringProperty("route")));
+        }
+        if (config.hasProperty("envelopes")) {
+            for (Object envelope : config.getListProperty("envelopes")) {
+                if (envelope instanceof Map) {
+                    Map<String, Object> envelopeMap = (Map<String, Object>) envelope;
+                    if (envelopeMap.containsKey("mail")) {
+                        envelopeMap.put("mail", session.magicReplace((String) envelopeMap.get("mail")));
+                    }
+                    if (envelopeMap.containsKey("rcpt")) {
+                        List<String> rcptList = new ArrayList<>();
+                        for (String address : (List<String>) envelopeMap.get("rcpt")) {
+                            rcptList.add(session.magicReplace(address));
+                        }
+                        envelopeMap.put("rcpt", rcptList);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * Add envelope.
      *
      * @param session        Session instance.
@@ -77,7 +110,7 @@ public class ConfigMapper {
     private void addEnvelope(Session session, EnvelopeConfig envelopeConfig, CaseConfig caseConfig) {
         // Message object.
         MessageEnvelope envelope = new MessageEnvelope()
-            .setAssertions(envelopeConfig.getAssertions());
+                .setAssertions(envelopeConfig.getAssertions());
 
         // Set MAIL FROM and RCPT TO.
         envelope.setMail(envelopeConfig.getMail() != null ? magicReplace(envelopeConfig.getMail()) : caseConfig.getMail());
@@ -88,21 +121,21 @@ public class ConfigMapper {
 
         // EJF.
         envelope.setMailEjf(magicReplace(envelopeConfig.getMailEjf()))
-            .setRcptEjf(magicReplace(envelopeConfig.getRcptEjf()));
+                .setRcptEjf(magicReplace(envelopeConfig.getRcptEjf()));
 
         // Transfer config.
         if (envelopeConfig.getChunkSize() > 128) {
             envelope.setChunkSize(envelopeConfig.getChunkSize());
         }
         envelope.setChunkBdat(envelopeConfig.isChunkBdat())
-            .setChunkWrite(envelopeConfig.isChunkWrite())
+                .setChunkWrite(envelopeConfig.isChunkWrite())
 
-            .setTerminateAfterBytes(envelopeConfig.getTerminateAfterBytes())
-            .setTerminateBeforeDot(envelopeConfig.isTerminateBeforeDot())
-            .setTerminateAfterDot(envelopeConfig.isTerminateAfterDot())
+                .setTerminateAfterBytes(envelopeConfig.getTerminateAfterBytes())
+                .setTerminateBeforeDot(envelopeConfig.isTerminateBeforeDot())
+                .setTerminateAfterDot(envelopeConfig.isTerminateAfterDot())
 
-            .setSlowBytes(envelopeConfig.getSlowBytes())
-            .setSlowWait(envelopeConfig.getSlowWait());
+                .setSlowBytes(envelopeConfig.getSlowBytes())
+                .setSlowWait(envelopeConfig.getSlowWait());
 
         // Set MIME.
         if (!envelopeConfig.getMime().isEmpty()) {
@@ -123,7 +156,7 @@ public class ConfigMapper {
         // If EML is null set subject and message.
         else if (StringUtils.isNotBlank(envelopeConfig.getSubject()) && StringUtils.isNotBlank(envelopeConfig.getMessage())) {
             envelope.setSubject(envelopeConfig.getSubject())
-                .setMessage(envelopeConfig.getMessage());
+                    .setMessage(envelopeConfig.getMessage());
 
             // Add message to delivery.
             session.addEnvelope(envelope);

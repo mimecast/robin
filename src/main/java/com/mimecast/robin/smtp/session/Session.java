@@ -3,13 +3,16 @@ package com.mimecast.robin.smtp.session;
 import com.mimecast.robin.config.ConfigMapper;
 import com.mimecast.robin.config.assertion.AssertConfig;
 import com.mimecast.robin.config.client.CaseConfig;
+import com.mimecast.robin.main.Config;
 import com.mimecast.robin.smtp.MessageEnvelope;
 import com.mimecast.robin.smtp.connection.SmtpFoundation;
 
 import javax.mail.internet.InternetAddress;
+import java.lang.management.ManagementFactory;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
+import java.util.stream.Collectors;
 
 /**
  * Session.
@@ -204,6 +207,7 @@ public class Session {
      * Constructs a new Session instance.
      */
     public Session() {
+        setMagic();
         setDate();
     }
 
@@ -214,6 +218,22 @@ public class Session {
      */
     public void map(CaseConfig caseConfig) {
         new ConfigMapper(caseConfig).mapTo(this);
+    }
+
+    /**
+     * Sets the magic.
+     */
+    private void setMagic() {
+        List<String> args = ManagementFactory.getRuntimeMXBean().getInputArguments()
+                .stream()
+                .filter(s -> s.startsWith("-D"))
+                .map(s -> s.replace("-D", "").replaceAll("=.*", ""))
+                .collect(Collectors.toList());
+
+        // Add magic arguments.
+        for (String key : args) {
+            putMagic(key, Config.getProperties().getStringProperty(key));
+        }
     }
 
     /**
@@ -966,7 +986,7 @@ public class Session {
     /**
      * Puts magic by key.
      *
-     * @param key Magic key.
+     * @param key   Magic key.
      * @param value Magic value of String or List of Strings.
      * @return Self.
      */
