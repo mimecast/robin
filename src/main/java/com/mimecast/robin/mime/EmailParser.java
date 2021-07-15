@@ -304,8 +304,9 @@ public class EmailParser {
         boolean isQuotedPrintable = false;
 
         // Get encoding.
-        if (headers.get("content-transfer-encoding").isPresent()) {
-            String encoding = headers.get("content-transfer-encoding").get().getValue();
+        Optional<MimeHeader> cte = headers.get("content-transfer-encoding");
+        if (cte.isPresent()) {
+            String encoding = cte.get().getValue();
 
             isBase64 = encoding.compareToIgnoreCase("base64") == 0;
             isQuotedPrintable = encoding.compareToIgnoreCase("quoted-printable") == 0;

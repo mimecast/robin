@@ -23,7 +23,7 @@ public enum HashType {
     /**
      * Key container.
      */
-    private String key;
+    private final String key;
 
     /**
      * Constructs new hash type with given string.
@@ -41,14 +41,5 @@ public enum HashType {
      */
     public String getKey() {
         return key;
-    }
-
-    /**
-     * Sets key.
-     *
-     * @param key String name of hash type.
-     */
-    public void setKey(String key) {
-        this.key = key;
     }
 }
