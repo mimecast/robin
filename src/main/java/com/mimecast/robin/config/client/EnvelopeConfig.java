@@ -149,6 +149,15 @@ public class EnvelopeConfig extends ConfigFoundation {
     }
 
     /**
+     * Gets repeat times.
+     *
+     * @return Integer.
+     */
+    public int getRepeat() {
+        return Math.toIntExact(getLongProperty("repeat"));
+    }
+
+    /**
      * Gets path to eml file.
      *
      * @return File path.

@@ -158,6 +158,11 @@
             "default": 0,
             "maximum": 100
           },
+          "repeat": {
+            "description": "Repeat the same envelope delivery",
+            "type": "integer",
+            "default": 0
+          },
           "mail": {
             "description": "MAIL FROM",
             "type": "string",

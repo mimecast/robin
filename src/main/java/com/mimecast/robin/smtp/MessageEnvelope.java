@@ -50,6 +50,8 @@ public class MessageEnvelope {
     private int slowBytes = 1;
     private int slowWait = 0;
 
+    private int repeat = 0;
+
     // Assertions to be made against transaction.
     private AssertConfig assertConfig;
 
@@ -59,7 +61,7 @@ public class MessageEnvelope {
     public MessageEnvelope() {
         date = new SimpleDateFormat("E, d MMM yyyy HH:mm:ss Z", Locale.UK).format(new Date());
         String now = String.valueOf(System.currentTimeMillis());
-        String uid = UUID.randomUUID().toString() + "-" + now;
+        String uid = UUID.randomUUID() + "-" + now;
 
         int size = 50 + 31 - date.length(); // Fixed length for unit tests stability.
         msgId = StringUtils.leftPad(uid, size, "0");
@@ -529,6 +531,27 @@ public class MessageEnvelope {
      */
     public MessageEnvelope setSlowWait(int slowWait) {
         this.slowWait = slowWait;
+        return this;
+    }
+
+    /**
+     * Gets repeat times.
+     * <p>Send the same envelope this many times +1.
+     *
+     * @return Repeat times.
+     */
+    public int getRepeat() {
+        return repeat;
+    }
+
+    /**
+     * Sets repeat times.
+     *
+     * @param repeat Repeat times.
+     * @return Self.
+     */
+    public MessageEnvelope setRepeat(int repeat) {
+        this.repeat = repeat;
         return this;
     }
 

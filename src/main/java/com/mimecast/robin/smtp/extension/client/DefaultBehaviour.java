@@ -1,6 +1,7 @@
 package com.mimecast.robin.smtp.extension.client;
 
 import com.mimecast.robin.main.Extensions;
+import com.mimecast.robin.smtp.MessageEnvelope;
 import com.mimecast.robin.smtp.connection.Connection;
 import com.mimecast.robin.smtp.extension.Extension;
 import org.apache.logging.log4j.LogManager;
@@ -92,8 +93,14 @@ public class DefaultBehaviour implements Behaviour {
      */
     void data() throws IOException {
         for (int i = 0; i < connection.getSession().getEnvelopes().size(); i++) {
-            if (i > 0 && !process("rset", connection)) return;
-            send();
+            MessageEnvelope envelope = connection.getSession().getEnvelopes().get(i);
+            for (int j = 0; j < envelope.getRepeat() + 1; j++) {
+                if ((i > 0 || j > 0) && !process("rset", connection)) return;
+                send();
+
+                // Reset transaction.
+                connection.getSessionTransactionList().getEnvelopes().remove(connection.getSessionTransactionList().getEnvelopes().size() - 1);
+            }
         }
     }
 

@@ -74,6 +74,10 @@ _Only one may be used at the same time (Order of priority)._
 - **slowWait** - _(Integer, Milliseconds)_ [default: 0, min: 100]  Wait time in milliseconds.
 
 
+##### Load
+- **repeat** - _(Integer, Times)_ [default: 0]  How many times to ressed the same envelope after the first time. Will stop if any one delivery fails.
+
+
 #### Message
 Every message should have either a file or a subject/message pair!
 If a file is not defined a MIME source will be generated from envelope date along with subject and message.

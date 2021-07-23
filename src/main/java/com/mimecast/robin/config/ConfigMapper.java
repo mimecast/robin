@@ -135,7 +135,8 @@ public class ConfigMapper {
                 .setTerminateAfterDot(envelopeConfig.isTerminateAfterDot())
 
                 .setSlowBytes(envelopeConfig.getSlowBytes())
-                .setSlowWait(envelopeConfig.getSlowWait());
+                .setSlowWait(envelopeConfig.getSlowWait())
+                .setRepeat(envelopeConfig.getRepeat());
 
         // Set MIME.
         if (!envelopeConfig.getMime().isEmpty()) {
