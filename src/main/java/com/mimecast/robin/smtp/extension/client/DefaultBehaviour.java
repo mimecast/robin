@@ -95,11 +95,13 @@ public class DefaultBehaviour implements Behaviour {
         for (int i = 0; i < connection.getSession().getEnvelopes().size(); i++) {
             MessageEnvelope envelope = connection.getSession().getEnvelopes().get(i);
             for (int j = 0; j < envelope.getRepeat() + 1; j++) {
+                // Reset transaction.
+                if (j > 0) {
+                    connection.getSessionTransactionList().getEnvelopes().remove(connection.getSessionTransactionList().getEnvelopes().size() - 1);
+                }
+
                 if ((i > 0 || j > 0) && !process("rset", connection)) return;
                 send();
-
-                // Reset transaction.
-                connection.getSessionTransactionList().getEnvelopes().remove(connection.getSessionTransactionList().getEnvelopes().size() - 1);
             }
         }
     }
