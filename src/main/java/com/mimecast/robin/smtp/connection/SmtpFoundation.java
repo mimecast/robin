@@ -149,9 +149,7 @@ public abstract class SmtpFoundation {
         try {
             byte[] read;
             while ((read = inc.readLine()) != null) {
-                if (log.isTraceEnabled()) {
-                    log.trace("<< {}", StringUtils.stripEnd(new String(read, UTF_8), null));
-                }
+                log.info("<< {}", StringUtils.stripEnd(new String(read, UTF_8), null));
 
                 if (expectedCode.length() == 3) {
                     receivedCode = new String(read).trim().substring(0, expectedCode.length());
