@@ -54,7 +54,8 @@ More...
 
 
 - [Test Cases](doc/case.md)
-- [Magic variables](doc/magic.md)
+- [Magic](doc/magic.md)
+- [MIME](doc/mime.md)
 - [Plugins](doc/plugin.md)
 
 
