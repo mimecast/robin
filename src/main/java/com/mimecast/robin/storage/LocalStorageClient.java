@@ -1,24 +1,27 @@
 package com.mimecast.robin.storage;
 
 import com.mimecast.robin.main.Config;
+import com.mimecast.robin.main.Factories;
 import com.mimecast.robin.mime.EmailParser;
 import com.mimecast.robin.mime.headers.MimeHeader;
+import com.mimecast.robin.smtp.EmailDelivery;
+import com.mimecast.robin.smtp.MessageEnvelope;
 import com.mimecast.robin.smtp.connection.Connection;
+import com.mimecast.robin.smtp.session.Session;
 import com.mimecast.robin.util.PathUtils;
 import org.apache.commons.io.output.NullOutputStream;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.mail.internet.InternetAddress;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Local storage client implementation.
@@ -49,9 +52,14 @@ public class LocalStorageClient implements StorageClient {
     protected String path;
 
     /**
+     * EmailParser instance.
+     */
+    protected EmailParser parser;
+
+    /**
      * Save file output stream.
      */
-    protected OutputStream stream = new NullOutputStream();
+    protected OutputStream stream = NullOutputStream.NULL_OUTPUT_STREAM;
 
     /**
      * Local storage client.
@@ -139,9 +147,17 @@ public class LocalStorageClient implements StorageClient {
     public void save() {
         // TODO Store token in connection session envelope.
         try {
+            parser = new EmailParser(getToken()).parse(true);
+            rename();
+            relay();
+
+        } catch (IOException e) {
+            log.error("Storage unable to parse email: {}", e.getMessage());
+        }
+
+        try {
             stream.flush();
             stream.close();
-            rename();
 
         } catch (IOException e) {
             log.error("Storage file not flushed/closed: {}", e.getMessage());
@@ -151,33 +167,65 @@ public class LocalStorageClient implements StorageClient {
     /**
      * Rename filename.
      * <p>Will parse and lookup if a X-Robin-Filename header exists and use it's value as a filename.
+     *
+     * @throws IOException Unable to delete file.
      */
-    private void rename() {
-        try {
-            EmailParser parser = new EmailParser(getToken())
-                    .parse(true);
+    private void rename() throws IOException {
+        Optional<MimeHeader> optional = parser.getHeaders().get("x-robin-filename");
+        if (optional.isPresent()) {
+            MimeHeader header = optional.get();
 
-            Optional<MimeHeader> optional = parser.getHeaders().get("x-robin-filename");
-            if (optional.isPresent()) {
-                MimeHeader header = optional.get();
+            String source = getToken();
+            Path target = Paths.get(path, header.getValue());
 
-                String source = getToken();
-                Path target = Paths.get(path, header.getValue());
+            if (StringUtils.isNotBlank(header.getValue())) {
+                if (Files.deleteIfExists(target)) {
+                    log.info("Storage deleted existing file before rename");
+                }
 
-                if (StringUtils.isNotBlank(header.getValue())) {
-                    if (Files.deleteIfExists(target)) {
-                        log.info("Storage deleted existing file before rename");
-                    }
-
-                    if (new File(source).renameTo(new File(target.toString()))) {
-                        fileName = header.getValue();
-                        log.info("Storage moved file to: {}", getToken());
-                    }
+                if (new File(source).renameTo(new File(target.toString()))) {
+                    fileName = header.getValue();
+                    log.info("Storage moved file to: {}", getToken());
                 }
             }
+        }
+    }
 
-        } catch (IOException e) {
-            log.error("Storage unable to parse email: {}", e.getMessage());
+    /**
+     * Relay email.
+     * <p>Will relay email to provided server.
+     */
+    private void relay() {
+        Optional<MimeHeader> optional = parser.getHeaders().get("x-robin-relay");
+        if (optional.isPresent()) {
+            MimeHeader header = optional.get();
+            String mx;
+            int port = 25;
+            if (header.getValue().contains(":")) {
+                String[] splits = header.getValue().split(":");
+                mx = splits[0];
+                if (splits.length > 1) {
+                    port = Integer.parseInt(splits[1]);
+                }
+            } else {
+                mx = header.getValue();
+            }
+            log.info("Relay found for: {}:{}", mx, port);
+
+            MessageEnvelope envelope = new MessageEnvelope()
+                    .setMail(connection.getSession().getMail().getAddress())
+                    .setRcpts(connection.getSession().getRcpts()
+                            .stream()
+                            .map(InternetAddress::getAddress)
+                            .collect(Collectors.toList()))
+                    .setFile(getToken());
+
+            Session session = Factories.getSession() // TODO Add session cloning.
+                    .setMx(Collections.singletonList(mx))
+                    .setPort(port)
+                    .addEnvelope(envelope);
+
+            new Thread(() -> new EmailDelivery(session).send()).start();
         }
     }
 }
