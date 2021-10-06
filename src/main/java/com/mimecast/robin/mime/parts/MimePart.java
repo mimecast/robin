@@ -154,6 +154,7 @@ public abstract class MimePart {
     /**
      * Gets hash by type.
      *
+     * @param hashType HashType instance.
      * @return HashType instance.
      */
     public String getHash(HashType hashType) {
@@ -170,6 +171,11 @@ public abstract class MimePart {
         hashes.put(key.getKey(), value);
     }
 
+    /**
+     * Returns a string representation of the object.
+     *
+     * @return String.
+     */
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
