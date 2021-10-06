@@ -62,11 +62,12 @@ public class LocalStorageClient implements StorageClient {
     protected OutputStream stream = NullOutputStream.NULL_OUTPUT_STREAM;
 
     /**
-     * Local storage client.
+     * Sets file extension.
      *
      * @param extension File extension.
+     * @return Self.
      */
-    public LocalStorageClient(String extension) {
+    public LocalStorageClient setExtension(String extension) {
         String now = new SimpleDateFormat("yyyyMMdd", Locale.UK).format(new Date());
 
         if (extension == null) {
@@ -77,6 +78,8 @@ public class LocalStorageClient implements StorageClient {
 
         fileName = now + "." + uid + extension;
         path = Config.getServer().getStorageDir();
+
+        return this;
     }
 
     /**

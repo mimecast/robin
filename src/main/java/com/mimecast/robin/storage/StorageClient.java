@@ -22,6 +22,14 @@ public interface StorageClient {
     StorageClient setConnection(Connection connection);
 
     /**
+     * Sets extension.
+     *
+     * @param extension File extension.
+     * @return Self.
+     */
+    StorageClient setExtension(String extension);
+
+    /**
      * Gets file output stream.
      *
      * @return OutputStream instance.
