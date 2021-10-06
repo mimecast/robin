@@ -1,5 +1,6 @@
 package com.mimecast.robin.smtp.extension.client;
 
+import com.google.common.base.CharMatcher;
 import com.mimecast.robin.smtp.MessageEnvelope;
 import com.mimecast.robin.smtp.connection.Connection;
 import com.mimecast.robin.smtp.transaction.EnvelopeTransactionList;
@@ -52,12 +53,14 @@ public class ClientMail extends ClientProcessor {
     }
 
     /**
-     * Checks if string is UTF-8.
+     * Checks if string is UTF-8 but not ASCII.
      *
      * @param bytes Byte array.
      * @return Boolean.
      */
     private boolean isUTF8(byte[] bytes) {
+        if (CharMatcher.ascii().matchesAllOf(new String(bytes, StandardCharsets.UTF_8))) return false;
+
         CharsetDecoder decoder = StandardCharsets.UTF_8.newDecoder();
         try {
             decoder.decode(ByteBuffer.wrap(bytes));
