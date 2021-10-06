@@ -45,17 +45,38 @@ Configuration
         ],
 
         "scenarios": {
-            "ehlo.reject.com": {
-                "ehlo": "501 Argument not allowed."
+            "*": {
+                "rcpt": [
+                    {
+                        "value": "friday\\-[0-9]+@example\\.com",
+                        "response": "252 I think I know this user"
+                    }
+                ]
             },
-            "mail.reject.com": {
-              "mail": "451 Unable to process email at this time"
+
+            "reject.com": {
+                "ehlo": "501 Not talking to you",
+                "mail": "451 I'm not listening to you",
+                "rcpt": [
+                    {
+                        "value": "ultron@reject\\.com",
+                        "response": "501 Heart not found"
+                    }
+                ],
+                "data": "554 Your data is corrupted"
             },
-            "rcpt.reject.com": {
-                "rcpt": "501 Invalid address"
+
+            "rejectmail.com": {
+                "rcpt": [
+                    {
+                        "value": "jane@example\\.com",
+                        "response": "501 Invalid address"
+                    }
+                ]
             },
-            "data.reject.com": {
-                "data": "554 Email rejected due to security policies"
+
+            "helo.com": {
+                "ehlo": "500 ESMTP Error (Try again using SMTP)"
             }
         }
     }
