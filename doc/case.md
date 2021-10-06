@@ -78,12 +78,13 @@ _Only one may be used at the same time (Order of priority)._
 - **repeat** - _(Integer, Times)_ [default: 0]  How many times to ressed the same envelope after the first time. Will stop if any one delivery fails.
 
 
-#### Message
+#### Message (envelope)
 Every message should have either a file or a subject/message pair!
 If a file is not defined a MIME source will be generated from envelope date along with subject and message.
 Shile message is mandatory subject may be left blank.
 
 - **file** - _(String, Path)_ Path to eml file to be transmitted.
+- **folder** - _(String, Path)_ Path to eml containing folder. A random eml file will be chosen for each DATA transmission.
 - **subject** - _(String)_ Email subject.
 - **message** - _(String)_ Email text/plain message.
 

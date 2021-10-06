@@ -22,6 +22,7 @@
       "chunkWrite": true,
 
       "file": "src/test/resources/lipsum.eml",
+      "folder": "src/test/resources/",
 
       "mail": "tony@example.com",
       "rcpt": [

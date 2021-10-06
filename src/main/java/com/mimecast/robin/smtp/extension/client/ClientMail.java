@@ -52,7 +52,7 @@ public class ClientMail extends ClientProcessor {
      */
     private int sizeMessage(MessageEnvelope envelope) {
         int size = 0;
-        if (envelope.getMessage() != null && envelope.getFile() == null) {
+        if (envelope.getMessage() != null && envelope.getFile() == null && envelope.getFolder() == null) {
             size = envelope.getHeaders().length() + envelope.getMessage().length() + 2 + 2 + 5;
         } else if (envelope.getFile() != null) {
             size = (int) new File(envelope.getFile()).length() + 5;

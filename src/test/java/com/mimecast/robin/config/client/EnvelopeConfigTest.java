@@ -81,6 +81,13 @@ class EnvelopeConfigTest {
     }
 
     @Test
+    void getFolder() {
+        assertEquals("src/test/resources/", envelopeConfig1.getFolder());
+
+        assertNull(envelopeConfig2.getFolder());
+    }
+
+    @Test
     void getSubject() {
         assertNull(envelopeConfig1.getSubject());
 

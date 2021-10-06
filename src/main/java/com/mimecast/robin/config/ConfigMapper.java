@@ -154,6 +154,14 @@ public class ConfigMapper {
             session.addEnvelope(envelope);
         }
 
+        // Set ramdom EML file from folder.
+        else if (StringUtils.isNotBlank(envelopeConfig.getFolder())) {
+            envelope.setFolder(envelopeConfig.getFolder());
+
+            // Add message to delivery.
+            session.addEnvelope(envelope);
+        }
+
         // If EML is null set subject and message.
         else if (StringUtils.isNotBlank(envelopeConfig.getSubject()) && StringUtils.isNotBlank(envelopeConfig.getMessage())) {
             envelope.setSubject(envelopeConfig.getSubject())

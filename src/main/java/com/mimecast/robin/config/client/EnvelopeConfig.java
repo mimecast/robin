@@ -167,6 +167,15 @@ public class EnvelopeConfig extends ConfigFoundation {
     }
 
     /**
+     * Gets folder path to eml files.
+     *
+     * @return Folder path.
+     */
+    public String getFolder() {
+        return getStringProperty("folder");
+    }
+
+    /**
      * Gets MimeConfig.
      *
      * @return MimeConfig instance.
