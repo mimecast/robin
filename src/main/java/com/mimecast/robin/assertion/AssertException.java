@@ -22,7 +22,7 @@ public class AssertException extends Exception {
      * @param message Message string.
      */
     public AssertException(String message) {
-        super(message);
+        super(Thread.currentThread().getName() + " - " + message);
     }
 
     /**
