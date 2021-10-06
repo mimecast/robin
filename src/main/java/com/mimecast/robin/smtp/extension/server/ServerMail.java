@@ -55,6 +55,16 @@ public class ServerMail extends ServerProcessor {
     private InternetAddress oRcpt;
 
     /**
+     * Advert getter.
+     *
+     * @return Advert string.
+     */
+    @Override
+    public String getAdvert() {
+        return "SMTPUTF8";
+    }
+
+    /**
      * MAIL processor.
      *
      * @param connection Connection instance.

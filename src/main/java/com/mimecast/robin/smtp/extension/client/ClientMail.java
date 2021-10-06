@@ -6,6 +6,10 @@ import com.mimecast.robin.smtp.transaction.EnvelopeTransactionList;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.charset.CharacterCodingException;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.StandardCharsets;
 
 /**
  * MAIL extension processor.
@@ -30,8 +34,11 @@ public class ClientMail extends ClientProcessor {
         // Construct delivery envelope.
         EnvelopeTransactionList transactionList = new EnvelopeTransactionList();
 
+        // Check if envelope requires SMTPUTF8
+        boolean smtpUtf8 = isUTF8(envelope.getMail().getBytes()) || envelope.getRcpts().stream().anyMatch(r -> isUTF8(r.getBytes()));
+
         // Sender.
-        String write = "MAIL FROM:<" + envelope.getMail() + "> SIZE=" + sizeMessage(envelope);
+        String write = "MAIL FROM:<" + envelope.getMail() + "> SIZE=" + sizeMessage(envelope) + (smtpUtf8 ? " SMTPUTF8" : "");
         connection.write(write);
 
         String read = connection.read("250");
@@ -42,6 +49,23 @@ public class ClientMail extends ClientProcessor {
         connection.getSessionTransactionList().addEnvelope(transactionList);
 
         return read.startsWith("250");
+    }
+
+    /**
+     * Checks if string is UTF-8.
+     *
+     * @param bytes Byte array.
+     * @return Boolean.
+     */
+    private boolean isUTF8(byte[] bytes) {
+        CharsetDecoder decoder = StandardCharsets.UTF_8.newDecoder();
+        try {
+            decoder.decode(ByteBuffer.wrap(bytes));
+        } catch (CharacterCodingException e) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
