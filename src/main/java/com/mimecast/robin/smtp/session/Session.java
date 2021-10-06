@@ -234,6 +234,13 @@ public class Session {
         for (String key : args) {
             putMagic(key, Config.getProperties().getStringProperty(key));
         }
+
+        // Add magic properties.
+        for (Map.Entry<String, Object> entry : Config.getProperties().getMap().entrySet()) {
+            if (entry.getValue() instanceof String) {
+                putMagic(entry.getKey(), entry.getValue());
+            }
+        }
     }
 
     /**
