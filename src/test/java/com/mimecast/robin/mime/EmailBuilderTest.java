@@ -3,11 +3,15 @@ package com.mimecast.robin.mime;
 import com.mimecast.robin.mime.parts.FileMimePart;
 import com.mimecast.robin.mime.parts.TextMimePart;
 import com.mimecast.robin.smtp.MessageEnvelope;
+import com.mimecast.robin.smtp.session.Session;
 import com.mimecast.robin.util.StreamUtils;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -19,7 +23,7 @@ class EmailBuilderTest {
     void defaultHeaders() throws IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-        EmailBuilder emailBuilder = new EmailBuilder(new MessageEnvelope())
+        new EmailBuilder(new Session(), new MessageEnvelope())
                 .writeTo(outputStream);
 
         Map<Integer, String> lines = StreamUtils.parseLines(outputStream);
@@ -32,10 +36,32 @@ class EmailBuilderTest {
     }
 
     @Test
+    void providedDefaultHeaders() throws IOException {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+        String date = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z", Locale.UK).format(new Date());
+        new EmailBuilder(new Session(), new MessageEnvelope())
+                .addHeader("Date", date)
+                .addHeader("Message-Id", "<test@id>")
+                .addHeader("Subject", "Lady Robin")
+                .addHeader("From", "Sir Robin <sir.robin@example.com>")
+                .addHeader("To", "Lady Robin <lady.robin@example.com>")
+                .writeTo(outputStream);
+
+        Map<Integer, String> lines = StreamUtils.parseLines(outputStream);
+        assertEquals("MIME-Version: 1.0\r\n", lines.get(1));
+        assertEquals("Date: " + date + "\r\n", lines.get(2));
+        assertEquals("Message-Id: <test@id>\r\n", lines.get(3));
+        assertEquals("Subject: Lady Robin\r\n", lines.get(4));
+        assertEquals("From: Sir Robin <sir.robin@example.com>\r\n", lines.get(5));
+        assertEquals("To: Lady Robin <lady.robin@example.com>\r\n", lines.get(6));
+    }
+
+    @Test
     void singlePart() throws IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-        EmailBuilder emailBuilder = new EmailBuilder(new MessageEnvelope())
+        new EmailBuilder(new Session(), new MessageEnvelope())
                 .addHeader("Subject", "Robin wrote")
                 .addHeader("To", "Lady Robin <lady.robin@example.com>")
                 .addHeader("From", "Sir Robin <sir.robin@example.com>")
@@ -68,7 +94,7 @@ class EmailBuilderTest {
     void multiPart() throws IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-        EmailBuilder emailBuilder = new EmailBuilder(new MessageEnvelope())
+        new EmailBuilder(new Session(), new MessageEnvelope())
                 .addHeader("Subject", "Robin wrote")
                 .addHeader("To", "Sir Robin <sir.robin@example.com>")
                 .addHeader("From", "Lady Robin <lady.robin@example.com>")

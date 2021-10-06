@@ -57,7 +57,7 @@ public class ClientData extends ClientProcessor {
 
             Path path = Files.createTempFile("robin-", ".eml");
             try (Closeable onClose = () -> Files.delete(path)) {
-                new EmailBuilder(envelope)
+                new EmailBuilder(connection.getSession(), envelope)
                         .buildMime()
                         .writeTo(new FileOutputStream(path.toFile()));
 

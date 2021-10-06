@@ -3,6 +3,7 @@ package com.mimecast.robin.mime;
 import com.mimecast.robin.mime.headers.MimeHeader;
 import com.mimecast.robin.mime.parts.MimePart;
 import com.mimecast.robin.smtp.MessageEnvelope;
+import com.mimecast.robin.smtp.session.Session;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,6 +20,11 @@ import java.util.stream.Collectors;
  */
 public class EmailBuilder {
     static final Logger log = LogManager.getLogger(EmailBuilder.class);
+
+    /**
+     * Session instance.
+     */
+    protected final Session session;
 
     /**
      * MessageEnvelope instance.
@@ -38,11 +44,13 @@ public class EmailBuilder {
     protected final List<MimePart> alternative = new ArrayList<>();
 
     /**
-     * Constructs a new EmailBuilder instance with given MessageEnvelope instance.
+     * Constructs a new EmailBuilder instance with given Session and MessageEnvelope instance.
      *
+     * @param session  Session instance.
      * @param envelope MessageEnvelope instance.
      */
-    public EmailBuilder(MessageEnvelope envelope) {
+    public EmailBuilder(Session session, MessageEnvelope envelope) {
+        this.session = session;
         this.envelope = envelope;
         headers.add(new MimeHeader("MIME-Version", "1.0"));
     }
@@ -54,7 +62,7 @@ public class EmailBuilder {
      */
     public EmailBuilder buildMime() {
         if (envelope.getMime() != null && !envelope.getMime().isEmpty()) {
-            headers.addAll(envelope.getMime().getHeaders());
+            envelope.getMime().getHeaders().forEach(h -> headers.add(new MimeHeader(h.getName(), session.magicReplace(h.getValue()))));
 
             for (MimePart part : envelope.getMime().getParts()) {
                 if (part.getHeader("Content-ID") != null) {
@@ -99,7 +107,7 @@ public class EmailBuilder {
         }
 
         // Message-ID
-        String messageId = "<" + UUID.randomUUID().toString() + ">";
+        String messageId = "<" + UUID.randomUUID() + ">";
         if (!addedHeaders.contains("message-id")) {
             headers.add(new MimeHeader("Message-ID", messageId));
         }
