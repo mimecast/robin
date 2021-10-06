@@ -4,13 +4,11 @@ import com.mimecast.robin.main.Config;
 import com.mimecast.robin.util.PathUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.config.Configurator;
 
 import javax.naming.ConfigurationException;
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.file.Paths;
 
 /**
@@ -37,13 +35,18 @@ public class ConfigLoader {
 
         if (path == null) path = "cfg" + File.separator;
 
-        String propertiesPath = Paths.get(path, "properties.json").toString();
+        String propertiesFile = "properties.json";
+        if (Config.getProperties().hasProperty("properties")) {
+            propertiesFile = Config.getProperties().getStringProperty("properties");
+        }
+
+        String propertiesPath = Paths.get(path, propertiesFile).toString();
         if (PathUtils.isFile(propertiesPath)) {
             try {
                 Config.initProperties(propertiesPath);
             } catch (IOException e) {
-                log.fatal("Error reading properties.json.");
-                throw new ConfigurationException("Can't read properties.json.");
+                log.fatal("Error reading {}.", propertiesFile);
+                throw new ConfigurationException("Can't read " + propertiesFile + ".");
             }
         }
 
@@ -67,14 +70,14 @@ public class ConfigLoader {
             }
         }
 
-        String log4jPath = Paths.get(path, "log4j2.xml").toString();
+        String log4jFile = "log4j2.xml";
+        if (Config.getProperties().hasProperty("log4j2")) {
+            log4jFile = Config.getProperties().getStringProperty("log4j2");
+        }
+
+        String log4jPath = Paths.get(path, log4jFile).toString();
         if (PathUtils.isFile(log4jPath)) {
-            try {
-                LoggerContext.getContext().setConfigLocation(new URI(log4jPath));
-            } catch (URISyntaxException e) {
-                log.fatal("Error loading log4j2.xml.");
-                throw new ConfigurationException("Can't load log4j.xml.");
-            }
+            Configurator.initialize("Robin", log4jPath);
         }
     }
 }

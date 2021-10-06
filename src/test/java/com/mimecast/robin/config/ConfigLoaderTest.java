@@ -8,8 +8,8 @@ import org.junit.jupiter.api.Test;
 
 import javax.naming.ConfigurationException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ConfigLoaderTest {
 
@@ -23,6 +23,6 @@ class ConfigLoaderTest {
         assertNotNull(Config.getServer());
         assertNotNull(Config.getClient());
         assertNotNull(Config.getProperties());
-        assertEquals("src/test/resources/log4j2.xml", LoggerContext.getContext().getConfigLocation().getPath());
+        assertTrue(LoggerContext.getContext().getConfiguration().getName().endsWith("/log4j2.xml"));
     }
 }

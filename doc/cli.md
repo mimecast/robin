@@ -35,3 +35,16 @@ Server
 
     example:
      java -jar robin.jar --server config/
+
+Common
+------
+
+The Log4j2 XML filename can be configured via properties.json or a system property called `log4j2`.
+
+    example:
+     java -jar robin.jar --server config/ -Dlog4j2=log4j2custom.xml
+
+The properties.json filename can be configured via a system property called `properties`.
+
+    example:
+     java -jar robin.jar --server config/ -Dproperties=properties-new.json
