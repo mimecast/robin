@@ -67,16 +67,17 @@ class EmailReceiptTest {
         connection.parseLines();
         assertTrue(connection.getLine(1).startsWith("220 Robin ready at example.com with ESMTP; "));
         assertEquals("250-Welcome [example.net (127.0.0.1)]\r\n", connection.getLine(2));
-        assertEquals("250-HELP\r\n", connection.getLine(3));
-        assertEquals("250-PIPELINING\r\n", connection.getLine(4));
-        assertEquals("250-AUTH PLAIN LOGIN\r\n", connection.getLine(5));
-        assertEquals("250-STARTTLS\r\n", connection.getLine(6));
-        assertEquals("250 CHUNKING\r\n", connection.getLine(7));
-        assertEquals("250 2.1.0 Sender OK\r\n", connection.getLine(8));
-        assertEquals("250 2.1.5 Recipient OK\r\n", connection.getLine(9));
-        assertEquals("354 Ready and willing\r\n", connection.getLine(10));
-        assertTrue(connection.getLine(11).startsWith("250 2.0.0 Received OK"), "startsWith(\"250 2.0.0 Received OK\")");
-        assertEquals("221 2.0.0 Closing connection\r\n", connection.getLine(12));
+        assertEquals("250-SMTPUTF8\r\n", connection.getLine(3));
+        assertEquals("250-HELP\r\n", connection.getLine(4));
+        assertEquals("250-PIPELINING\r\n", connection.getLine(5));
+        assertEquals("250-AUTH PLAIN LOGIN\r\n", connection.getLine(6));
+        assertEquals("250-STARTTLS\r\n", connection.getLine(7));
+        assertEquals("250 CHUNKING\r\n", connection.getLine(8));
+        assertEquals("250 2.1.0 Sender OK\r\n", connection.getLine(9));
+        assertEquals("250 2.1.5 Recipient OK\r\n", connection.getLine(10));
+        assertEquals("354 Ready and willing\r\n", connection.getLine(11));
+        assertTrue(connection.getLine(12).startsWith("250 2.0.0 Received OK"), "startsWith(\"250 2.0.0 Received OK\")");
+        assertEquals("221 2.0.0 Closing connection\r\n", connection.getLine(13));
     }
 
     @Test
@@ -93,14 +94,15 @@ class EmailReceiptTest {
         connection.parseLines();
         assertTrue(connection.getLine(1).startsWith("220 Robin ready at example.com with ESMTP; "));
         assertEquals("250-Welcome [example.net (127.0.0.1)]\r\n", connection.getLine(2));
-        assertEquals("250-HELP\r\n", connection.getLine(3));
-        assertEquals("250-PIPELINING\r\n", connection.getLine(4));
-        assertEquals("250-AUTH PLAIN LOGIN\r\n", connection.getLine(5));
-        assertEquals("250-STARTTLS\r\n", connection.getLine(6));
-        assertEquals("250 CHUNKING\r\n", connection.getLine(7));
-        assertEquals("250 2.1.0 Sender OK\r\n", connection.getLine(8));
-        assertEquals("501 Invalid address\r\n", connection.getLine(9));
-        assertEquals("221 2.0.0 Closing connection\r\n", connection.getLine(10));
+        assertEquals("250-SMTPUTF8\r\n", connection.getLine(3));
+        assertEquals("250-HELP\r\n", connection.getLine(4));
+        assertEquals("250-PIPELINING\r\n", connection.getLine(5));
+        assertEquals("250-AUTH PLAIN LOGIN\r\n", connection.getLine(6));
+        assertEquals("250-STARTTLS\r\n", connection.getLine(7));
+        assertEquals("250 CHUNKING\r\n", connection.getLine(8));
+        assertEquals("250 2.1.0 Sender OK\r\n", connection.getLine(9));
+        assertEquals("501 Invalid address\r\n", connection.getLine(10));
+        assertEquals("221 2.0.0 Closing connection\r\n", connection.getLine(11));
     }
 
     @Test
@@ -118,14 +120,15 @@ class EmailReceiptTest {
         connection.parseLines();
         assertTrue(connection.getLine(1).startsWith("220 Robin ready at example.com with ESMTP; "));
         assertEquals("250-Welcome [example.net (127.0.0.1)]\r\n", connection.getLine(2));
-        assertEquals("250-HELP\r\n", connection.getLine(3));
-        assertEquals("250-PIPELINING\r\n", connection.getLine(4));
-        assertEquals("250-AUTH PLAIN LOGIN\r\n", connection.getLine(5));
-        assertEquals("250-STARTTLS\r\n", connection.getLine(6));
-        assertEquals("250 CHUNKING\r\n", connection.getLine(7));
-        assertEquals("250 2.1.0 Sender OK\r\n", connection.getLine(8));
-        assertEquals("501 Invalid address\r\n", connection.getLine(9));
-        assertEquals("554 5.5.1 No valid recipients\r\n", connection.getLine(10));
-        assertEquals("221 2.0.0 Closing connection\r\n", connection.getLine(11));
+        assertEquals("250-SMTPUTF8\r\n", connection.getLine(3));
+        assertEquals("250-HELP\r\n", connection.getLine(4));
+        assertEquals("250-PIPELINING\r\n", connection.getLine(5));
+        assertEquals("250-AUTH PLAIN LOGIN\r\n", connection.getLine(6));
+        assertEquals("250-STARTTLS\r\n", connection.getLine(7));
+        assertEquals("250 CHUNKING\r\n", connection.getLine(8));
+        assertEquals("250 2.1.0 Sender OK\r\n", connection.getLine(9));
+        assertEquals("501 Invalid address\r\n", connection.getLine(10));
+        assertEquals("554 5.5.1 No valid recipients\r\n", connection.getLine(11));
+        assertEquals("221 2.0.0 Closing connection\r\n", connection.getLine(12));
     }
 }
