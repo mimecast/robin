@@ -11,17 +11,17 @@ import java.io.IOException;
  * Server extension processor abstract.
  */
 public abstract class ServerProcessor {
-    static final Logger log = LogManager.getLogger(ServerProcessor.class);
+    protected static final Logger log = LogManager.getLogger(ServerProcessor.class);
 
     /**
      * Connection instance.
      */
-    Connection connection;
+    protected Connection connection;
 
     /**
      * Verb instance.
      */
-    Verb verb;
+    protected Verb verb;
 
     /**
      * Advert getter.
@@ -29,7 +29,7 @@ public abstract class ServerProcessor {
      * @return Advert string.
      */
     @SuppressWarnings("squid:S3400")
-    String getAdvert() {
+    protected String getAdvert() {
         return "";
     }
 

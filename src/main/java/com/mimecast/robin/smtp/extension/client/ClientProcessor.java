@@ -10,12 +10,12 @@ import java.io.IOException;
  * Client extension processor abstract.
  */
 public abstract class ClientProcessor {
-    static final Logger log = LogManager.getLogger(ClientProcessor.class);
+    protected static final Logger log = LogManager.getLogger(ClientProcessor.class);
 
     /**
      * Connection.
      */
-    Connection connection;
+    protected Connection connection;
 
     /**
      * Blank client processor.
