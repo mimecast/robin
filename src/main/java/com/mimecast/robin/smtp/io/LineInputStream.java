@@ -81,7 +81,6 @@ public class LineInputStream extends PushbackInputStream {
         }
 
         if (buffer.size() == 0) {
-            log.trace("Buffer empty.");
             return null;
         }
 
