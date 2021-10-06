@@ -136,22 +136,21 @@ public class Assert {
      * @throws AssertException Assertion exception.
      */
     private void assertExternal(List<BasicConfig> assertions, int transactionId) throws AssertException {
-        if (!Factories.getExternalKeys().isEmpty()) {
-            List<String> keys = Factories.getExternalKeys();
+        if (Factories.getExternalKeys().isEmpty()) return;
 
-            for (BasicConfig assertion : assertions) {
-                if (!assertion.isEmpty() && keys.contains(assertion.getStringProperty("type"))) {
+        List<String> keys = Factories.getExternalKeys();
+        for (BasicConfig assertion : assertions) {
+            if (!assertion.isEmpty() && keys.contains(assertion.getStringProperty("type"))) {
 
-                    ExternalClient client = Factories.getExternalClient(assertion.getStringProperty("type"), connection, assertion);
-                    if (client != null) {
-                        if (transactionId >= 0) {
-                            client.setTransactionId(transactionId);
-                        }
-                        client.run();
-
-                    } else {
-                        throw new AssertException("Assert external client not instanciated");
+                ExternalClient client = Factories.getExternalClient(assertion.getStringProperty("type"), connection, assertion);
+                if (client != null) {
+                    if (transactionId >= 0) {
+                        client.setTransactionId(transactionId);
                     }
+                    client.run();
+
+                } else {
+                    throw new AssertException("Assert external client not instanciated");
                 }
             }
         }
