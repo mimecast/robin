@@ -147,6 +147,8 @@ public class EmailParser {
 
     /**
      * Parses email body.
+     *
+     * @throws IOException Unable to read.
      */
     private void parseBody() throws IOException {
         Optional<MimeHeader> optional = headers.get("Content-Type");
@@ -339,7 +341,7 @@ public class EmailParser {
                     content.write(QuotedPrintableDecoder.decode(baos.toByteArray()));
 
                 } catch (DecoderException de) {
-                    log.error("EmailParser decoder exception:", de);
+                    log.error("EmailParser decoder exception:", de.getMessage());
                     content.write(baos.toByteArray());
                 }
             } else {
