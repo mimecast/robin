@@ -54,6 +54,11 @@ public class Connection extends SmtpFoundation {
     private String server = null;
 
     /**
+     * ScenarioConfig instance.
+     */
+    private ScenarioConfig scenario = null;
+
+    /**
      * Transaction response pattern.
      */
     private static final Pattern transactionPattern = Pattern.compile("(250.*)\\s\\[[a-z0-9\\-_]+\\.[a-z]+([0-9]+)?]", Pattern.CASE_INSENSITIVE);
@@ -216,12 +221,23 @@ public class Connection extends SmtpFoundation {
     }
 
     /**
+     * Sets scenario.
+     *
+     * @param scenario Scenario instance.
+     * @return Self.
+     */
+    public Connection setScenario(ScenarioConfig scenario) {
+        this.scenario = scenario;
+        return this;
+    }
+
+    /**
      * [Server] Gets scenarios for given HELO/EHLO.
      *
      * @return Optional of ScenarioConfig.
      */
     public Optional<ScenarioConfig> getScenario() {
-        return Optional.ofNullable(Config.getServer())
+        return scenario != null ? Optional.of(scenario) : Optional.ofNullable(Config.getServer())
                 .map(ServerConfig::getScenarios)
                 .map(s -> {
                     ScenarioConfig c = s.get(session.getEhlo());
