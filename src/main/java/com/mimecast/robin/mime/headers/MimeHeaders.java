@@ -48,4 +48,13 @@ public class MimeHeaders {
         }
         return Optional.empty();
     }
+
+    /**
+     * Gets headers list size.
+     *
+     * @return Integer.
+     */
+    public int size() {
+        return headers.size();
+    }
 }
