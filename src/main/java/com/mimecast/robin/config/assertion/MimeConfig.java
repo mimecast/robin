@@ -57,31 +57,6 @@ public class MimeConfig extends ConfigFoundation {
     }
 
     /**
-     * Gets SMTP assertion list.
-     *
-     * @return List in list.
-     */
-    public List<List<String>> getSmtp() {
-        return getListProperty("smtp");
-    }
-
-    /**
-     * Gets external assertion configuration instance.
-     *
-     * @return List of BasicConfig instance.
-     */
-    public List<BasicConfig> getExternal() {
-        List<BasicConfig> external = new ArrayList<>();
-        for (Object map : getListProperty("external")) {
-            if (map instanceof Map) {
-                external.add(new BasicConfig((Map) map));
-            }
-        }
-
-        return external;
-    }
-
-    /**
      * Gets list of headers.
      *
      * @return List of MimeHeader.

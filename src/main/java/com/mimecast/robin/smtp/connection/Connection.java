@@ -56,7 +56,7 @@ public class Connection extends SmtpFoundation {
     /**
      * Transaction response pattern.
      */
-    private final static Pattern transactionPattern = Pattern.compile("(250.*)\\s\\[[a-z0-9\\-_]+\\.[a-z]+[0-9]+?]", Pattern.CASE_INSENSITIVE);
+    private static final Pattern transactionPattern = Pattern.compile("(250.*)\\s\\[[a-z0-9\\-_]+\\.[a-z]+([0-9]+)?]", Pattern.CASE_INSENSITIVE);
 
     /**
      * [Client] Constructs a new Connection instance with given Session.
