@@ -17,7 +17,7 @@ import java.nio.file.Paths;
  *
  * @see SmtpListener
  */
-class Server extends Foundation {
+public class Server extends Foundation {
 
     /**
      * Listener instance.
