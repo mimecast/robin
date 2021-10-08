@@ -7,7 +7,10 @@ import com.mimecast.robin.main.Factories;
 import com.mimecast.robin.mime.headers.MimeHeader;
 import com.mimecast.robin.mime.parts.FileMimePart;
 import com.mimecast.robin.mime.parts.MimePart;
+import com.mimecast.robin.mime.parts.PdfMimePart;
 import com.mimecast.robin.mime.parts.TextMimePart;
+import com.mimecast.robin.smtp.MessageEnvelope;
+import com.mimecast.robin.smtp.session.Session;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -89,6 +92,17 @@ public class MimeConfig extends ConfigFoundation {
      * @return List of MimePart.
      */
     public List<MimePart> getParts() {
+        return getParts(null, null);
+    }
+
+    /**
+     * Gets list of parts with magic.
+     *
+     * @param session Session instance.
+     * @param envelope MessageEnvelope instance.
+     * @return List of MimePart.
+     */
+    public List<MimePart> getParts(Session session, MessageEnvelope envelope) {
         if (parts.isEmpty()) {
             for (Object part : getListProperty("parts")) {
                 if (part instanceof Map && ((Map<?, ?>) part).size() > 0) {
@@ -97,10 +111,28 @@ public class MimeConfig extends ConfigFoundation {
                     // Get both file and message variables.
                     String message = config.getStringProperty("message");
                     String file = config.getStringProperty("file");
+                    Map<String, String> pdf = config.getMapProperty("pdf");
 
-                    // Choose file first if no message.
                     MimePart mimePart = null;
-                    if (message == null && file != null) {
+
+                    // Make a pdf part if defined.
+                    if (pdf != null && !pdf.isEmpty()) {
+                        BasicConfig pdfConfig = new BasicConfig(pdf);
+
+                        // Magic.
+                        if (pdfConfig.hasProperty("text")) {
+                            pdfConfig.getMap().put("text", session.magicReplace(pdfConfig.getStringProperty("text")));
+                        }
+
+                        try {
+                            mimePart = new PdfMimePart(pdfConfig, envelope);
+                        } catch (IOException e) {
+                            log.error("Unable to read part file: {}", file);
+                        }
+                    }
+
+                    // Make a file part if defined.
+                    if (file != null) {
                         try {
                             mimePart = new FileMimePart(file);
                         } catch (IOException e) {

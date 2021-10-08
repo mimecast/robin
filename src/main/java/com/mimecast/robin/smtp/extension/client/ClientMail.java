@@ -39,7 +39,8 @@ public class ClientMail extends ClientProcessor {
         boolean smtpUtf8 = isUTF8(envelope.getMail().getBytes()) || envelope.getRcpts().stream().anyMatch(r -> isUTF8(r.getBytes()));
 
         // Sender.
-        String write = "MAIL FROM:<" + envelope.getMail() + "> SIZE=" + sizeMessage(envelope) + (smtpUtf8 ? " SMTPUTF8" : "");
+        int size = sizeMessage(envelope);
+        String write = "MAIL FROM:<" + envelope.getMail() + ">" + (size > 0 ? " SIZE=" + size : "") + (smtpUtf8 ? " SMTPUTF8" : "");
         connection.write(write);
 
         String read = connection.read("250");

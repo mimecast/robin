@@ -56,7 +56,7 @@ public class ClientData extends ClientProcessor {
             log.debug("Sending email from MIME.");
 
             Path path = Files.createTempFile("robin-", ".eml");
-            try (Closeable onClose = () -> Files.delete(path)) {
+            try (Closeable ignored = () -> Files.delete(path)) {
                 new EmailBuilder(connection.getSession(), envelope)
                         .buildMime()
                         .writeTo(new FileOutputStream(path.toFile()));
