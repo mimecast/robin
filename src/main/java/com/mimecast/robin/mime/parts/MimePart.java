@@ -148,7 +148,7 @@ public abstract class MimePart {
      * @return HashType instance.
      */
     public List<String> getHashesList() {
-        return new ArrayList<String>(hashes.values());
+        return new ArrayList<>(hashes.values());
     }
 
     /**

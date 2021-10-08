@@ -45,6 +45,31 @@ If all you need is headers, ignore the parts.
 The parts may be either strings of paths.
 In order to define a string use the `message` keyword and for a path `file`.
 
+When adding a PDF attachment, you can either specify a pre-created file:
+
+              {
+                "headers": [
+                  ["Content-Type", "application/pdf; name=\"article.pdf\""],
+                  ["Content-Disposition", "attachment; filename=\"article.pdf\""],
+                  ["Content-Transfer-Encoding", "base64"]
+                ],
+                "file": "src/test/resources/mime/robin.article.pdf"
+              }
+
+or dynamically generate a file using the magic variables:
+
+              {
+                "headers": [
+                  ["Content-Type", "application/pdf; name=\"article.pdf\""],
+                  ["Content-Disposition", "attachment; filename=\"article.pdf\""],
+                  ["Content-Transfer-Encoding", "base64"]
+                ],
+                "pdf": {
+                    "text": "<p>{$RANDCH50} {$RANDNO10000}</p>\r\n<p>Robin had a party on {$DATE} it turned out to be a blast!</p>\r\n<p>{$RANDCH50} {$RANDNO10000}</p><hr/>",
+                    "image": "src/test/resources/mime/selfie.jpg"
+               }
+              }
+
 Sadly JSON doesn't do multiline strings, so you'll have some long lines there.
 
                 "headers": [
