@@ -1,4 +1,5 @@
 {
+  "hostname": "example.com",
   "bind": "::",
   "port": 25,
   "backlog": 25,

@@ -35,6 +35,15 @@ public class ServerConfig extends ConfigFoundation {
     }
 
     /**
+     * Gets hostname.
+     *
+     * @return Hostname.
+     */
+    public String getHostname() {
+        return getStringProperty("hostname", "mimecast.com");
+    }
+
+    /**
      * Gets bind address.
      *
      * @return Bind address string.

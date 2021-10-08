@@ -72,7 +72,7 @@ public class EmailReceipt implements Runnable {
      */
     public void run() {
         try {
-            connection.write("220 Robin ready at " + connection.getSession().getRdns() + " with ESMTP; " + connection.getSession().getDate());
+            connection.write("220 " + Config.getServer().getHostname() + " Robin ready at " + connection.getSession().getRdns() + " with ESMTP; " + connection.getSession().getDate());
 
             Verb verb;
             for (int i = 0; i < transactionsLimit; i++) {
@@ -119,25 +119,22 @@ public class EmailReceipt implements Runnable {
      * Server extension processor.
      *
      * @param verb Verb instance.
-     * @return Boolean.
      * @throws IOException Unable to communicate.
      */
-    private boolean process(Verb verb) throws IOException {
+    private void process(Verb verb) throws IOException {
         if (Extensions.isExtension(verb)) {
             Optional<Extension> opt = Extensions.getExtension(verb);
             if (opt.isPresent()) {
-                return opt.get().getServer().process(connection, verb);
+                opt.get().getServer().process(connection, verb);
             }
         } else {
             errorLimit--;
             if (errorLimit == 0) {
                 log.warn("Error limit reached.");
-                return false;
+                return;
             }
 
             connection.write("500 5.3.3 Unrecognized command");
         }
-
-        return true;
     }
 }
