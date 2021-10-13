@@ -76,6 +76,7 @@ public class MimeConfig extends ConfigFoundation {
      * @param container List of MimeHeader.
      * @param headers   List of headers.
      */
+    @SuppressWarnings("rawtypes")
     public void getHeaders(List<MimeHeader> container, List headers) {
         if (container.isEmpty()) {
             for (Object header : headers) {
@@ -102,6 +103,7 @@ public class MimeConfig extends ConfigFoundation {
      * @param envelope MessageEnvelope instance.
      * @return List of MimePart.
      */
+    @SuppressWarnings("rawtypes")
     public List<MimePart> getParts(Session session, MessageEnvelope envelope) {
         if (parts.isEmpty()) {
             for (Object part : getListProperty("parts")) {
@@ -117,7 +119,7 @@ public class MimeConfig extends ConfigFoundation {
 
                     // Make a pdf part if defined.
                     if (pdf != null && !pdf.isEmpty()) {
-                        BasicConfig pdfConfig = new BasicConfig(pdf);
+                        MimeConfig pdfConfig = new MimeConfig(pdf);
 
                         // Magic.
                         if (pdfConfig.hasProperty("text")) {

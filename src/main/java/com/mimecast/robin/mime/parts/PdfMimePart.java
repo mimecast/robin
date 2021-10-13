@@ -1,9 +1,10 @@
 package com.mimecast.robin.mime.parts;
 
-import com.mimecast.robin.config.BasicConfig;
+import com.mimecast.robin.config.assertion.MimeConfig;
 import com.mimecast.robin.mime.headers.MimeHeader;
 import com.mimecast.robin.smtp.MessageEnvelope;
 import com.mimecast.robin.smtp.io.MagicInputStream;
+import com.mimecast.robin.util.PathUtils;
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 import com.openhtmltopdf.util.XRLog;
 
@@ -12,6 +13,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.logging.Level;
 
 /**
@@ -20,9 +22,9 @@ import java.util.logging.Level;
 public class PdfMimePart extends MimePart {
 
     /**
-     * Config instance.
+     * MimeConfig instance.
      */
-    protected final BasicConfig config;
+    protected final MimeConfig config;
 
     /**
      * messageEnvelope instance.
@@ -32,12 +34,14 @@ public class PdfMimePart extends MimePart {
     /**
      * Constructs a new FileMimePart instance with given BasicConfig instance.
      *
-     * @param config   BasicConfig instance.
+     * @param config   MimeConfig instance.
      * @param envelope MessageEnvelope instance.
      * @throws IOException Unable to open/read from file.
      */
-    public PdfMimePart(BasicConfig config, MessageEnvelope envelope) throws IOException {
+    public PdfMimePart(MimeConfig config, MessageEnvelope envelope) throws IOException {
         this.config = config;
+        config.getHeaders().forEach(h -> headers.put(h)); // Add headers.
+
         this.envelope = envelope;
         build();
     }
@@ -83,7 +87,13 @@ public class PdfMimePart extends MimePart {
             html.append(config.getStringProperty("text"));
             html.append("</p>");
         }
-        if (config.hasProperty("image")) {
+
+        if (config.hasProperty("folder")) {
+            html.append("<p><img src=\"file://");
+            html.append(Paths.get(System.getProperty("user.dir"), PathUtils.folderFile(config.getStringProperty("folder"), Arrays.asList("jpg", "jpeg", "png", "gif"))));
+            html.append("\"/></p>");
+
+        } else if (config.hasProperty("image")) {
             html.append("<p><img src=\"file://");
             html.append(Paths.get(System.getProperty("user.dir"), config.getStringProperty("image")));
             html.append("\"/></p>");

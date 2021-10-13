@@ -2,16 +2,12 @@ package com.mimecast.robin.smtp;
 
 import com.mimecast.robin.config.assertion.AssertConfig;
 import com.mimecast.robin.config.assertion.MimeConfig;
+import com.mimecast.robin.util.PathUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.File;
 import java.io.InputStream;
-import java.nio.file.Paths;
-import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Message envelope.
@@ -291,18 +287,7 @@ public class MessageEnvelope {
      * @return Folder path.
      */
     public String getFolderFile() {
-        File[] files = new File(getFolder()).listFiles();
-
-        if (files != null && files.length > 0) {
-            List<String> filtered =  Stream.of(files)
-                    .filter(file -> !file.isDirectory() && file.getName().toLowerCase().endsWith(".eml"))
-                    .map(File::getName)
-                    .collect(Collectors.toList());
-
-            return Paths.get(getFolder(), filtered.get(new SecureRandom().nextInt(filtered.size()))).toString();
-        }
-
-        return null;
+        return PathUtils.folderFile(getFolder(), Collections.singletonList("eml"));
     }
 
     /**

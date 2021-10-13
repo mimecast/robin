@@ -7,8 +7,13 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Static utilities for handling files and paths.
@@ -80,5 +85,30 @@ public final class PathUtils extends File {
         Objects.requireNonNull(path, "path must not be null");
         Objects.requireNonNull(charset, "charset must not be null");
         return new String(Files.readAllBytes(Paths.get(path)), charset);
+    }
+
+    /**
+     * Get random file from folder with optional extension filter
+     *
+     * @param path       Path to folder.
+     * @param extensions List of String.
+     * @return Absolute path.
+     */
+    public static String folderFile(String path, List<String> extensions) {
+        Objects.requireNonNull(path, "path must not be null");
+
+        final List<String> filter = extensions != null ? extensions : new ArrayList<>();
+
+        File[] files = new File(path).listFiles();
+        if (files != null && files.length > 0) {
+            List<String> filtered = Stream.of(files)
+                    .filter(file -> !file.isDirectory() && filter.contains(FilenameUtils.getExtension(file.getName().toLowerCase())))
+                    .map(File::getName)
+                    .collect(Collectors.toList());
+
+            return Paths.get(path, filtered.get(new SecureRandom().nextInt(filtered.size()))).toString();
+        }
+
+        return null;
     }
 }
