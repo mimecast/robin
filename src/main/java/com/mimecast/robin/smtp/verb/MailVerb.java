@@ -14,7 +14,7 @@ import java.io.IOException;
  * @see <a href="https://tools.ietf.org/html/rfc3461">RFC 3461</a>
  * @see <a href="https://tools.ietf.org/html/rfc6152">RFC 6152</a>
  */
-class MailVerb extends Verb {
+public class MailVerb extends Verb {
 
     /**
      * TO address.
