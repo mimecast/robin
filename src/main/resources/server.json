@@ -41,6 +41,9 @@
         }
       ],
       "data": "554 Email rejected due to security policies"
+    },
+    "mimecast.net": {
+      "data": "250 2.0.0 Received email OKAY"
     }
   }
 }
