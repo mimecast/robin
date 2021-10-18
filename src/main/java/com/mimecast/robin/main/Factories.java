@@ -2,6 +2,7 @@ package com.mimecast.robin.main;
 
 import com.mimecast.robin.annotation.Plugin;
 import com.mimecast.robin.assertion.client.ExternalClient;
+import com.mimecast.robin.assertion.client.logs.LogsExternalClient;
 import com.mimecast.robin.config.BasicConfig;
 import com.mimecast.robin.smtp.auth.DigestCache;
 import com.mimecast.robin.smtp.auth.StaticDigestCache;
@@ -19,7 +20,7 @@ import org.apache.logging.log4j.Logger;
 
 import javax.net.ssl.X509TrustManager;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -75,7 +76,7 @@ public class Factories {
      * External clients.
      * <p>Used to fetch external service logs for assertion.
      */
-    private static final Map<String, Callable<ExternalClient>> externalClients = new HashMap<>();
+    private static final Map<String, Callable<ExternalClient>> externalClients = Collections.singletonMap("logs", LogsExternalClient::new);
 
     /**
      * Protected constructor.
