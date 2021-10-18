@@ -1,9 +1,6 @@
 {
   "$schema": "/schema/case.schema.json",
 
-  "retry": 1,
-  "delay": 2,
-
   "request": {
     "url": "https://robin.requestcatcher.com/",
     "type": "POST",
