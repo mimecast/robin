@@ -1,5 +1,10 @@
 {
   "logging": {
     "data": false
+  },
+  "request": {
+    "connectTimeout": 20,
+    "writeTimeout": 20,
+    "readTimeout": 90
   }
 }
