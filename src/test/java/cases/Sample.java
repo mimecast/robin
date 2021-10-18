@@ -41,4 +41,30 @@ class Sample {
         new Client("src/main/resources/")
                 .send("src/test/resources/cases/config/pangrams.json");
     }
+
+    /**
+     * Make an HTTP POST request with a JSON.
+     *
+     * @throws AssertException Case assertion failed.
+     * @throws IOException     Communication issues.
+     */
+    @Test
+    @SuppressWarnings("java:S2699")
+    void postJson() throws AssertException, IOException, ConfigurationException {
+        new Client("src/main/resources/")
+                .send("src/test/resources/cases/config/post-json.json");
+    }
+
+    /**
+     * Make an HTTP POST request with files upload.
+     *
+     * @throws AssertException Case assertion failed.
+     * @throws IOException     Communication issues.
+     */
+    @Test
+    @SuppressWarnings("java:S2699")
+    void postFilesAndParams() throws AssertException, IOException, ConfigurationException {
+        new Client("src/main/resources/")
+                .send("src/test/resources/cases/config/post-files.json");
+    }
 }

@@ -1,0 +1,33 @@
+{
+  "$schema": "/schema/case.schema.json",
+
+  "retry": 1,
+  "delay": 2,
+
+  "request": {
+    "url": "https://robin.requestcatcher.com/",
+    "type": "POST",
+    "headers": [
+      {
+        "name": "Content-Type",
+        "value": "text/html"
+      }
+    ],
+    "params": [
+      {
+        "name": "name",
+        "value": "Robin"
+      }
+    ],
+    "files": [
+      {
+        "name": "logo",
+        "value": "src/test/resources/mime/logo.jpg"
+      },
+      {
+        "name": "photo",
+        "value": "src/test/resources/mime/selfie.jpg"
+      }
+    ]
+  }
+}
