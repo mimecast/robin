@@ -12,10 +12,25 @@
 
       "assertions": {
         "smtp": [
-          ["MAIL", "250 Sender OK"],
-          ["RCPT", "250 Recipient OK"],
-          ["DATA", "^250"],
-          ["DATA", "Received OK"]
+          ["MAIL", "250 2.1.0 Sender OK"],
+          ["RCPT", "250 2.1.5 Recipient OK"],
+          ["DATA", "^250 2.0.0"],
+          ["DATA", "Received email OKAY"]
+        ],
+        "external": [
+          {
+            "type": "logs",
+            "wait": 5,
+            "delay": 5,
+            "retry": 3,
+            "verify": ["QUIT"],
+            "match": [
+              ["250 2.0.0", "Received email OKAY"]
+            ],
+            "refuse": [
+              ["java.lang.NullPointerException"]
+            ]
+          }
         ]
       }
     }
@@ -25,7 +40,7 @@
     "smtp": [
       [ "SMTP", "^220" ],
       [ "EHLO", "STARTTLS" ],
-      [ "SHLO", "250 HELP" ],
+      [ "SHLO", "250 CHUNKING" ],
       [ "QUIT" ]
     ]
   }
