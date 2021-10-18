@@ -2,6 +2,7 @@ package cases;
 
 import com.mimecast.robin.assertion.AssertException;
 import com.mimecast.robin.main.Client;
+import com.mimecast.robin.main.RequestClient;
 import org.junit.jupiter.api.Test;
 
 import javax.naming.ConfigurationException;
@@ -51,8 +52,8 @@ class Sample {
     @Test
     @SuppressWarnings("java:S2699")
     void postJson() throws AssertException, IOException, ConfigurationException {
-        new Client("src/main/resources/")
-                .send("src/test/resources/cases/config/post-json.json");
+        new RequestClient("src/main/resources/")
+                .request("src/test/resources/cases/config/post-json.json");
     }
 
     /**
@@ -64,7 +65,7 @@ class Sample {
     @Test
     @SuppressWarnings("java:S2699")
     void postFilesAndParams() throws AssertException, IOException, ConfigurationException {
-        new Client("src/main/resources/")
-                .send("src/test/resources/cases/config/post-files.json");
+        new RequestClient("src/main/resources/")
+                .request("src/test/resources/cases/config/post-files.json");
     }
 }
