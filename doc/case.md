@@ -1,6 +1,6 @@
-Test Cases
-==========
-A framework for writing tests for automation.
+E/SMTP Cases
+============
+Cases represent speciffic scenarios that can be configured in JSON and executed as a test for end-to-end testing of MTA servers.
 
 
 Glossary
@@ -70,12 +70,12 @@ _Only one may be used at the same time (Order of priority)._
 
 
 ##### Speed
-- **slowBytes** - _(Integer, Bytes)_ [default: 1, min: 128]  Adds a write delay every given number of bytes.
-- **slowWait** - _(Integer, Milliseconds)_ [default: 0, min: 100]  Wait time in milliseconds.
+- **slowBytes** - _(Integer, Bytes)_ [default: 1, min: 128]  Write delay every n number of bytes.
+- **slowWait** - _(Integer, Milliseconds)_ [default: 0, min: 100]  Write delay wait time in milliseconds.
 
 
 ##### Load
-- **repeat** - _(Integer, Times)_ [default: 0]  How many times to ressed the same envelope after the first time. Will stop if any one delivery fails.
+- **repeat** - _(Integer, Times)_ [default: 0]  How many times to ressed the same envelope after the first time. Will stop if any delivery fails.
 
 
 #### Message (envelope)
@@ -131,11 +131,12 @@ There are session level and envelope level assertions.
 MTA Assertions
 ---------------
 You may run assertions against your MTA logs from envelope level.
-A logs client needs to be plugged in for this functionality to work.
-LogsClient.java interface.
+A local logs client is provided to deemonstrate.
 
-- **wait** - _(Integer, Seconds)_ [default: 2, min: 2] Initial wait before calling the logs client.
-- **retry** - _(Integer, Attempts)_ [default: 1, min: 1] How many times to attempt to fetch logs.
+_See LogsClient.java interface for implementation of external clients._
+
+- **wait** - _(Integer, Seconds)_ [default: 2, min: 2] Initial wait before calling the external client.
+- **retry** - _(Integer, Attempts)_ [default: 1, min: 1] How many times to attempt if verify fails.
 - **delay** - _(Integer, Attempts)_ [default: 2, min: 2] Delay between attempts.
 - **verify** - _(List, String, Regex)_ List of regex matches to verify bottom most needed logs received. Provides stability when MTA takes more time.
 - **match** - _(List of List, String, Regex)_ Regex assertions to run against log lines. Multiple expressions can run on the same line. All must match.

@@ -53,7 +53,8 @@ More...
 - [Server configuration](doc/server.md)
 
 
-- [Test Cases](doc/case.md)
+- [E/SMTP Cases](doc/case.md)
+- [HTTP/S Cases](doc/case.md)
 - [Magic](doc/magic.md)
 - [MIME](doc/mime.md)
 - [Plugins](doc/plugin.md)
