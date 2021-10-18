@@ -1,7 +1,8 @@
 package com.mimecast.robin.config.client;
 
 import com.mimecast.robin.config.ConfigFoundation;
-import javafx.util.Pair;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.mail.internet.InternetHeaders;
 import java.util.HashMap;
@@ -94,7 +95,7 @@ public class RequestConfig extends ConfigFoundation {
         if (map != null && map.containsKey("payload")) {
             String payload = (String) map.get("payload");
             String mimeType = map.containsKey("mimeType") ? (String) map.get("mimeType") : "application/json";
-            content = new Pair<>(payload, mimeType);
+            content = new ImmutablePair<>(payload, mimeType);
         }
 
         return content;

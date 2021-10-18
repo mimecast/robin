@@ -1,6 +1,7 @@
 package com.mimecast.robin.http;
 
-import javafx.util.Pair;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.AbstractMap;
 import java.util.Collections;
@@ -143,7 +144,7 @@ public class HttpRequest {
      * @return Self.
      */
     public HttpRequest addFile(String param, String file, String mimeType) {
-        files.put(param, new Pair<>(file, mimeType));
+        files.put(param, new ImmutablePair<>(file, mimeType));
         return this;
     }
 
@@ -165,7 +166,7 @@ public class HttpRequest {
      * @return Self.
      */
     public HttpRequest addContent(String content, String type) {
-        this.content = new Pair<>(content, type);
+        this.content = new ImmutablePair<>(content, type);
         return this;
     }
 
