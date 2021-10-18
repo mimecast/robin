@@ -198,23 +198,6 @@
           "file": {
             "description": "Path to eml file; Alternative to subject & message",
             "type": "string"
-          },
-          "assertions": {
-            "description": "Post delivery assertions",
-            "type": "object",
-            "items": {
-              "description": "Assertion group",
-              "properties": {
-                "smtp": {
-                  "description": "SMTP transaction assertions",
-                  "type": "array"
-                },
-                "mta": {
-                  "description": "MTA logs assertion by FFS",
-                  "type": "object"
-                }
-              }
-            }
           }
         },
         "dependencies": {
