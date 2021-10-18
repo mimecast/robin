@@ -8,7 +8,7 @@
 
   "tls": true,
   "protocols": [
-    "SSLv3", "SSLv2Hello", "TLSv1", "TLSv1.1", "TLSv1.2"
+    "TLSv1.2", "TLSv1.3"
   ],
   "ciphers": [
     "TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384",
