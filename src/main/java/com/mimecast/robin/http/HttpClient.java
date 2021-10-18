@@ -33,7 +33,7 @@ public class HttpClient {
     private final BasicConfig config;
 
     /**
-     * Constructs a new FfsClient instance.
+     * Constructs a new HttpClient instance.
      *
      * @param config       Config instance.
      * @param trustManager PermissiveTrustManager instance.
