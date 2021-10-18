@@ -79,8 +79,10 @@ public class LogsExternalClient extends ExternalClient {
 
     /**
      * Find logs using given client if any.
+     *
+     * @throws AssertException Assertion exception.
      */
-    protected void findLogs() {
+    protected void findLogs() throws AssertException {
         logsList = new ArrayList<>();
 
         String dir = Config.getProperties().getStringProperty("logs.local.dir", "");
@@ -104,6 +106,7 @@ public class LogsExternalClient extends ExternalClient {
                 logResults(logsList);
             } catch (IOException e) {
                 log.error("AssertExternal logs reading problems: {}", e.getMessage());
+                throw new AssertException("No logs found to assert against");
             }
         }
     }
