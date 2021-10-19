@@ -124,7 +124,7 @@ public class MatchExternalClientConfig extends ExternalConfig {
                 value = magic.get(magicName);
             }
 
-            magicString = magicString.replace(magicVariable, value == null ? "null" : value);
+            magicString = magicString.replace(magicVariable, value == null ? magicVariable : value);
         }
 
         return magicString;
