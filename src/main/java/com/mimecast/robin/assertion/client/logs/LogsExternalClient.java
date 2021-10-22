@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
 /**
  * Logs external client.
  * <p>This provides a means to fetch the logs from a local file.
+ * TODO Extend this to implement remote log pulling via SSH.
  */
 public class LogsExternalClient extends ExternalClient {
 
