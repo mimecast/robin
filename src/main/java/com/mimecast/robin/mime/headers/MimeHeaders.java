@@ -3,6 +3,7 @@ package com.mimecast.robin.mime.headers;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Mime headers container.
@@ -22,6 +23,17 @@ public class MimeHeaders {
      */
     public MimeHeaders put(MimeHeader header) {
         headers.add(header);
+        return this;
+    }
+
+    /**
+     * Removed header.
+     *
+     * @param header MimeHeader instance.
+     * @return Self.
+     */
+    public MimeHeaders remove(MimeHeader header) {
+        headers.remove(header);
         return this;
     }
 
@@ -47,6 +59,18 @@ public class MimeHeaders {
             }
         }
         return Optional.empty();
+    }
+
+    /**
+     * Gets header by starts with partial name.
+     *
+     * @param name Header name.
+     * @return List of MimeHeader.
+     */
+    public List<MimeHeader> startsWith(String name) {
+        return headers.stream()
+                .filter(h -> h.getName().toLowerCase().startsWith(name.toLowerCase()))
+                .collect(Collectors.toList());
     }
 
     /**

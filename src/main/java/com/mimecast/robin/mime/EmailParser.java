@@ -153,21 +153,31 @@ public class EmailParser {
     private void parseBody() throws IOException {
         Optional<MimeHeader> optional = headers.get("Content-Type");
         if (optional.isPresent()) {
-            MimeHeader hdr = optional.get();
-            String boundary = hdr.getParameter("boundary");
+            MimeHeader contentType = optional.get();
+            String boundary = contentType.getParameter("boundary");
 
             MimePart part;
-            if (hdr.getValue().startsWith("multipart/")) {
+            if (contentType.getValue().startsWith("multipart/")) {
                 part = new MultipartMimePart();
 
-            } else if (hdr.getValue().startsWith("text/")) {
+            } else if (contentType.getValue().startsWith("text/")) {
                 part = parsePartContent(true, headers, boundary);
 
             } else {
                 part = parsePartContent(false, headers, boundary);
             }
 
-            part.addHeader(hdr.getName(), hdr.getValue());
+            // Move over content type.
+            part.addHeader(contentType.getName(), contentType.getValue());
+            headers.remove(contentType);
+
+            // Move over part headers.
+            for (MimeHeader header : headers.startsWith("content-")) {
+                part.addHeader(contentType.getName(), contentType.getValue());
+                headers.remove(header);
+            }
+
+            // Add part.
             parts.add(part);
 
             if (boundary == null || boundary.length() == 0) {
@@ -341,7 +351,7 @@ public class EmailParser {
                     content.write(QuotedPrintableDecoder.decode(baos.toByteArray()));
 
                 } catch (DecoderException de) {
-                    log.error("EmailParser decoder exception:", de.getMessage());
+                    log.error("EmailParser decoder exception: {}", de.getMessage());
                     content.write(baos.toByteArray());
                 }
             } else {

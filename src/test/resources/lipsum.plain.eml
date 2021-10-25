@@ -1,0 +1,23 @@
+MIME-Version: 1.0
+From: <{$MAILFROM}>
+To: <{$RCPTTO}>
+Date: {$DATE}
+Message-ID: <{$MSGID}{$MAILFROM}>
+Subject: Lipsum
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+Aliquam in quam id orci finibus luctus.
+Integer at finibus orci.
+Vestibulum nunc massa, porttitor vel justo vitae, dictum fermentum augue.
+Integer ut lorem consectetur, feugiat lectus quis, mattis sem.
+Phasellus quis eros eget felis ornare accumsan. Suspendisse potenti.
+Proin ornare vestibulum purus, a pharetra enim tempor at.
+Vestibulum a augue rutrum purus bibendum rutrum.
+Aliquam nec lacus dui.
+Sed et nisi vel sem tristique finibus sit amet nec tortor.
+Ut finibus, eros id mollis maximus, felis ante imperdiet mauris, sit amet vehicula justo lectus id ipsum.
+Donec vitae dapibus lacus.
+Curabitur eu orci iaculis, pretium augue aliquam, vestibulum nulla.
+Sed ultricies justo nec justo tempor viverra.

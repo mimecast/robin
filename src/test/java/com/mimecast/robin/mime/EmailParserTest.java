@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SuppressWarnings("OptionalGetWithoutIsPresent")
 class EmailParserTest {
 
-    static final String dir = "src/test/resources/cases/sources/";
+    static final String dir = "src/test/resources/";
 
     @Test
     @DisplayName("Parse headers of email finds correct headers")
@@ -64,11 +64,26 @@ class EmailParserTest {
         assertEquals(3, parser.getParts().size(), "Unexpected number of parts");
 
         assertEquals("uSdGze9aOjGMKP/QLtT9szHfcNV5K9DoaP12xlasxeU=", parser.getParts().get(1).getHash(HashType.SHA_256), "unexpected hash");
-        assertEquals(780, parser.getParts().get(1).getSize(), "unexpected file size");
+        assertEquals(780, parser.getParts().get(1).getSize(), "Unexpected file size");
 
         assertTrue(validateTextPart(parser.getParts(), 1508, HashType.SHA_256, "bksYTbn+IdI8bDjJTjArvxdEXj719WVpDWmj96KfHAU="));
 
         assertEquals("UTF-8", parser.getParts().get(2).getHeaders().get("Content-type").get().getParameter("charset"), "inexpected charset");
+    }
+
+    @Test
+    @DisplayName("Parse lipsum.plin.eml gives 1 part")
+    void parseLipsumPlain() throws IOException {
+        EmailParser parser = new EmailParser(new LineInputStream(new FileInputStream(dir + "lipsum.plain.eml")));
+        parser.parse();
+
+        assertEquals(1, parser.getParts().size(), "Unexpected number of parts");
+
+        assertEquals("WrdX4IXpDfF7m1IpaNJzlrcnnhQR6vynQUHzAEVVpIM=", parser.getParts().get(0).getHash(HashType.SHA_256), "unexpected hash");
+        assertEquals(778, parser.getParts().get(0).getSize(), "Unexpected file size");
+        assertEquals(3, parser.getParts().get(0).getHeaders().size(), "Unexpected part headers size");
+
+        assertTrue(validateTextPart(parser.getParts(), 778, HashType.SHA_256, "WrdX4IXpDfF7m1IpaNJzlrcnnhQR6vynQUHzAEVVpIM="));
     }
 
     @SuppressWarnings("SameParameterValue")
