@@ -167,15 +167,9 @@ public class EmailParser {
                 part = parsePartContent(false, headers, boundary);
             }
 
-            // Move over content type.
-            part.addHeader(contentType.getName(), contentType.getValue());
-            headers.remove(contentType);
-
             // Move over part headers.
-            for (MimeHeader header : headers.startsWith("content-")) {
-                part.addHeader(contentType.getName(), contentType.getValue());
-                headers.remove(header);
-            }
+            headers.startsWith("content-").forEach(part::addHeader);
+            part.getHeaders().get().forEach(headers::remove);
 
             // Add part.
             parts.add(part);

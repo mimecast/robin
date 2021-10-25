@@ -45,6 +45,17 @@ public abstract class MimePart {
     protected HashMap<String, String> hashes = new HashMap<>();
 
     /**
+     * Adds given instance header.
+     *
+     * @param header MimeHeader instance.
+     * @return Self.
+     */
+    public MimePart addHeader(MimeHeader header) {
+        headers.put(header);
+        return this;
+    }
+
+    /**
      * Adds header with given anme and value.
      *
      * @param name  Header name.

@@ -81,7 +81,7 @@ class EmailParserTest {
 
         assertEquals("WrdX4IXpDfF7m1IpaNJzlrcnnhQR6vynQUHzAEVVpIM=", parser.getParts().get(0).getHash(HashType.SHA_256), "unexpected hash");
         assertEquals(778, parser.getParts().get(0).getSize(), "Unexpected file size");
-        assertEquals(3, parser.getParts().get(0).getHeaders().size(), "Unexpected part headers size");
+        assertEquals(2, parser.getParts().get(0).getHeaders().size(), "Unexpected part headers size");
 
         assertTrue(validateTextPart(parser.getParts(), 778, HashType.SHA_256, "WrdX4IXpDfF7m1IpaNJzlrcnnhQR6vynQUHzAEVVpIM="));
     }
