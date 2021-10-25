@@ -218,7 +218,6 @@ public class LogsExternalClient extends ExternalClient {
         if (positive) {
             for (AssertExternalGroup group : groups) {
                 if (group.getMatched().size() == group.getPatterns().size()) {
-                    log.debug("AssertExternal LOG: {}", line);
                     log.info("AssertExternal matched: {}", group.getMatched());
                 }
             }
