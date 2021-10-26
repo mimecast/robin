@@ -16,7 +16,7 @@ import java.util.Map;
  *
  * @see ConfigFoundation
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class ClientConfig extends ConfigFoundation {
     private final List<RouteConfig> routes = new ArrayList<>();
 
@@ -35,6 +35,7 @@ public class ClientConfig extends ConfigFoundation {
      */
     public ClientConfig(String path) throws IOException {
         super(path);
+        getListProperty("routes").forEach(map -> routes.add(new RouteConfig((Map) map)));
     }
 
     /**
@@ -61,9 +62,7 @@ public class ClientConfig extends ConfigFoundation {
      * @param name Route name.
      * @return Route configuration instance.
      */
-    @SuppressWarnings({"rawtypes"})
     public RouteConfig getRoute(String name) {
-        if (routes.isEmpty()) getListProperty("routes").forEach(map -> routes.add(new RouteConfig((Map) map)));
         return routes.stream().filter(route -> route.getName().equals(name)).findFirst().orElse(null);
     }
 }
