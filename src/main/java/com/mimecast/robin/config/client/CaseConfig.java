@@ -34,7 +34,7 @@ public class CaseConfig extends ConfigFoundation {
      */
     public CaseConfig() {
         map = new HashMap<>();
-        Config.getClient().getMap().forEach(map::put);
+        map.putAll(Config.getClient().getMap());
     }
 
     /**

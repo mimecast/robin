@@ -6,6 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.naming.ConfigurationException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Run-once initializer for server and client.
@@ -19,14 +20,13 @@ import javax.naming.ConfigurationException;
  * @see ConfigLoader
  * @see AnnotationLoader
  */
-@SuppressWarnings("squid:S1118")
 public abstract class Foundation {
     static final Logger log = LogManager.getLogger(Foundation.class);
 
     /**
-     * Run once.
+     * Run once boolean.
      */
-    private static boolean runOnce = false;
+    private static final AtomicBoolean runOnce = new AtomicBoolean();
 
     /**
      * Run once initializer.
@@ -34,20 +34,11 @@ public abstract class Foundation {
      * @param path Path to configuration file.
      * @throws ConfigurationException Unable to read/parse config file.
      */
-    public static void init(String path) throws ConfigurationException {
-        if (runOnce) return;
-        load(path);
-        runOnce = true;
-    }
-
-    /**
-     * Load config and annotation.
-     *
-     * @param path Path to configuration file.
-     * @throws ConfigurationException Unable to read/parse config file.
-     */
-    public static synchronized void load(String path) throws ConfigurationException {
-        ConfigLoader.load(path);
-        AnnotationLoader.load();
+    public static synchronized void init(String path) throws ConfigurationException {
+        if (runOnce.get()) return;
+        if (runOnce.compareAndSet(false, true)) {
+            ConfigLoader.load(path);
+            AnnotationLoader.load();
+        }
     }
 }

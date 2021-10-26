@@ -23,6 +23,14 @@ import java.io.IOException;
 public class Client extends Foundation {
 
     /**
+     * Constructs a new Client instance.
+     * <p>To be used in combination with the Junit launcher service.
+     */
+    public Client() {
+        // Do nothing.
+    }
+
+    /**
      * Constructs a new Client instance with given client configuration path.
      *
      * @param configDirPath Directory path.
