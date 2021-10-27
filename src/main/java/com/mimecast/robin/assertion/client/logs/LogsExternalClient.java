@@ -190,6 +190,15 @@ public class LogsExternalClient extends ExternalClient {
                     checkLine((String) line, positive);
                 }
             }
+
+            // Evaluate if all positive patterns matched.
+            if (positive) {
+                for (AssertExternalGroup group : matchGroups) {
+                    if (group.getMatched().size() == group.getPatterns().size()) {
+                        log.info("AssertExternal matched: {}", group.getMatched());
+                    }
+                }
+            }
         }
     }
 
@@ -211,15 +220,6 @@ public class LogsExternalClient extends ExternalClient {
                 // Loop and match.
                 matchLine(group, line, positive);
 
-            }
-        }
-
-        // Evaluate if all positive patterns matched.
-        if (positive) {
-            for (AssertExternalGroup group : groups) {
-                if (group.getMatched().size() == group.getPatterns().size()) {
-                    log.info("AssertExternal matched: {}", group.getMatched());
-                }
             }
         }
     }
