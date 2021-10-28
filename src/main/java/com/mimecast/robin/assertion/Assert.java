@@ -31,12 +31,25 @@ public class Assert {
     protected final Connection connection;
 
     /**
+     * Run external assertions.
+     */
+    protected Boolean runExternal = true;
+
+    /**
      * Constructs a new Assert instance with given Connection.
      *
      * @param connection Connection instance.
      */
     public Assert(Connection connection) {
         this.connection = connection;
+    }
+
+    /**
+     * Don't run external assertions.
+     */
+    public Assert noExternal() {
+        runExternal = false;
+        return this;
     }
 
     /**
@@ -49,7 +62,10 @@ public class Assert {
             assertSmtp(connection.getSession().getAssertions().getSmtp(), connection.getSessionTransactionList());
         }
         assertEnvelopes();
-        assertExternal(connection.getSession().getAssertions().getExternal());
+
+        if (runExternal) {
+            assertExternal(connection.getSession().getAssertions().getExternal());
+        }
     }
 
     /**
@@ -112,7 +128,9 @@ public class Assert {
                     }
 
                     // External.
-                    assertExternal(envelope.getAssertions().getExternal(), i);
+                    if (runExternal) {
+                        assertExternal(envelope.getAssertions().getExternal(), i);
+                    }
                 }
             }
         }

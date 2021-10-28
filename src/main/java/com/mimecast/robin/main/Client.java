@@ -10,12 +10,7 @@ import javax.naming.ConfigurationException;
 import java.io.IOException;
 
 /**
- * Email delivery client.
- *
- * <p>This is the client used to send cases.
- * <p>It takes a configuration directory path and a case JSON path.
- * <p>The configuration path is used to load the global configuration files.
- * <p>Loads both client and server configuration files.
+ * Case delivery client with assertion.
  *
  * @see Foundation
  * @see EmailDelivery
@@ -66,6 +61,16 @@ public class Client extends Foundation {
         EmailDelivery emailDelivery = new EmailDelivery(session).send();
 
         // Assert.
+        assertion(emailDelivery);
+    }
+
+    /**
+     * Assert delivery successfull if any.
+     *
+     * @param emailDelivery EmailDelivery instance.
+     * @throws AssertException Assertion exception.
+     */
+    protected void assertion(EmailDelivery emailDelivery) throws AssertException {
         new Assert(emailDelivery.getConnection()).run();
     }
 }
