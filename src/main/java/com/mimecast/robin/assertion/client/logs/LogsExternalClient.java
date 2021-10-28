@@ -6,6 +6,7 @@ import com.mimecast.robin.assertion.client.ExternalClient;
 import com.mimecast.robin.config.BasicConfig;
 import com.mimecast.robin.config.assertion.external.logs.LogsExternalClientConfig;
 import com.mimecast.robin.main.Config;
+import com.mimecast.robin.util.Sleep;
 import com.mimecast.robin.util.UIDExtractor;
 
 import java.io.BufferedReader;
@@ -90,23 +91,42 @@ public class LogsExternalClient extends ExternalClient {
         if (dir.isEmpty()) {
             log.error("AssertExternal logs.local.dir not found in properties");
         } else {
-            log.info("AssertExternal logs fetching locally");
 
-            String file = dir + new SimpleDateFormat("yyyyMMdd").format(new Date()) + ".log";
-            try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-                String uid = UIDExtractor.getUID(connection, transactionId);
+            long delay = config.getWait() > 0 ? config.getWait() * 1000L : 0L;
+            for (int count = 0; count < config.getRetry(); count++) {
+                Sleep.nap((int) delay);
+                log.info("AssertExternal logs fetching locally");
 
-                if (uid != null) {
-                    String line;
-                    while ((line = br.readLine()) != null) {
-                        if (line.contains(uid)) {
-                            logsList.add(line);
+                String file = dir + new SimpleDateFormat("yyyyMMdd").format(new Date()) + ".log";
+                try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+                    String uid = UIDExtractor.getUID(connection, transactionId);
+
+                    if (uid != null) {
+                        String line;
+                        while ((line = br.readLine()) != null) {
+                            if (line.contains(uid)) {
+                                logsList.add(line);
+                            }
                         }
                     }
+
+                    logResults(logsList);
+
+                } catch (IOException e) {
+                    log.error("AssertExternal logs reading problems: {}", e.getMessage());
+                    throw new AssertException("No logs found to assert against");
                 }
-                logResults(logsList);
-            } catch (IOException e) {
-                log.error("AssertExternal logs reading problems: {}", e.getMessage());
+
+                if (verifyLogs()) {
+                    log.debug("AssertExternal logs fetch verify success");
+                    break;
+                }
+
+                delay = config.getDelay() * 1000L; // Retry delay.
+                log.info("AssertExternal logs fetch verify {}", (count < config.getRetry() - 1 ? "failure" : "attempts spent"));
+            }
+
+            if (logsList == null || logsList.isEmpty()) {
                 throw new AssertException("No logs found to assert against");
             }
         }
