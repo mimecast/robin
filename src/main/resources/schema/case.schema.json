@@ -165,7 +165,7 @@
             "description": "Wait time in milliseconds",
             "type": "integer",
             "default": 0,
-            "maximum": 100
+            "minimum": 100
           },
           "repeat": {
             "description": "Repeat the same envelope delivery",
