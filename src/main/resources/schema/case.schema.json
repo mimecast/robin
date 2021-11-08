@@ -4,8 +4,17 @@
   "title": "Robin Case JSON",
   "description": "This provides the deviations from the defaults for each case",
   "type": "object",
-  "required": [
-    "envelopes"
+  "oneOf": [
+    {
+      "required": [
+        "envelopes"
+      ]
+    },
+    {
+      "required": [
+        "request"
+      ]
+    }
   ],
   "properties": {
     "retry": {
@@ -115,7 +124,7 @@
       "description": "List of email envelopes to deliver",
       "type": "array",
       "items": {
-        "description": "Supports: mail, rcpt, file, header, message, assertions",
+        "description": "Supports: mail, rcpt, file, header, message, mime, request, assertions",
         "properties": {
           "chunkSize": {
             "description": "Enables CHUNKING if grater than minimum 128",
@@ -198,6 +207,10 @@
           "file": {
             "description": "Path to eml file; Alternative to subject & message",
             "type": "string"
+          },
+          "mime": {
+            "description": "MIME structure as per mime.md",
+            "type": "object"
           }
         },
         "dependencies": {
@@ -223,9 +236,18 @@
             "required": [
               "file"
             ]
+          },
+          {
+            "required": [
+              "mime"
+            ]
           }
         ]
       }
+    },
+    "request": {
+      "description": "HTTP request structure as per request.md",
+      "type": "object"
     }
   }
 }
