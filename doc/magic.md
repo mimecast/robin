@@ -5,6 +5,7 @@ Email (.eml) files may contain these magic variables.
 Use these to program your emails to autocomplete information.
 
 - **{$DATE}** - RFC compliant current date.
+- **{$YYMD}** - YYYYMMDD date.
 - **{$MSGID}** - Random string. Combines with {$MAILFROM} to form a valid Message-ID.
 - **{$MAILFROM}** - Envelope mail address.
 - **{$RCPTTO}** - Envelope rcpt address.

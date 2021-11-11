@@ -79,6 +79,15 @@ public class MessageEnvelope {
     }
 
     /**
+     * Gets yyyyMMdd date.
+     *
+     * @return Date string.
+     */
+    public String getYymd() {
+        return new SimpleDateFormat("yyyyMMdd").format(new Date());
+    }
+
+    /**
      * Gets Message-ID.
      *
      * @return Message-ID string.

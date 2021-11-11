@@ -70,6 +70,7 @@ class MagicInputStreamTest {
     void doSimpleMagic() {
         assertEquals(envelope.getMessageId(), magic.doSimpleMagic("{$msgid}", "{$msgid}"));
         assertEquals(envelope.getDate(), magic.doSimpleMagic("{$date}", "{$date}"));
+        assertEquals(envelope.getYymd(), magic.doSimpleMagic("{$yymd}", "{$yymd}"));
         assertEquals(envelope.getMailFrom(), magic.doSimpleMagic("{$mailfrom}", "{$mailfrom}"));
         assertEquals(envelope.getRcptTo(), magic.doSimpleMagic("{$rcptto}", "{$rcptto}"));
         assertEquals(envelope.getMailEjfFrom(), magic.doSimpleMagic("{$mailejffrom}", "{$mailejffrom}"));
@@ -80,6 +81,7 @@ class MagicInputStreamTest {
     void getReplacement() {
         assertEquals(envelope.getMessageId(), magic.getReplacement("{$msgid}"));
         assertEquals(envelope.getDate(), magic.getReplacement("{$date}"));
+        assertEquals(envelope.getYymd(), magic.getReplacement("{$yymd}"));
         assertEquals(envelope.getMailFrom(), magic.getReplacement("{$mailfrom}"));
         assertEquals(envelope.getRcptTo(), magic.getReplacement("{$rcptto}"));
         assertEquals(envelope.getMailEjfFrom(), magic.getReplacement("{$mailejffrom}"));
