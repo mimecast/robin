@@ -1,4 +1,9 @@
-component: "Robin"
-component_usage: "Open Source"
-owning_team: "Vlad Marian"
-dev_language: "Java"
+component: Robin
+project_name: Robin
+full_path: 'https://github.com/mimecast/robin'
+component_usage: Open Source
+owning_team: Vlad Marian
+risk_category: low
+application_purpose: testing
+dev_language:
+  - Java
