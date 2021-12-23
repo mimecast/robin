@@ -24,7 +24,7 @@ class Sample {
     @SuppressWarnings("java:S2699")
     void lipsum() throws AssertException, IOException, ConfigurationException {
         new Client("src/main/resources/")
-                .send("src/test/resources/cases/config/lipsum.json");
+                .send("src/test/resources/cases/config/lipsum.json5");
     }
 
     /**

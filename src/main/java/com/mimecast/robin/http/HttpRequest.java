@@ -47,7 +47,7 @@ public class HttpRequest {
     private Pair<String, String> content;
 
     /**
-     * Constructs a new HttpRequest instance with given URL and requst method.
+     * Constructs a new HttpRequest instance with given URL and request method.
      *
      * @param url    Request URL.
      * @param method Request method.

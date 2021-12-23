@@ -13,9 +13,9 @@ import javax.naming.ConfigurationException;
 public class SetupListener implements LauncherSessionListener {
 
     /**
-     * Initialiser instance.
+     * Initializer instance.
      */
-    private Initialiser initialiser;
+    private Initializer initializer;
 
     /**
      * Launcher session opened.
@@ -27,9 +27,9 @@ public class SetupListener implements LauncherSessionListener {
         session.getLauncher().registerTestExecutionListeners(new TestExecutionListener() {
             @Override
             public void testPlanExecutionStarted(TestPlan testPlan) {
-                if (initialiser == null) {
-                    initialiser = new Initialiser();
-                    initialiser.init();
+                if (initializer == null) {
+                    initializer = new Initializer();
+                    initializer.setUp();
                 }
             }
         });
@@ -42,30 +42,39 @@ public class SetupListener implements LauncherSessionListener {
      */
     @Override
     public void launcherSessionClosed(LauncherSession session) {
-        if (initialiser != null) {
-            initialiser = null;
+        if (initializer != null) {
+            initializer.tearDown();
+            initializer = null;
         }
     }
 
     /**
-     * Initialiser class.
+     * Initializer class.
      * <p>Will initialise only if <code>init.path</code> system property is defined.
      * <p>Example VM options: -Dinit.path=src/main/resources/
      */
-    static class Initialiser {
+    static class Initializer {
 
         /**
-         * Initialise.
+         * Set up.
          */
-        void init() {
+        void setUp() {
             try {
                 String initPath = System.getProperty("init.path");
+
                 if (PathUtils.isDirectory(initPath)) {
-                    Foundation.init(System.getProperty("init.path"));
+                    Foundation.init(initPath);
                 }
             } catch (ConfigurationException e) {
                 System.out.println(e.getMessage());
             }
+        }
+
+        /**
+         * Tear down.
+         */
+        void tearDown() {
+            // Do nothing.
         }
     }
 }

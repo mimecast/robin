@@ -1,0 +1,99 @@
+{
+  "$schema": "../../../../main/resources/schema/case.schema.json",
+
+  // How many times to try and establish a connection to remote server. First counts.
+  "retry": 2,
+
+  // Delay between tries.
+  "delay": 5,
+
+  // Predefined route to use if no MX & port configured.
+  "route": "dev",
+
+  // Enable TLS.
+  "tls": true,
+
+  // Email envelopes.
+  "envelopes": [
+    // Envelope one.
+    {
+      // Recipients list.
+      "rcpt": [
+        "smoke@mta11.goldcheesyfish.com"
+      ],
+
+      // Email eml file to transmit.
+      "file": "src/test/resources/cases/sources/lipsum.eml",
+
+      // Assertions to run against the envelope.
+      "assertions": {
+
+        // Protocol assertions.
+        // Check SMTP responses match regular expressions.
+        "smtp": [
+          ["MAIL", "250 2.1.0 Sender OK"],
+          ["RCPT", "250 2.1.5 Recipient OK"],
+          ["DATA", "^250 2.0.0"],
+          ["DATA", "Received email OKAY"]
+        ],
+
+        // External assertions.
+        "external": [
+          {
+            // Assertion type logs for pulling logs from FFS.
+            "type": "logs",
+
+            // How long to wait before asserting.
+            "wait": 5,
+
+            // Delay between log pulling attempts.
+            "delay": 5,
+
+            // How many times to retry should no logs be found or valid.
+            "retry": 3,
+
+            // Grep command to use to fetch logs.
+            "grep": [
+              {
+                // Lines containing GUID used by magic variable.
+                "parameter": "-E",
+                "pattern": "{$uid}"
+              },
+              {
+                // Exclude DEBUG and TRACE log lines matched.
+                "parameter": "-vE",
+                "pattern": "DEBUG|TRACE"
+              }
+            ],
+
+            // Verify regular expressions that would confirm logs fetched are complete.
+            "verify": ["QUIT"],
+
+            // Match regular expressions to run agaisnt logs to pass the test.
+            "match": [
+              ["250 2.0.0", "Received email OKAY"]
+            ],
+
+            // Refuse regular expressions that would fail the tests if matched.
+            "refuse": [
+              ["java.lang.NullPointerException"]
+            ]
+          }
+        ]
+      }
+    }
+  ],
+
+  // Assertions to run against the connection.
+  "assertions": {
+
+    // Protocol assertions.
+    // Check SMTP responses match regular expressions.
+    "smtp": [
+      [ "SMTP", "^220" ],
+      [ "EHLO", "STARTTLS" ],
+      [ "SHLO", "250 CHUNKING" ],
+      [ "QUIT" ]
+    ]
+  }
+}

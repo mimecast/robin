@@ -43,7 +43,7 @@ This project makes use of sample password as needed for testing and demonstratio
 - giveHerTheRing - Another sample used in unit tests and documentation. (Tony Stark / Pepper Pots easter egg)
 - avengers - Test keystore password that contains a single entry issued to Tony Stark. (Another easter egg)
 
-**These passwords are not used in Mimecast production environments.**
+**These passwords are not in use within Mimecast production environments.**
 
 
 More...

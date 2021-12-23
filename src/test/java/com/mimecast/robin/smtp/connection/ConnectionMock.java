@@ -1,6 +1,7 @@
 package com.mimecast.robin.smtp.connection;
 
 import com.mimecast.robin.main.Factories;
+import com.mimecast.robin.smtp.MessageEnvelope;
 import com.mimecast.robin.smtp.io.LineInputStream;
 import com.mimecast.robin.smtp.session.Session;
 import com.mimecast.robin.smtp.transaction.SessionTransactionList;
@@ -11,6 +12,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -63,5 +65,21 @@ public class ConnectionMock extends Connection {
 
     public String getLine(int lineNo) {
         return lines.get(lineNo);
+    }
+
+    public static ConnectionMock getConnection(StringBuilder stringBuilder) {
+        ConnectionMock connection = new ConnectionMock(stringBuilder);
+        connection.getSession().setEhlo("example.com");
+        connection.getSession().setMx(Collections.singletonList("example.com"));
+        connection.getSession().setPort(25);
+
+        MessageEnvelope envelope = new MessageEnvelope();
+        envelope.setMail("tony@example.com");
+        envelope.setRcpt("pepper@example.com");
+        envelope.setSubject("Lost in space");
+        envelope.setMessage("Rescue me!");
+        connection.getSession().addEnvelope(envelope);
+
+        return connection;
     }
 }
