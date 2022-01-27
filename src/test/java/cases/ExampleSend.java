@@ -52,4 +52,13 @@ public class ExampleSend {
         new Client()
                 .send("src/test/resources/cases/config/xclient.json5");
     }
+
+    /**
+     * JSON example of a basic test that uses a custom defined SMTP behaviour.
+     */
+    @Test
+    void behaviour() throws AssertException, IOException {
+        new Client()
+                .send("src/test/resources/cases/config/behaviour.json5");
+    }
 }

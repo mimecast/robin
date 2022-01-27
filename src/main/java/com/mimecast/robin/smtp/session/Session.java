@@ -178,6 +178,11 @@ public class Session {
     private String password = "";
 
     /**
+     * List of envelopes.
+     */
+    private final List<String> behaviour = new ArrayList<>();
+
+    /**
      * MAIL FROM envelope address.
      */
     private InternetAddress mail;
@@ -866,6 +871,26 @@ public class Session {
      */
     public Session setPassword(String password) {
         this.password = password;
+        return this;
+    }
+
+    /**
+     * Gets list of behaviour.
+     *
+     * @return String list.
+     */
+    public List<String> getBehaviour() {
+        return behaviour;
+    }
+
+    /**
+     * Sets behaviour list.
+     *
+     * @param list List of String.
+     * @return Self.
+     */
+    public Session setBehaviour(List<String> list) {
+        behaviour.addAll(list);
         return this;
     }
 

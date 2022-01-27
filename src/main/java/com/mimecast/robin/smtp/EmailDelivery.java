@@ -4,6 +4,7 @@ import com.mimecast.robin.main.Factories;
 import com.mimecast.robin.smtp.connection.Connection;
 import com.mimecast.robin.smtp.connection.SmtpException;
 import com.mimecast.robin.smtp.extension.client.Behaviour;
+import com.mimecast.robin.smtp.extension.client.CustomBehaviour;
 import com.mimecast.robin.smtp.session.Session;
 import com.mimecast.robin.smtp.transaction.EnvelopeTransactionList;
 import com.mimecast.robin.smtp.transaction.Transaction;
@@ -55,7 +56,10 @@ public class EmailDelivery {
             connection.connect();
             log.debug("Remote ready and willing.");
 
-            Behaviour behaviour = Factories.getBehaviour();
+            Behaviour behaviour = connection.getSession().getBehaviour().isEmpty() ?
+                    Factories.getBehaviour() :
+                    new CustomBehaviour();
+
             if (behaviour != null) {
                 behaviour.process(connection);
             } else log.error("Error getting behaviour. This is bad.");

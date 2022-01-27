@@ -41,27 +41,6 @@ public class DefaultBehaviour implements Behaviour {
     }
 
     /**
-     * Executes AUTH.
-     *
-     * @return Boolean.
-     * @throws IOException Unable to communicate.
-     */
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    boolean auth() throws IOException {
-        // Authenticate if configured.
-        if (connection.getSession().isAuth()) {
-            if (!process("auth", connection)) return false;
-
-            // Start TLS if specifically configured to do after AUTH.
-            if (connection.getSession().isAuthBeforeTls()) {
-                return startTls();
-            }
-        }
-
-        return true;
-    }
-
-    /**
      * Executes EHLO.
      *
      * @return Boolean.
@@ -84,6 +63,27 @@ public class DefaultBehaviour implements Behaviour {
      */
     boolean startTls() throws IOException {
         return !process("starttls", connection) || !connection.getSession().isStartTls() || ehlo();
+    }
+
+    /**
+     * Executes AUTH.
+     *
+     * @return Boolean.
+     * @throws IOException Unable to communicate.
+     */
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    boolean auth() throws IOException {
+        // Authenticate if configured.
+        if (connection.getSession().isAuth()) {
+            if (!process("auth", connection)) return false;
+
+            // Start TLS if specifically configured to do after AUTH.
+            if (connection.getSession().isAuthBeforeTls()) {
+                return startTls();
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -123,10 +123,7 @@ public class DefaultBehaviour implements Behaviour {
      * @throws IOException Unable to communicate.
      */
     void quit() throws IOException {
-        Optional<Extension> opt = Extensions.getExtension("quit");
-        if (opt.isPresent()) {
-            opt.get().getClient().process(connection);
-        }
+        process("quit", connection);
     }
 
     /**

@@ -22,7 +22,7 @@ public class ClientRcpt extends ClientProcessor {
     public boolean process(Connection connection) throws IOException {
         super.process(connection);
 
-        // Select mesenvelopesage to send.
+        // Select message and envelope to send.
         int messageID = connection.getSessionTransactionList().getEnvelopes().size() - 1; // Adjust as it's initially added in ClientMail.
         MessageEnvelope envelope = connection.getSession().getEnvelopes().get(messageID);
 

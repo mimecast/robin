@@ -1,0 +1,60 @@
+{
+  $schema: "../../../../main/resources/schema/case.schema.json",
+
+  // How many times to try and establish a connection to remote server. First counts.
+  retry: 2,
+
+  // Delay between tries.
+  delay: 5,
+
+  // Enable TLS.
+  tls: true,
+
+  // Will execute commands in this order.
+  // RCPT will send one address, multiple required for multiple addresses.
+  // QUIT is always executed last.
+  // AUTH is also supported.
+  behaviour: [
+    "EHLO", "MAIL", "RCPT", "STARTTLS", "RCPT", "DATA"
+  ],
+
+  // Email envelopes.
+  envelopes: [
+    // Envelope one.
+    {
+      // Recipients list.
+      rcpt: [
+        "robin@example.com",
+        "lady@example.com"
+      ],
+
+      // Email eml file to transmit.
+      file: "src/test/resources/cases/sources/lipsum.eml",
+
+      // Assertions to run against the envelope.
+      assertions: {
+
+        // Protocol assertions.
+        // Check SMTP responses match regular expressions.
+        smtp: [
+          ["MAIL", "250 Sender OK"],
+          ["RCPT", "250 Recipient OK"],
+          ["DATA", "^250"],
+          ["DATA", "Received OK"]
+        ]
+      }
+    }
+  ],
+
+  // Assertions to run against the connection.
+  assertions: {
+
+    // Protocol assertions.
+    // Check SMTP responses match regular expressions.
+    smtp: [
+      [ "SMTP", "^220" ],
+      [ "EHLO", "STARTTLS" ],
+      [ "QUIT" ]
+    ]
+  }
+}

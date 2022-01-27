@@ -114,6 +114,15 @@ public class CaseConfig extends ConfigFoundation {
     }
 
     /**
+     * Gets behaviour.
+     *
+     * @return List of String.
+     */
+    public List<String> getBehaviour() {
+        return getListProperty("behaviour");
+    }
+
+    /**
      * Is authentication enabled.
      * <p>Route auth supersedes case auth.
      *

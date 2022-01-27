@@ -63,6 +63,9 @@ public class ConfigMapper {
                     .setPassword(config.getPass());
         }
 
+        // Add behaviour config.
+        session.setBehaviour(config.getBehaviour());
+
         // Add assertion config.
         session.addAssertions(config.getAssertions());
 
