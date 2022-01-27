@@ -46,6 +46,8 @@ public class Assert {
 
     /**
      * Don't run external assertions.
+     *
+     * @return Self.
      */
     public Assert noExternal() {
         runExternal = false;

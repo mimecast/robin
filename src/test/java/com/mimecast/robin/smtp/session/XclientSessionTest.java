@@ -21,7 +21,7 @@ class XclientSessionTest {
     @Test
     void map() throws IOException {
         XclientSession session = (XclientSession) Factories.getSession();
-        session.map(new CaseConfig("src/test/resources/case.json"));
+        session.map(new CaseConfig("src/test/resources/case.json5"));
 
         assertEquals("example.com", session.getXclient().get("name"));
         assertEquals("example.net", session.getXclient().get("helo"));

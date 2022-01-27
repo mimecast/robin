@@ -35,7 +35,7 @@ public class ConfigLoader {
 
         if (path == null) path = "cfg" + File.separator;
 
-        String propertiesFile = "properties.json";
+        String propertiesFile = "properties.json5";
         if (Config.getProperties().hasProperty("properties")) {
             propertiesFile = Config.getProperties().getStringProperty("properties");
         }
@@ -44,26 +44,29 @@ public class ConfigLoader {
         if (PathUtils.isFile(propertiesPath)) {
             try {
                 Config.initProperties(propertiesPath);
+                log.debug("Properties: {}", propertiesPath);
             } catch (IOException e) {
                 log.fatal("Error reading {}.", propertiesFile);
                 throw new ConfigurationException("Can't read " + propertiesFile + ".");
             }
         }
 
-        String serverPath = Paths.get(path, "server.json").toString();
+        String serverPath = Paths.get(path, "server.json5").toString();
         if (PathUtils.isFile(serverPath)) {
             try {
                 Config.initServer(serverPath);
+                log.debug("Server: {}", serverPath);
             } catch (IOException e) {
                 log.fatal("Error reading server.json.");
                 throw new ConfigurationException("Can't read server.json.");
             }
         }
 
-        String clientPath = Paths.get(path, "client.json").toString();
+        String clientPath = Paths.get(path, "client.json5").toString();
         if (PathUtils.isFile(clientPath)) {
             try {
                 Config.initClient(clientPath);
+                log.debug("Client: {}", clientPath);
             } catch (Exception e) {
                 log.fatal("Error reading client.json.");
                 throw new ConfigurationException("Can't read client.json.");
@@ -77,6 +80,7 @@ public class ConfigLoader {
 
         String log4jPath = Paths.get(path, log4jFile).toString();
         if (PathUtils.isFile(log4jPath)) {
+            log.debug("Log4j2: {}", log4jPath);
             Configurator.initialize("Robin", log4jPath);
         }
     }

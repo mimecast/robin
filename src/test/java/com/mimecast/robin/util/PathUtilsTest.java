@@ -20,7 +20,7 @@ class PathUtilsTest {
 
     @Test
     void isFile() {
-        assertTrue(PathUtils.isFile("src/test/resources/properties.json"));
+        assertTrue(PathUtils.isFile("src/test/resources/properties.json5"));
     }
 
     @Test
@@ -53,7 +53,7 @@ class PathUtilsTest {
 
     @Test
     void readFile() throws IOException {
-        String payload = PathUtils.readFile("src/test/resources/properties.json", Charset.defaultCharset());
+        String payload = PathUtils.readFile("src/test/resources/properties.json5", Charset.defaultCharset());
         assertEquals(123, payload.charAt(0));
         assertEquals(125, payload.charAt(payload.length() - 1));
     }

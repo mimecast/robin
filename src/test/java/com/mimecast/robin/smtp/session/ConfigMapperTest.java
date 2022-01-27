@@ -21,7 +21,7 @@ class ConfigMapperTest {
     static void before() throws IOException, ConfigurationException {
         Foundation.init("src/test/resources/");
 
-        caseConfig = new CaseConfig("src/test/resources/mapper.json");
+        caseConfig = new CaseConfig("src/test/resources/mapper.json5");
     }
 
     @Test

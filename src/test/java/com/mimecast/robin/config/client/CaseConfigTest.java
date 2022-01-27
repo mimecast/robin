@@ -17,7 +17,7 @@ class CaseConfigTest {
     static void before() throws IOException, ConfigurationException {
         Foundation.init("src/test/resources/");
 
-        caseConfig = new CaseConfig("src/test/resources/case.json");
+        caseConfig = new CaseConfig("src/test/resources/case.json5");
     }
 
     @Test

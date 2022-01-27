@@ -35,7 +35,15 @@ public final class RequestClient extends Foundation {
     private final BasicConfig config;
 
     /**
-     * Constructs a new MultiGridClient instance with given client configuration path.
+     * Constructs a new RequestClient instance with given client configuration path.
+     * <p>To be used in combination with the Junit launcher service.
+     */
+    public RequestClient() {
+        config = new BasicConfig(Config.getProperties().getMapProperty("request"));
+    }
+
+    /**
+     * Constructs a new RequestClient instance with given client configuration path.
      *
      * @param configDirPath Directory path.
      * @throws ConfigurationException Unable to read/parse config file.

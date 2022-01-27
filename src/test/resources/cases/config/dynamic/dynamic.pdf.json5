@@ -1,0 +1,95 @@
+{
+  $schema: "../../../../../main/resources/schema/case.schema.json",
+
+  // How many times to try and establish a connection to remote server. First counts.
+  retry: 2,
+
+  // Delay between tries.
+  delay: 5,
+
+  // Enable TLS.
+  tls: true,
+
+  // Email envelopes.
+  envelopes: [
+    {
+      // Recipients list.
+      rcpt: [
+        "robin@example.com"
+      ],
+
+      // Email to transmit defined as JSON MIME.
+      mime: {
+
+        // Main headers.
+        headers: [
+          ["Subject", "Robin wrote"],
+          ["To", "Sir Robin <robin@example.com>"],
+          ["From", "Lady Robin <lady@example.com>"],
+        ],
+
+        // List of parts (no multiparts required, multiparts will be crated based on parts defined).
+        parts: [
+
+          // Plain text part.
+          {
+            headers: [
+              ["Content-Type", "text/plain; charset=\"UTF-8\""],
+              ["Content-Transfer-Encoding", "quoted-printable"]
+            ],
+            message: "Mon chéri,\
+\
+Please review this lovely blog post I have written about myself.\
+Huge ego, right?\
+\
+Kisses,\
+Your Robin."
+          },
+
+          // PDF attachment part.
+          {
+            headers: [
+              ["Content-Type", "application/pdf; name=\"article.pdf\""],
+              ["Content-Disposition", "attachment; filename=\"article.pdf\""],
+              ["Content-Transfer-Encoding", "base64"]
+            ],
+
+            // Defining the PDF as a text/image pair will auto generate a PDF using provided data (image is optional).
+            pdf: {
+              text: "<p>{$RANDCH50} {$RANDNO10000}</p>\
+<p>Robin had a party on {$DATE} it turned out to be a blast!</p>\
+<p>{$RANDCH50} {$RANDNO10000}</p><hr/>",
+              image: "src/test/resources/mime/selfie.jpg"
+            }
+          }
+        ]
+      },
+
+      // Assertions to run against the envelope.
+      assertions: {
+
+        // Protocol assertions.
+        // Check SMTP responses match regular expressions.
+        smtp: [
+          ["MAIL", "250 Sender OK"],
+          ["RCPT", "250 Recipient OK"],
+          ["DATA", "^250"],
+          ["DATA", "Received OK"]
+        ]
+      }
+    }
+  ],
+
+  // Assertions to run against the connection.
+  assertions: {
+
+    // Protocol assertions.
+    // Check SMTP responses match regular expressions.
+    smtp: [
+      [ "SMTP", "^220" ],
+      [ "EHLO", "STARTTLS" ],
+      [ "SHLO", "250 HELP" ],
+      [ "QUIT" ]
+    ]
+  }
+}

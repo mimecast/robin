@@ -6,17 +6,17 @@ In many cases you may simply want to just attach a file or add a piece of text.
 With the MIME object you can construct basic emails on the fly as shown below:
 
     {
-      "$schema": "/schema/case.schema.json",
+      $schema: "/schema/case.schema.json",
 
-      "retry": 2,
+      retry: 2,
 
-      "envelopes": [
+      envelopes: [
         {
 
 Instead of defining a subject & message pair for a text/plain email, or a file for a MIME one,
 You can now provide a list of headers and parts to have an email built at run time.
 
-          "mime": {
+          mime: {
 
 
 The email headers you wish to define.
@@ -29,7 +29,7 @@ Please note:
  - - From
  - - To
 
-            "headers": [
+            headers: [
               ["Subject", "Robin wrote"],
               ["To", "Sir Robin <sir@example.com>"],
               ["From", "Lady Robin <lady@example.com>"],
@@ -39,7 +39,7 @@ Please note:
 The parts also are optional, and you may add one if you need one.
 If all you need is headers, ignore the parts.
 
-            "parts": [
+            parts: [
               {
 
 The parts may be either strings of paths.
@@ -48,49 +48,49 @@ In order to define a string use the `message` keyword and for a path `file`.
 When adding a PDF attachment, you can either specify a pre-created file:
 
               {
-                "headers": [
+                headers: [
                   ["Content-Type", "application/pdf; name=\"article.pdf\""],
                   ["Content-Disposition", "attachment; filename=\"article.pdf\""],
                   ["Content-Transfer-Encoding", "base64"]
                 ],
-                "file": "src/test/resources/mime/robin.article.pdf"
+                file: "src/test/resources/mime/robin.article.pdf"
               }
 
 or dynamically generate a file using the magic variables:
 
               {
-                "headers": [
+                headers: [
                   ["Content-Type", "application/pdf; name=\"article.pdf\""],
                   ["Content-Disposition", "attachment; filename=\"article.pdf\""],
                   ["Content-Transfer-Encoding", "base64"]
                 ],
-                "pdf": {
-                    "text": "<p>{$RANDCH50} {$RANDNO10000}</p>\r\n<p>Robin had a party on {$DATE} it turned out to be a blast!</p>\r\n<p>{$RANDCH50} {$RANDNO10000}</p><hr/>",
-                    "image": "src/test/resources/mime/selfie.jpg"
+                pdf: {
+                    text: "<p>{$RANDCH50} {$RANDNO10000}</p>\r\n<p>Robin had a party on {$DATE} it turned out to be a blast!</p>\r\n<p>{$RANDCH50} {$RANDNO10000}</p><hr/>",
+                    image: "src/test/resources/mime/selfie.jpg"
                }
               }
 
 Sadly JSON doesn't do multiline strings, so you'll have some long lines there.
 
-                "headers": [
+                headers: [
                   ["Content-Type", "text/plain; charset=\"UTF-8\""],
                   ["Content-Transfer-Encoding", "quoted-printable"]
                 ],
-                "message": "Mon chéri,\r\n\r\nPlease review this lovely blog post I have written about myself.\r\nHuge ego, right?\r\n\r\nKisses,\r\nYour Robin."
+                message: "Mon chéri,\r\n\r\nPlease review this lovely blog post I have written about myself.\r\nHuge ego, right?\r\n\r\nKisses,\r\nYour Robin."
               },
               {
-                "headers": [
+                headers: [
                   ["Content-Type", "application/pdf; name=\"article.pdf\""],
                   ["Content-Disposition", "attachment; filename=\"article.pdf\""],
                   ["Content-Transfer-Encoding", "base64"]
                 ],
-                "file": "src/test/resources/mime/robin.article.pdf"
+                file: "src/test/resources/mime/robin.article.pdf"
               }
             ]
           },
 
-          "assertions": {
-            "smtp": [
+          assertions: {
+            smtp: [
               ["MAIL", "250 Sender OK"],
               ["RCPT", "250 Recipient OK"],
               ["DATA", "^250"],
@@ -100,8 +100,8 @@ Sadly JSON doesn't do multiline strings, so you'll have some long lines there.
         }
       ],
 
-      "assertions": {
-        "smtp": [
+      assertions: {
+        smtp: [
           [ "SMTP", "^220" ],
           [ "EHLO", "STARTTLS" ],
           [ "SHLO", "250 HELP" ],

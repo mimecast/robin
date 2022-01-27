@@ -18,7 +18,7 @@ class EnvelopeConfigTest {
     static void before() throws IOException, ConfigurationException {
         Foundation.init("src/test/resources/");
 
-        CaseConfig caseConfig = new CaseConfig("src/test/resources/case.json");
+        CaseConfig caseConfig = new CaseConfig("src/test/resources/case.json5");
         envelopeConfig1 = caseConfig.getEnvelopes().get(0);
         envelopeConfig2 = caseConfig.getEnvelopes().get(1);
     }

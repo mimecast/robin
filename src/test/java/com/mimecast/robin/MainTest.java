@@ -54,12 +54,12 @@ class MainTest {
         assertEquals("Config error: A file or a JSON are required", logs.get(0));
         assertEquals(7, logs.size());
 
-        logs = MainMock.main(Arrays.asList("--client", "-j", "fake.json"));
+        logs = MainMock.main(Arrays.asList("--client", "-j", "fake.json5"));
 
         assertEquals("Config error: JSON not found", logs.get(0));
         assertEquals(7, logs.size());
 
-        logs = MainMock.main(Arrays.asList("--client", "-j", "src/test/resources/case.json"));
+        logs = MainMock.main(Arrays.asList("--client", "-j", "src/test/resources/case.json5"));
 
         assertEquals("Config error: Config directory not found", logs.get(0));
         assertEquals(7, logs.size());
