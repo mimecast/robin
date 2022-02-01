@@ -57,8 +57,8 @@ public class ConfigLoader {
                 Config.initServer(serverPath);
                 log.debug("Server: {}", serverPath);
             } catch (IOException e) {
-                log.fatal("Error reading server.json.");
-                throw new ConfigurationException("Can't read server.json.");
+                log.fatal("Error reading server.json5.");
+                throw new ConfigurationException("Can't read server.json5.");
             }
         }
 
@@ -68,8 +68,8 @@ public class ConfigLoader {
                 Config.initClient(clientPath);
                 log.debug("Client: {}", clientPath);
             } catch (Exception e) {
-                log.fatal("Error reading client.json.");
-                throw new ConfigurationException("Can't read client.json.");
+                log.fatal("Error reading client.json5.");
+                throw new ConfigurationException("Can't read client.json5.");
             }
         }
 

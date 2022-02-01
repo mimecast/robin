@@ -30,6 +30,7 @@
     },
     "reject.com": {
       "ehlo": "501 Not talking to you",
+      "starttls": "421 Too many TLS sessions at this time",
       "mail": "451 I'm not listening to you",
       "rcpt": [
         {

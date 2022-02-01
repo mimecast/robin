@@ -51,6 +51,16 @@ public class ScenarioConfig extends ConfigFoundation {
     }
 
     /**
+     * Gets STARTTLS response.
+     * <p>If none defined the server will 220.
+     *
+     * @return STARTTLS response string.
+     */
+    public String getStarTls() {
+        return getStringProperty("starttls");
+    }
+
+    /**
      * Gets MAIL response.
      * <p>If none defined the server will 250.
      *

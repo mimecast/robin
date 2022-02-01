@@ -1,10 +1,12 @@
 package com.mimecast.robin.smtp.extension.server;
 
+import com.mimecast.robin.config.server.ScenarioConfig;
 import com.mimecast.robin.main.Config;
 import com.mimecast.robin.smtp.connection.Connection;
 import com.mimecast.robin.smtp.verb.Verb;
 
 import java.io.IOException;
+import java.util.Optional;
 
 /**
  * STARTLS extension processor.
@@ -33,10 +35,25 @@ public class ServerStartTls extends ServerProcessor {
     public boolean process(Connection connection, Verb verb) throws IOException {
         super.process(connection, verb);
 
-        connection.write("220 Ready for handshake");
-        connection.startTLS(false);
-        connection.getSession().setStartTls(true);
-        connection.buildStreams();
+        boolean shakeHand = true;
+
+        // ScenarioConfig response.
+        Optional<ScenarioConfig> opt = connection.getScenario();
+        if (opt.isPresent() && opt.get().getStarTls() != null) {
+            connection.write(opt.get().getStarTls());
+            shakeHand = opt.get().getStarTls().startsWith("2");
+        }
+
+        // Shake hand.
+        else {
+            connection.write("220 Ready for handshake");
+        }
+
+        if (shakeHand) {
+            connection.startTLS(false);
+            connection.getSession().setStartTls(true);
+            connection.buildStreams();
+        }
 
         return true;
     }

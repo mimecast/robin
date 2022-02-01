@@ -32,6 +32,11 @@ class ScenarioConfigTest {
     }
 
     @Test
+    void getStartTls() {
+        assertEquals("421 Too many TLS sessions at this time", scenarioConfig.getStarTls());
+    }
+
+    @Test
     void getRcpt() {
         assertFalse(scenarioConfig.getRcpt().isEmpty());
         assertEquals("ultron@reject\\.com", scenarioConfig.getRcpt().get(0).get("value"));
