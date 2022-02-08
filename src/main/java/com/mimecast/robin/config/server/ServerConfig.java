@@ -1,5 +1,6 @@
 package com.mimecast.robin.config.server;
 
+import com.mimecast.robin.config.BasicConfig;
 import com.mimecast.robin.config.ConfigFoundation;
 
 import java.io.IOException;
@@ -136,12 +137,12 @@ public class ServerConfig extends ConfigFoundation {
     }
 
     /**
-     * Gets storage directory.
+     * Gets storage config.
      *
-     * @return Storage directory path as string.
+     * @return BasicConfig instance.
      */
-    public String getStorageDir() {
-        return getStringProperty("storage", "/tmp/store");
+    public BasicConfig getStorage() {
+        return new BasicConfig(getMapProperty("storage"));
     }
 
     /**

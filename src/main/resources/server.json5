@@ -13,7 +13,10 @@
   "keystore": "/usr/local/keystore",
   "keystorepassword": "avengers",
 
-  "storage": "/usr/local/store",
+  "storage": {
+    "enabled": true,
+    "path": "/usr/local/store"
+  },
 
   "users": [
     {

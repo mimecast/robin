@@ -12,6 +12,11 @@
   "keystore": "src/test/resources/keystore.jks",
   "keystorepassword": "avengers",
 
+  "storage": {
+    "enabled": true,
+    "path": "/tmp/store"
+  },
+
   "users": [
     {
       "name": "tony@example.com",

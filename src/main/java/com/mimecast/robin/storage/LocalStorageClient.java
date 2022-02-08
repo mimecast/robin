@@ -32,6 +32,11 @@ public class LocalStorageClient implements StorageClient {
     protected static final Logger log = LogManager.getLogger(LocalStorageClient.class);
 
     /**
+     * Enablement.
+     */
+    protected final boolean enabled = Config.getServer().getStorage().getBooleanProperty("enabled");
+
+    /**
      * UID.
      */
     protected final String uid = UUID.randomUUID().toString();
@@ -77,7 +82,7 @@ public class LocalStorageClient implements StorageClient {
         }
 
         fileName = now + "." + uid + extension;
-        path = Config.getServer().getStorageDir();
+        path = Config.getServer().getStorage().getStringProperty("path", "/tmp/store");
 
         return this;
     }
@@ -114,10 +119,14 @@ public class LocalStorageClient implements StorageClient {
      */
     @Override
     public OutputStream getStream() throws FileNotFoundException {
-        if (PathUtils.makePath(path)) {
-            stream = new FileOutputStream(Paths.get(path, fileName).toString());
+        if (enabled) {
+            if (PathUtils.makePath(path)) {
+                stream = new FileOutputStream(Paths.get(path, fileName).toString());
+            } else {
+                log.error("Storage path could not be created");
+            }
         } else {
-            log.error("Storage path could not be created");
+            stream = NullOutputStream.NULL_OUTPUT_STREAM;
         }
 
         return stream;
@@ -149,21 +158,23 @@ public class LocalStorageClient implements StorageClient {
     @Override
     public void save() {
         // TODO Store token in connection session envelope.
-        try {
-            parser = new EmailParser(getToken()).parse(true);
-            rename();
-            relay();
+        if (enabled) {
+            try {
+                parser = new EmailParser(getToken()).parse(true);
+                rename();
+                relay();
 
-        } catch (IOException e) {
-            log.error("Storage unable to parse email: {}", e.getMessage());
-        }
+            } catch (IOException e) {
+                log.error("Storage unable to parse email: {}", e.getMessage());
+            }
 
-        try {
-            stream.flush();
-            stream.close();
+            try {
+                stream.flush();
+                stream.close();
 
-        } catch (IOException e) {
-            log.error("Storage file not flushed/closed: {}", e.getMessage());
+            } catch (IOException e) {
+                log.error("Storage file not flushed/closed: {}", e.getMessage());
+            }
         }
     }
 

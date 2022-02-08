@@ -1,12 +1,15 @@
 package com.mimecast.robin.storage;
 
+import com.mimecast.robin.main.Foundation;
 import com.mimecast.robin.smtp.connection.Connection;
 import com.mimecast.robin.smtp.session.Session;
 import com.mimecast.robin.util.PathUtils;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+import javax.naming.ConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -18,6 +21,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class LocalStorageClientTest {
+
+    @BeforeAll
+    static void before() throws ConfigurationException {
+        Foundation.init("src/test/resources/");
+    }
 
     @Test
     void simple() {
