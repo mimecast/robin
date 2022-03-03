@@ -125,10 +125,8 @@ public class DefaultTLSSocket implements TLSSocket {
         sslSocket.setUseClientMode(client);
 
         // Allowed TLS protocols and supported cipher suites.
-        if (client) {
-            sslSocket.setEnabledProtocols(getEnabledProtocols(sslSocket));
-            sslSocket.setEnabledCipherSuites(getEnabledCipherSuites(sslSocket));
-        }
+        sslSocket.setEnabledProtocols(getEnabledProtocols(sslSocket));
+        sslSocket.setEnabledCipherSuites(getEnabledCipherSuites(sslSocket));
 
         // Make a friend!
         sslSocket.startHandshake();

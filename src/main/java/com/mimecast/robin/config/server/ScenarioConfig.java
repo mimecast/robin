@@ -1,5 +1,6 @@
 package com.mimecast.robin.config.server;
 
+import com.mimecast.robin.config.BasicConfig;
 import com.mimecast.robin.config.ConfigFoundation;
 
 import java.util.List;
@@ -53,11 +54,12 @@ public class ScenarioConfig extends ConfigFoundation {
     /**
      * Gets STARTTLS response.
      * <p>If none defined the server will 220.
+     * <p>If response doesn't start with 2 it will not handshake.
      *
-     * @return STARTTLS response string.
+     * @return BasicConfig instance.
      */
-    public String getStarTls() {
-        return getStringProperty("starttls");
+    public BasicConfig getStarTls() {
+        return new BasicConfig(getMapProperty("starttls"));
     }
 
     /**

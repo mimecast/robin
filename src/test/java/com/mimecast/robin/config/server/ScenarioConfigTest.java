@@ -33,7 +33,9 @@ class ScenarioConfigTest {
 
     @Test
     void getStartTls() {
-        assertEquals("421 Too many TLS sessions at this time", scenarioConfig.getStarTls());
+        assertEquals("TLSv1.0", scenarioConfig.getStarTls().getListProperty("protocols").get(0));
+        assertEquals("TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA", scenarioConfig.getStarTls().getListProperty("ciphers").get(0));
+        assertEquals("220 You will fail", scenarioConfig.getStarTls().getStringProperty("response"));
     }
 
     @Test

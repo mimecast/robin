@@ -1,5 +1,6 @@
 package com.mimecast.robin.smtp.extension.server;
 
+import com.mimecast.robin.config.BasicConfig;
 import com.mimecast.robin.config.server.ScenarioConfig;
 import com.mimecast.robin.main.Config;
 import com.mimecast.robin.smtp.connection.Connection;
@@ -32,22 +33,35 @@ public class ServerStartTls extends ServerProcessor {
      * @throws IOException Unable to communicate.
      */
     @Override
+    @SuppressWarnings("unchecked")
     public boolean process(Connection connection, Verb verb) throws IOException {
         super.process(connection, verb);
 
         boolean shakeHand = true;
+        String handShake = "220 Ready for handshake";
 
         // ScenarioConfig response.
         Optional<ScenarioConfig> opt = connection.getScenario();
-        if (opt.isPresent() && opt.get().getStarTls() != null) {
-            connection.write(opt.get().getStarTls());
-            shakeHand = opt.get().getStarTls().startsWith("2");
+        if (opt.isPresent() && opt.get().getStarTls() != null && !opt.get().getStarTls().isEmpty()) {
+            BasicConfig tls = opt.get().getStarTls();
+            if (!tls.isEmpty()) {
+                if (tls.hasProperty("response")) {
+                    handShake = tls.getStringProperty("response");
+                    shakeHand = handShake.startsWith("2");
+                }
+
+                if (tls.hasProperty("protocols")) {
+                    connection.setProtocols((String[]) tls.getListProperty("protocols").toArray(new String[0]));
+                }
+
+                if (tls.hasProperty("ciphers")) {
+                    connection.setCiphers((String[]) tls.getListProperty("ciphers").toArray(new String[0]));
+                }
+            }
         }
 
         // Shake hand.
-        else {
-            connection.write("220 Ready for handshake");
-        }
+        connection.write(handShake);
 
         if (shakeHand) {
             connection.startTLS(false);

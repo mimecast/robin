@@ -35,7 +35,11 @@
     },
     "reject.com": {
       "ehlo": "501 Not talking to you",
-      "starttls": "421 Too many TLS sessions at this time",
+      "starttls": {
+        "protocols": ["TLSv1.0"],
+        "ciphers": ["TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA"],
+        "response": "220 You will fail"
+      },
       "mail": "451 I'm not listening to you",
       "rcpt": [
         {

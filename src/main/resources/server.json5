@@ -34,6 +34,13 @@
         }
       ]
     },
+    "failtls.com": {
+      "starttls": {
+        "protocols": ["TLSv1.0"],
+        "ciphers": ["TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA"],
+        "response": "220 You will fail"
+      }
+    },
     "reject.com": {
       "ehlo": "501 Argument not allowed.",
       "mail": "451 Unable to process email at this time",
