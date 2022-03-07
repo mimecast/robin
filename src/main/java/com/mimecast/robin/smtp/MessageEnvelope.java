@@ -384,11 +384,11 @@ public class MessageEnvelope {
     }
 
     /**
-     * Gets email headers.
+     * Builds email headers.
      *
      * @return Email headers string.
      */
-    public String getHeaders() {
+    public String buildHeaders() {
         String to = "<" + String.join(">, <", getRcpts()) + ">";
 
         return "MIME-Version: 1.0\r\n" +

@@ -79,7 +79,7 @@ public class ClientData extends ClientProcessor {
 
         } else if (envelope.getMessage() != null && !bdat) {
             log.debug("Sending email from headers and body.");
-            inputStream = new ByteArrayInputStream((envelope.getHeaders() + "\r\n" + envelope.getMessage()).getBytes());
+            inputStream = new ByteArrayInputStream((envelope.buildHeaders() + "\r\n" + envelope.getMessage()).getBytes());
         }
 
         boolean result;
@@ -176,7 +176,7 @@ public class ClientData extends ClientProcessor {
 
         } else if (envelope.getMessage() != null) {
             // Write headers
-            read = writeChunk((envelope.getHeaders() + "\r\n").getBytes(), false);
+            read = writeChunk((envelope.buildHeaders() + "\r\n").getBytes(), false);
             if (!read.startsWith("250")) return false;
 
             // Write body
