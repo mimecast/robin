@@ -1,31 +1,31 @@
 {
-  "$schema": "/schema/case.schema.json",
+  $schema: "/schema/case.schema.json",
 
-  "route": "net",
-  "timeout": 30,
+  route: "net",
+  timeout: 30,
 
-  "xclient": {
-    "name": "example.com",
-    "helo": "example.net",
-    "addr": "127.0.0.10"
+  xclient: {
+    name: "example.com",
+    helo: "example.net",
+    addr: "127.0.0.10"
   },
 
-  "auth": true,
-  "authBeforeTls": true,
-  "user": "tony@example.com",
-  "pass": "giveHerTheRing",
+  auth: true,
+  authBeforeTls: true,
+  user: "tony@example.com",
+  pass: "giveHerTheRing",
 
-  "envelopes": [
+  envelopes: [
     {
-      "chunkSize": 2048,
-      "chunkBdat": true,
-      "chunkWrite": true,
+      chunkSize: 2048,
+      chunkBdat: true,
+      chunkWrite: true,
 
-      "file": "src/test/resources/lipsum.eml",
-      "folder": "src/test/resources/",
+      file: "src/test/resources/lipsum.eml",
+      folder: "src/test/resources/",
 
-      "mail": "tony@example.com",
-      "rcpt": [
+      mail: "tony@example.com",
+      rcpt: [
         "pepper@example.com",
         "happy@example.com"
       ],
@@ -33,15 +33,15 @@
       "rcptEjf": "{$rcpt}"
     },
     {
-      "subject": "Lost in space",
-      "message": "Rescue me!",
+      subject: "Lost in space",
+      message: "Rescue me!",
 
-      "mail": "",
-      "rcpt": [
+      mail: "",
+      rcpt: [
         "journalling@example.com"
       ],
-      "mailEjf": "tony@example.com",
-      "rcptEjf": "pepper@example.com"
+      mailEjf: "tony@example.com",
+      rcptEjf: "pepper@example.com"
     }
   ]
 }
