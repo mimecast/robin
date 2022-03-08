@@ -48,9 +48,9 @@ Usage
     envelope.getRcpts().add("pepper@example.com");
     envelope.getRcpts().add("happy@example.com");
 
-    // Journal magic.
-    envelope.setMailEjf("jarvis@example.com");
-    envelope.setRcptEjf("friday@example.com");
+    // Magic headers.
+    envelope.addHeader("From", "jarvis@example.com");
+    envelope.addHeader("To", "friday@example.com");
 
 
     // Email stream // Preferred when available.

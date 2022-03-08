@@ -29,8 +29,10 @@
         "pepper@example.com",
         "happy@example.com"
       ],
-      "mailEjf": "{$mail}",
-      "rcptEjf": "{$rcpt}"
+      headers: {
+        from: "{$mail}",
+        to: ["{$rcpt}"]
+      }
     },
     {
       subject: "Lost in space",
@@ -40,8 +42,10 @@
       rcpt: [
         "journalling@example.com"
       ],
-      mailEjf: "tony@example.com",
-      rcptEjf: "pepper@example.com"
+      headers: {
+        from: "tony@example.com",
+        to: ["pepper@example.com"]
+      }
     }
   ]
 }

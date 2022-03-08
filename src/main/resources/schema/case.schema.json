@@ -186,16 +186,6 @@
               "pattern": "^([\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4})|$"
             }
           },
-          "mailEjf": {
-            "description": "EJF MAIL FROM",
-            "type": "string",
-            "pattern": "^([\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4})|([\\w}{$]{4,}})|$"
-          },
-          "rcptEjf": {
-            "description": "EFJ RCPT TO",
-            "type": "string",
-            "pattern": "^([\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4})|([\\w}{$]{4,}})|$"
-          },
           "subject": {
             "description": "Message subject",
             "type": "string"

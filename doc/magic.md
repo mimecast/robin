@@ -8,9 +8,11 @@ Use these to program your emails to autocomplete information.
 - **{$YYMD}** - YYYYMMDD date.
 - **{$MSGID}** - Random string. Combines with {$MAILFROM} to form a valid Message-ID.
 - **{$MAILFROM}** - Envelope mail address.
+- **{$MAIL}** - Envelope mail address.
 - **{$RCPTTO}** - Envelope rcpt address.
-- **{$MAILEJFFROM}** - Envelope mailEjf address.
-- **{$RCPTEJFTO}** - Envelope rcptEjf address.
+- **{$RCPT}** - Envelope rcpt address.
+- **{$HEADERS}** - Magic headers.
+- **{$HEADERS[*]}** - Magic header by name.
 - **{$RANDNO}** - Random number between 1 and 10.
 - **{$RANDCH}** - Random 20 alpha characters.
 - **{$RANDNO#}** - Generates random number of given length (example: **{$RANDNO3}**).

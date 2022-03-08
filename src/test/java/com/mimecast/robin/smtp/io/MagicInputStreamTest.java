@@ -26,8 +26,8 @@ class MagicInputStreamTest {
         envelope.setFile("src/test/resources/lipsum.eml");
         envelope.setMail("rocket@example.com");
         envelope.setRcpt("groot@example.com");
-        envelope.setMailEjf("peter@example.com");
-        envelope.setRcptEjf("gamora@example.com");
+        envelope.addHeader("mail", "peter@example.com");
+        envelope.addHeader("rcpt", "gamora@example.com");
 
         FileInputStream file = new FileInputStream(envelope.getFile());
         magic = new MagicInputStream(file, envelope);
@@ -68,13 +68,11 @@ class MagicInputStreamTest {
 
     @Test
     void doSimpleMagic() {
-        assertEquals(envelope.getMessageId(), magic.doSimpleMagic("{$msgid}", "{$msgid}"));
-        assertEquals(envelope.getDate(), magic.doSimpleMagic("{$date}", "{$date}"));
-        assertEquals(envelope.getYymd(), magic.doSimpleMagic("{$yymd}", "{$yymd}"));
-        assertEquals(envelope.getMailFrom(), magic.doSimpleMagic("{$mailfrom}", "{$mailfrom}"));
-        assertEquals(envelope.getRcptTo(), magic.doSimpleMagic("{$rcptto}", "{$rcptto}"));
-        assertEquals(envelope.getMailEjfFrom(), magic.doSimpleMagic("{$mailejffrom}", "{$mailejffrom}"));
-        assertEquals(envelope.getRcptEjfTo(), magic.doSimpleMagic("{$rcptejfto}", "{$rcptejfto}"));
+        assertEquals(envelope.getMessageId(), magic.doMagic("{$msgid}", "{$msgid}"));
+        assertEquals(envelope.getDate(), magic.doMagic("{$date}", "{$date}"));
+        assertEquals(envelope.getYymd(), magic.doMagic("{$yymd}", "{$yymd}"));
+        assertEquals(envelope.getMailFrom(), magic.doMagic("{$mailfrom}", "{$mailfrom}"));
+        assertEquals(envelope.getRcptTo(), magic.doMagic("{$rcptto}", "{$rcptto}"));
     }
 
     @Test
@@ -84,8 +82,8 @@ class MagicInputStreamTest {
         assertEquals(envelope.getYymd(), magic.getReplacement("{$yymd}"));
         assertEquals(envelope.getMailFrom(), magic.getReplacement("{$mailfrom}"));
         assertEquals(envelope.getRcptTo(), magic.getReplacement("{$rcptto}"));
-        assertEquals(envelope.getMailEjfFrom(), magic.getReplacement("{$mailejffrom}"));
-        assertEquals(envelope.getRcptEjfTo(), magic.getReplacement("{$rcptejfto}"));
+        assertEquals(envelope.getHeaders().get("mail"), magic.getReplacement("{$headers[mail]}"));
+        assertEquals(envelope.getHeaders().get("rcpt"), magic.getReplacement("{$headers[rcpt]}"));
         assertEquals("", magic.getReplacement("rocket"));
 
         MagicInputStream empty = new MagicInputStream(new BufferedInputStream(new ByteArrayInputStream("".getBytes())), new MessageEnvelope());

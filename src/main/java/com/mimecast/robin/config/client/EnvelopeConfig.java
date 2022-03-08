@@ -43,28 +43,19 @@ public class EnvelopeConfig extends ConfigFoundation {
     /**
      * Gets RCPT TO.
      *
-     * @return RCPT TO address.
+     * @return List of String.
      */
     public List<String> getRcpt() {
         return getListProperty("rcpt");
     }
 
     /**
-     * Gets secondary MAIL FROM address for EJF cases.
+     * Gets headers.
      *
-     * @return MAIL FROM address.
+     * @return Map of String, Object.
      */
-    public String getMailEjf() {
-        return getStringProperty("mailEjf");
-    }
-
-    /**
-     * Gets secondary RCPT TO address for EJF cases.
-     *
-     * @return RCPT TO address.
-     */
-    public String getRcptEjf() {
-        return getStringProperty("rcptEjf");
+    public Map<String, Object> getHeaders() {
+        return getMapProperty("headers");
     }
 
     /**

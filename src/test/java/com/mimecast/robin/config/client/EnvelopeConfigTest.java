@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 
 import javax.naming.ConfigurationException;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -39,17 +41,15 @@ class EnvelopeConfigTest {
     }
 
     @Test
-    void getMailEjf() {
-        assertTrue(String.join(", ", envelopeConfig1.getMailEjf()).contains("{$mail}"));
+    @SuppressWarnings("unchecked")
+    void getHeaders() {
+        Map<String, Object> headers = envelopeConfig1.getHeaders();
+        assertEquals("{$mail}", headers.get("from"));
+        assertEquals("{$rcpt}", ((List<String>) headers.get("to")).get(0));
 
-        assertTrue(String.join(", ", envelopeConfig2.getMailEjf()).contains("tony@example.com"));
-    }
-
-    @Test
-    void getRcptEjf() {
-        assertTrue(String.join(", ", envelopeConfig1.getRcptEjf()).contains("{$rcpt}"));
-
-        assertTrue(String.join(", ", envelopeConfig2.getRcptEjf()).contains("pepper@example.com"));
+        headers = envelopeConfig2.getHeaders();
+        assertEquals("tony@example.com", headers.get("from"));
+        assertEquals("pepper@example.com", ((List<String>) headers.get("to")).get(0));
     }
 
     @Test

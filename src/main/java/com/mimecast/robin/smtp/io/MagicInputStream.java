@@ -46,9 +46,10 @@ public class MagicInputStream extends LineInputStream {
         simpleTags.put("{$date}", Pattern.compile("\\{\\$date}", Pattern.CASE_INSENSITIVE));
         simpleTags.put("{$yymd}", Pattern.compile("\\{\\$yymd}", Pattern.CASE_INSENSITIVE));
         simpleTags.put("{$mailfrom}", Pattern.compile("\\{\\$mailfrom}", Pattern.CASE_INSENSITIVE));
-        simpleTags.put("{$mailejffrom}", Pattern.compile("\\{\\$mailejffrom}", Pattern.CASE_INSENSITIVE));
+        simpleTags.put("{$mail}", Pattern.compile("\\{\\$mail}", Pattern.CASE_INSENSITIVE));
         simpleTags.put("{$rcptto}", Pattern.compile("\\{\\$rcptto}", Pattern.CASE_INSENSITIVE));
-        simpleTags.put("{$rcptejfto}", Pattern.compile("\\{\\$rcptejfto}", Pattern.CASE_INSENSITIVE));
+        simpleTags.put("{$rcpt}", Pattern.compile("\\{\\$rcpt}", Pattern.CASE_INSENSITIVE));
+        simpleTags.put("{$headers", Pattern.compile("\\{\\$headers(\\[[a-z0-9-]+])?}", Pattern.CASE_INSENSITIVE));
     }
 
     /**
@@ -106,7 +107,7 @@ public class MagicInputStream extends LineInputStream {
                 line = random;
             }
 
-            String magic = doSimpleMagic(tag, line);
+            String magic = doMagic(tag, line);
             if (!line.equals(magic)) {
                 changed = true;
                 line = magic;
@@ -127,11 +128,16 @@ public class MagicInputStream extends LineInputStream {
      * @param line Line string.
      * @return Line string.
      */
-    String doSimpleMagic(String tag, String line) {
+    String doMagic(String tag, String line) {
         for (Map.Entry<String, Pattern> entry : simpleTags.entrySet()) {
             if (tag.contains(entry.getKey())) {
 
-                String replacement = getReplacement(entry.getKey());
+                String key = entry.getKey();
+                Matcher matcher = entry.getValue().matcher(tag);
+                if (matcher.find()) {
+                    key = matcher.group();
+                }
+                String replacement = getReplacement(key);
                 if (!replacement.isEmpty()) {
                     line = entry.getValue().matcher(line).replaceAll(replacement);
                 }
@@ -148,8 +154,15 @@ public class MagicInputStream extends LineInputStream {
      * @return Value string.
      */
     String getReplacement(String key) {
+        String param = null;
+        if (key.contains("[") && key.contains("]")) {
+            String[] splits = key.replace("]}", "").split("\\[");
+            param = splits[1].toLowerCase();
+            key = key.replace("[" + param + "]", "");
+        }
+
         if (envelope != null) {
-            switch (key) {
+            switch (key.toLowerCase()) {
                 case "{$msgid}":
                     return envelope.getMessageId();
 
@@ -160,16 +173,21 @@ public class MagicInputStream extends LineInputStream {
                     return envelope.getYymd();
 
                 case "{$mailfrom}":
+                case "{$mail}":
                     return envelope.getMailFrom();
 
-                case "{$mailejffrom}":
-                    return envelope.getMailEjfFrom();
-
                 case "{$rcptto}":
+                case "{$rcpt}":
                     return envelope.getRcptTo();
 
-                case "{$rcptejfto}":
-                    return envelope.getRcptEjfTo();
+                case "{$headers}":
+                    if (param != null) {
+                        return envelope.getHeaders().get(param);
+                    } else {
+                        StringBuilder stringBuilder = new StringBuilder();
+                        envelope.getHeaders().forEach((k, v) -> stringBuilder.append(StringUtils.capitalize(k)).append(": ").append(v).append("\r\n"));
+                        return stringBuilder.toString();
+                    }
 
                 default:
                     return "";

@@ -282,9 +282,9 @@ public class Connection extends SmtpFoundation {
             magicVariables.put("msgid", envelope.getMessageId());
             magicVariables.put("date", envelope.getDate());
             magicVariables.put("mailfrom", envelope.getMail());
-            magicVariables.put("mailejffrom", envelope.getMailEjfFrom());
             magicVariables.put("rcptto", envelope.getRcpt());
-            magicVariables.put("rcptejfto", envelope.getRcptEjfTo());
+
+            envelope.getHeaders().forEach((key, value) -> magicVariables.put("headers[" + key + "]", value));
         }
 
         return magicVariables;

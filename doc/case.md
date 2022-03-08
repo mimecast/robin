@@ -51,8 +51,7 @@ Glossary
 ### Envelope
 - **mail** - _(String, Email Address)_ [default: client.json] Sender email address.
 - **rcpt** - _(List, String, Email Address)_ [default: client.json] Recipients list of email addresses.
-- **mailEjf** - _(String)_ Special variable for EJF magic. Value _{$mail}_ will use _client.json_ mail value.
-- **rcptEjf** - _(String)_ Special variable for EJF magic. Value _{$rcpt}_ will use _client.json_ rcpt value.
+- **headers** - _(List, String, String)_ List of headers to be injected by magic.
 
 
 #### Transfer

@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Mapper of CaseConfig to Session.
@@ -110,6 +111,7 @@ public class ConfigMapper {
      * @param envelopeConfig EnvelopeConfig instance.
      * @param caseConfig     CaseCOnfig instance.
      */
+    @SuppressWarnings("unchecked")
     private void addEnvelope(Session session, EnvelopeConfig envelopeConfig, CaseConfig caseConfig) {
         // Message object.
         MessageEnvelope envelope = new MessageEnvelope()
@@ -122,9 +124,14 @@ public class ConfigMapper {
             envelope.getRcpts().add(magicReplace(rcpt));
         }
 
-        // EJF.
-        envelope.setMailEjf(magicReplace(envelopeConfig.getMailEjf()))
-                .setRcptEjf(magicReplace(envelopeConfig.getRcptEjf()));
+        // Magic headers.
+        envelopeConfig.getHeaders().forEach((k, v) -> {
+            if (v instanceof String) {
+                envelope.addHeader(k, magicReplace((String) v));
+            } else if (v instanceof List) {
+                envelope.addHeader(k, ((List<String>) v).stream().map(this::magicReplace).collect(Collectors.joining("; ")));
+            }
+        });
 
         // Transfer config.
         if (envelopeConfig.getChunkSize() > 128) {

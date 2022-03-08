@@ -14,15 +14,19 @@
         "happy@example.com"
       ],
 
-      "mailEjf": "{$mail}",
-      "rcptEjf": "{$rcpt}"
+      "headers": {
+        "from": "{$mail}",
+        "to": "{$rcpt}"
+      }
     },
     {
       "subject": "lost in space",
       "message": "Rescue me",
 
-      "mailEjf": "{$blnk}",
-      "rcptEjf": "{$blank}"
+      "headers": {
+        "from": "{$blnk}",
+        "to": "{$blank}"
+      }
     }
   ]
 }

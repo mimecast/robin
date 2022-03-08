@@ -19,10 +19,9 @@ public class MessageEnvelope {
 
     // Set MAIL FROM and RCPT TO.
     private String mail = null;
-    private String mailEjf = null;
     private String rcpt = null;
-    private String rcptEjf = null;
     private List<String> rcpts = new ArrayList<>();
+    private Map<String, String> headers = new HashMap<>();
 
     // Set MimeConfig.
     private MimeConfig mime = null;
@@ -123,30 +122,6 @@ public class MessageEnvelope {
     }
 
     /**
-     * Gets secondary MAIL FROM address for EJF cases.
-     *
-     * @return MAIL FROM address.
-     */
-    public String getMailEjfFrom() {
-        if (StringUtils.isNotBlank(mailEjf)) {
-            return mailEjf;
-        }
-        return "";
-    }
-
-    /**
-     * Gets secondary RCPT TO address for EJF cases.
-     *
-     * @return RCPT TO address.
-     */
-    public String getRcptEjfTo() {
-        if (StringUtils.isNotBlank(rcptEjf)) {
-            return rcptEjf;
-        }
-        return "";
-    }
-
-    /**
      * Gets MAIL.
      *
      * @return MAIL address.
@@ -167,26 +142,6 @@ public class MessageEnvelope {
     }
 
     /**
-     * Gets MAIL for EJF.
-     *
-     * @return MAIL address.
-     */
-    public String getMailEjf() {
-        return mailEjf;
-    }
-
-    /**
-     * Sets MAIL for EJF.
-     *
-     * @param mailEjf MAIL address.
-     * @return Self.
-     */
-    public MessageEnvelope setMailEjf(String mailEjf) {
-        this.mailEjf = mailEjf;
-        return this;
-    }
-
-    /**
      * Gets RCPT.
      *
      * @return RCPT address.
@@ -203,26 +158,6 @@ public class MessageEnvelope {
      */
     public MessageEnvelope setRcpt(String rcpt) {
         this.rcpt = rcpt;
-        return this;
-    }
-
-    /**
-     * Gets RCPT for EJF.
-     *
-     * @return RCPT address.
-     */
-    public String getRcptEjf() {
-        return rcptEjf;
-    }
-
-    /**
-     * Sets RCPT for EJF.
-     *
-     * @param rcptEjf RCPT address.
-     * @return Self.
-     */
-    public MessageEnvelope setRcptEjf(String rcptEjf) {
-        this.rcptEjf = rcptEjf;
         return this;
     }
 
@@ -248,6 +183,39 @@ public class MessageEnvelope {
     public MessageEnvelope setRcpts(List<String> rcpts) {
         this.rcpts = rcpts;
         return this;
+    }
+
+    /**
+     * Adds magic header.
+     *
+     * @param name  Header name.
+     * @param value Header value.
+     * @return Self.
+     */
+    public MessageEnvelope addHeader(String name, String value) {
+        headers.put(name.toLowerCase(), value);
+        return this;
+    }
+
+    /**
+     * Sets magic headers.
+     *
+     * @param headers Map of String, String.
+     * @return Self.
+     */
+    public MessageEnvelope setHeaders(Map<String, String> headers) {
+        this.headers.clear();
+        headers.forEach((k, v) -> this.headers.put(k.toLowerCase(), v));
+        return this;
+    }
+
+    /**
+     * Gets magic headers.
+     *
+     * @return Map of String, String.
+     */
+    public Map<String, String> getHeaders() {
+        return headers;
     }
 
     /**
