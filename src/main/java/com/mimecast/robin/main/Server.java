@@ -1,6 +1,7 @@
 package com.mimecast.robin.main;
 
 import com.mimecast.robin.smtp.SmtpListener;
+import com.mimecast.robin.storage.StorageCleaner;
 
 import javax.naming.ConfigurationException;
 import java.io.IOException;
@@ -34,6 +35,7 @@ public class Server extends Foundation {
         init(path); // Initialize foundation.
         registerShutdown(); // Shutdown hook.
         loadKeystore(); // Load Keystore.
+        StorageCleaner.clean(Config.getServer().getStorage()); // Clean storage.
 
         // Listener.
         port25 = new SmtpListener(

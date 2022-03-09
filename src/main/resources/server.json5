@@ -15,7 +15,11 @@
 
   "storage": {
     "enabled": true,
-    "path": "/usr/local/store"
+    "path": "/usr/local/store",
+    "clean": true,
+    "patterns": [
+      "^([0-9]{8}\\.)"
+    ]
   },
 
   "users": [
