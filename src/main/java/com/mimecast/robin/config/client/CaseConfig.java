@@ -95,9 +95,14 @@ public class CaseConfig extends ConfigFoundation {
      */
     public List<String> getMx() {
         RouteConfig routeConfig = getRoute();
-        return routeConfig != null && routeConfig.getMx() != null ?
+
+        List<String> mx = routeConfig != null && routeConfig.getMx() != null ?
                 routeConfig.getMx() :
                 getListProperty("mx", Collections.singletonList("127.0.0.1"));
+
+        Collections.shuffle(mx); // Randomize MX.
+
+        return mx;
     }
 
     /**
