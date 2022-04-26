@@ -129,6 +129,7 @@ public class DefaultTLSSocket implements TLSSocket {
         sslSocket.setEnabledCipherSuites(getEnabledCipherSuites(sslSocket));
 
         // Make a friend!
+        log.info("Attempting handshake with: {}.", sslSocket.getSession().getPeerHost());
         sslSocket.startHandshake();
         log.debug("Handshake done with: {} / {}.", sslSocket.getSession().getProtocol(), sslSocket.getSession().getCipherSuite());
 
