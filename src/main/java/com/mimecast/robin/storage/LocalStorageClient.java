@@ -20,7 +20,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Locale;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -35,11 +38,6 @@ public class LocalStorageClient implements StorageClient {
      * Enablement.
      */
     protected final boolean enabled = Config.getServer().getStorage().getBooleanProperty("enabled");
-
-    /**
-     * UID.
-     */
-    protected final String uid = UUID.randomUUID().toString();
 
     /**
      * Connection instance.
@@ -81,7 +79,7 @@ public class LocalStorageClient implements StorageClient {
             extension = "." + extension;
         }
 
-        fileName = now + "." + uid + extension;
+        fileName = now + "." + connection.getSession() + extension;
         path = Config.getServer().getStorage().getStringProperty("path", "/tmp/store");
 
         return this;
@@ -140,16 +138,6 @@ public class LocalStorageClient implements StorageClient {
     @Override
     public String getToken() {
         return Paths.get(path, fileName).toString();
-    }
-
-    /**
-     * Gets UID.
-     *
-     * @return String.
-     */
-    @Override
-    public String getUID() {
-        return uid;
     }
 
     /**

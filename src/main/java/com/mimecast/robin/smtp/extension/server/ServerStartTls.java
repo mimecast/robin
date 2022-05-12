@@ -38,7 +38,7 @@ public class ServerStartTls extends ServerProcessor {
         super.process(connection, verb);
 
         boolean shakeHand = true;
-        String handShake = "220 Ready for handshake";
+        String handShake = "220 Ready for handshake [" + connection.getSession().getUID() + "]";
 
         // ScenarioConfig response.
         Optional<ScenarioConfig> opt = connection.getScenario();

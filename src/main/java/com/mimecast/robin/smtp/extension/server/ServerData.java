@@ -63,7 +63,7 @@ public class ServerData extends ServerProcessor {
      */
     private void ascii() throws IOException {
         if (connection.getSession().getRcpts().isEmpty()) {
-            connection.write("554 5.5.1 No valid recipients");
+            connection.write("554 5.5.1 No valid recipients [" + connection.getSession().getUID() + "]");
             return;
         }
 
@@ -72,9 +72,9 @@ public class ServerData extends ServerProcessor {
 
         Optional<ScenarioConfig> opt = connection.getScenario();
         if (opt.isPresent() && opt.get().getData() != null) {
-            connection.write(opt.get().getData() + " [" + storageClient.getUID() + "]");
+            connection.write(opt.get().getData() + " [" +  connection.getSession().getUID() + "]");
         } else {
-            connection.write("250 2.0.0 Received OK [" + storageClient.getUID() + "]");
+            connection.write("250 2.0.0 Received OK [" +  connection.getSession().getUID() + "]");
         }
     }
 
@@ -127,7 +127,7 @@ public class ServerData extends ServerProcessor {
             }
 
             // Scenario response or accept.
-            scenarioResponse(storageClient.getUID());
+            scenarioResponse( connection.getSession().getUID());
         }
     }
 

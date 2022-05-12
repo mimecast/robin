@@ -23,17 +23,21 @@ public class ConnectionMock extends Connection {
     private final Map<Integer, String> lines = new HashMap<>();
 
     public ConnectionMock(StringBuilder string) {
-        super(Factories.getSession());
+        this();
         inc = new LineInputStream(new ByteArrayInputStream(string.toString().getBytes()));
         out = new DataOutputStream(output);
     }
 
-    public ConnectionMock(Session session, SessionTransactionList sessionTransactionList) {
-        super(session, sessionTransactionList);
+    public ConnectionMock() {
+        this(Factories.getSession());
     }
 
     public ConnectionMock(Session session) {
         super(session);
+    }
+
+    public ConnectionMock(Session session, SessionTransactionList sessionTransactionList) {
+        super(session, sessionTransactionList);
     }
 
     @Override

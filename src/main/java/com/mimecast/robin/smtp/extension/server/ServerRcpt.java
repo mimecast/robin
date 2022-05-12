@@ -44,7 +44,7 @@ public class ServerRcpt extends ServerMail {
 
         // Accept all.
         connection.getSession().addRcpt(getAddress());
-        connection.write("250 2.1.5 Recipient OK");
+        connection.write("250 2.1.5 Recipient OK [" + connection.getSession().getUID() + "]");
 
         return true;
     }

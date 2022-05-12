@@ -242,7 +242,7 @@ public class Factories {
             }
         }
 
-        return new LocalStorageClient().setExtension(extension).setConnection(connection);
+        return new LocalStorageClient().setConnection(connection).setExtension(extension);
     }
 
     /**

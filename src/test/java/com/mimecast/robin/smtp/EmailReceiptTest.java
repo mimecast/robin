@@ -71,8 +71,8 @@ class EmailReceiptTest {
         assertEquals("250-AUTH PLAIN LOGIN\r\n", connection.getLine(6));
         assertEquals("250-STARTTLS\r\n", connection.getLine(7));
         assertEquals("250 CHUNKING\r\n", connection.getLine(8));
-        assertEquals("250 2.1.0 Sender OK\r\n", connection.getLine(9));
-        assertEquals("250 2.1.5 Recipient OK\r\n", connection.getLine(10));
+        assertTrue(connection.getLine(9).startsWith("250 2.1.0 Sender OK"), "startsWith(\"250 2.1.0 Sender OK\")");
+        assertTrue(connection.getLine(10).startsWith("250 2.1.5 Recipient OK"), "startsWith(\"250 2.1.5 Recipient OK\")");
         assertEquals("354 Ready and willing\r\n", connection.getLine(11));
         assertTrue(connection.getLine(12).startsWith("250 2.0.0 Received OK"), "startsWith(\"250 2.0.0 Received OK\")");
         assertEquals("221 2.0.0 Closing connection\r\n", connection.getLine(13));
@@ -97,7 +97,7 @@ class EmailReceiptTest {
         assertEquals("250-AUTH PLAIN LOGIN\r\n", connection.getLine(6));
         assertEquals("250-STARTTLS\r\n", connection.getLine(7));
         assertEquals("250 CHUNKING\r\n", connection.getLine(8));
-        assertEquals("250 2.1.0 Sender OK\r\n", connection.getLine(9));
+        assertTrue(connection.getLine(9).startsWith("250 2.1.0 Sender OK"), "startsWith(\"250 2.1.0 Sender OK\")");
         assertEquals("501 Invalid address\r\n", connection.getLine(10));
         assertEquals("221 2.0.0 Closing connection\r\n", connection.getLine(11));
     }
@@ -122,9 +122,9 @@ class EmailReceiptTest {
         assertEquals("250-AUTH PLAIN LOGIN\r\n", connection.getLine(6));
         assertEquals("250-STARTTLS\r\n", connection.getLine(7));
         assertEquals("250 CHUNKING\r\n", connection.getLine(8));
-        assertEquals("250 2.1.0 Sender OK\r\n", connection.getLine(9));
+        assertTrue(connection.getLine(9).startsWith("250 2.1.0 Sender OK"), "startsWith(\"250 2.1.0 Sender OK\")");
         assertEquals("501 Invalid address\r\n", connection.getLine(10));
-        assertEquals("554 5.5.1 No valid recipients\r\n", connection.getLine(11));
+        assertTrue(connection.getLine(11).startsWith("554 5.5.1 No valid recipients"), "startsWith(\"554 5.5.1 No valid recipients\")");
         assertEquals("221 2.0.0 Closing connection\r\n", connection.getLine(12));
     }
 }

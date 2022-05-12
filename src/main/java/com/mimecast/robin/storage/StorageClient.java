@@ -45,13 +45,6 @@ public interface StorageClient {
     String getToken();
 
     /**
-     * Gets UID.
-     *
-     * @return String.
-     */
-    String getUID();
-
-    /**
      * Saves file.
      */
     void save();

@@ -6,6 +6,9 @@ import com.mimecast.robin.config.client.CaseConfig;
 import com.mimecast.robin.main.Config;
 import com.mimecast.robin.smtp.MessageEnvelope;
 import com.mimecast.robin.smtp.connection.SmtpFoundation;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.ThreadContext;
 
 import javax.mail.internet.InternetAddress;
 import java.lang.management.ManagementFactory;
@@ -21,6 +24,12 @@ import java.util.stream.Collectors;
  */
 @SuppressWarnings("UnusedReturnValue")
 public class Session {
+    private static final Logger log = LogManager.getLogger(Session.class);
+
+    /**
+     * UID.
+     */
+    private final String uid = UUID.randomUUID().toString();
 
     /**
      * Current RFC 2822 compliant date.
@@ -212,6 +221,8 @@ public class Session {
      * Constructs a new Session instance.
      */
     public Session() {
+        ThreadContext.put("aCode", uid);
+
         setMagic();
         setDate();
     }
@@ -246,6 +257,15 @@ public class Session {
                 putMagic(entry.getKey(), entry.getValue());
             }
         }
+    }
+
+    /**
+     * Gets UID.
+     *
+     * @return String.
+     */
+    public String getUID() {
+        return date;
     }
 
     /**

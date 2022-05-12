@@ -88,7 +88,7 @@ public class ServerMail extends ServerProcessor {
             // Accept all.
             else {
                 connection.getSession().setMail(getAddress());
-                connection.write("250 2.1.0 Sender OK");
+                connection.write("250 2.1.0 Sender OK [" + connection.getSession().getUID() + "]");
             }
         }
 
