@@ -236,7 +236,7 @@ public class Factories {
     public static StorageClient getStorageClient(Connection connection, String extension) {
         if (storageClient != null) {
             try {
-                return storageClient.call().setExtension(extension).setConnection(connection);
+                return storageClient.call().setConnection(connection).setExtension(extension);
             } catch (Exception e) {
                 log.error("Error calling storage client: {}", e.getMessage());
             }
