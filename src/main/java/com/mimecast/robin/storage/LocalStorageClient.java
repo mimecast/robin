@@ -80,7 +80,6 @@ public class LocalStorageClient implements StorageClient {
         }
 
         fileName = now + "." + connection.getSession() + extension;
-        path = Config.getServer().getStorage().getStringProperty("path", "/tmp/store");
 
         return this;
     }
@@ -94,6 +93,7 @@ public class LocalStorageClient implements StorageClient {
     @Override
     public LocalStorageClient setConnection(Connection connection) {
         this.connection = connection;
+        path = Config.getServer().getStorage().getStringProperty("path", "/tmp/store");
 
         // Append first recipient domain/address to path
         if (connection != null && !connection.getSession().getRcpts().isEmpty()) {
