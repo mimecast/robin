@@ -102,7 +102,30 @@ public abstract class ConfigFoundation {
      * @return String.
      */
     public String getStringProperty(String name, String def) {
-        return hasProperty(name) ? getStringProperty(name) : def;
+        return hasProperty(name) ? getStringProperty(name) : getStringSubProperty(name, def);
+    }
+
+    /**
+     * Gets String sub property with default.
+     *
+     * @param name Property name.
+     * @param def  Default value.
+     * @return String.
+     */
+    private String getStringSubProperty(String name, String def) {
+        if (name.contains(".")) {
+
+            String[] splits = name.split("\\.");
+            if (splits.length > 1 && hasProperty(splits[0])) {
+
+                BasicConfig sub = new BasicConfig(getMapProperty(splits[0]));
+                if (sub.hasProperty(splits[1])) {
+                    return sub.getStringProperty(splits[1]);
+                }
+            }
+        }
+
+        return def;
     }
 
     /**
