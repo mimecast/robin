@@ -1,0 +1,9 @@
+DEBUG|0810-110152743|SmtpThread-30307|smtp.Receipt|rescueMe|||||Closing Transmission Channel
+INFO |0810-110152743|SmtpThread-30307|smtp.Receipt|rescueMe|||||Accepted connection from 8.8.8.8:7575
+INFO |0810-110152743|SmtpThread-30307|smtp.Receipt|rescueMe|||||> EHLO example.com
+INFO |0810-110152743|SmtpThread-30307|smtp.Receipt|rescueMe|||||> MAIL FROM:<tony@example.com> SIZE=294
+INFO |0810-110152743|SmtpThread-30307|smtp.Receipt|rescueMe|||||> RCPT TO:<pepper@example.com>
+INFO |0810-110152743|SmtpThread-30307|smtp.Receipt|rescueMe|||||> DATA
+INFO |0810-110152743|SmtpThread-30307|smtp.Receipt|rescueMe|||||> .
+INFO |0810-110152743|SmtpThread-30307|smtp.Receipt|rescueMe|||||> QUIT
+DEBUG|0810-110152743|SmtpThread-30307|smtp.Receipt|rescueMe|||||Closing Transmission Channel

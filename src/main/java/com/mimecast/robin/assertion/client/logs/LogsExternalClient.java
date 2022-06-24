@@ -47,6 +47,18 @@ public class LogsExternalClient extends ExternalClient {
     protected final List<AssertExternalGroup> matchGroups = new ArrayList<>();
     protected final List<AssertExternalGroup> refuseGroups = new ArrayList<>();
 
+    // Storage dir and log file.
+    protected String dir;
+    protected String file;
+
+    /**
+     * Constructs a new LogsExternalClient instance.
+     */
+    public LogsExternalClient() {
+        this.dir = Config.getProperties().getStringProperty("logs.local.dir", "");
+        this.file = dir + new SimpleDateFormat("yyyyMMdd").format(new Date()) + ".log";
+    }
+
     /**
      * Sets config instance.
      *
@@ -87,7 +99,6 @@ public class LogsExternalClient extends ExternalClient {
     protected void findLogs() throws AssertException {
         logsList = new ArrayList<>();
 
-        String dir = Config.getProperties().getStringProperty("logs.local.dir", "");
         if (dir.isEmpty()) {
             log.error("AssertExternal logs.local.dir not found in properties");
         } else {
@@ -97,7 +108,6 @@ public class LogsExternalClient extends ExternalClient {
                 Sleep.nap((int) delay);
                 log.info("AssertExternal logs fetching locally");
 
-                String file = dir + new SimpleDateFormat("yyyyMMdd").format(new Date()) + ".log";
                 try (BufferedReader br = new BufferedReader(new FileReader(file))) {
                     String uid = UIDExtractor.getUID(connection, transactionId);
 
