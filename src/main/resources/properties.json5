@@ -1,6 +1,6 @@
 {
   "logs.local.dir": "/home/robin/log/",
-  "uid.pattern": "\\s\\[([a-z0-9\\-_]+)",
+  "uid.pattern": "\\s\\[([a-z0-9\\-_]+)]",
   "logging": {
     "data": false
   },
