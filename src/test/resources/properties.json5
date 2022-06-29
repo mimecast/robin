@@ -1,15 +1,18 @@
 {
   "digestmd5.random": "64",
 
-  "boolean": true,
-  "long": 7,
-  "string": "string",
-  "list": [
+  boolean: true,
+  long: 7,
+  string: "string",
+  sub: {
+    string: "substring"
+  },
+  list: [
     "monkey",
     "weasel",
     "dragon"
   ],
-  "map": {
-    "string": "map"
+  map: {
+    string: "map"
   }
 }

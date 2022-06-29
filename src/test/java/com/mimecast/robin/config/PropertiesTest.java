@@ -35,6 +35,11 @@ class PropertiesTest {
     }
 
     @Test
+    void getStringSubProperty() {
+        assertEquals("substring", Config.getProperties().getStringProperty("sub.string"));
+    }
+
+    @Test
     void getListProperty() {
         assertTrue(Config.getProperties().hasProperty("list"));
         assertEquals("[monkey, weasel, dragon]", Config.getProperties().getListProperty("list").toString());
