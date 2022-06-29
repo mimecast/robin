@@ -1,8 +1,10 @@
 package com.mimecast.robin.config;
 
+import org.apache.commons.lang3.LocaleUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
+import java.util.Locale;
 
 /**
  * General purpose configuration.
@@ -74,5 +76,12 @@ public class Properties extends ConfigFoundation {
     public Boolean getBooleanProperty(String name) {
         String sys = System.getProperty(name);
         return StringUtils.isNotBlank(sys) ? Boolean.valueOf(sys) : super.getBooleanProperty(name);
+    }
+    
+    /**
+     * Gets Locale property if set or default.
+     */
+    public Locale getLocale() {
+        return LocaleUtils.toLocale(getStringProperty("locale", Locale.getDefault().toString()));
     }
 }
