@@ -51,7 +51,19 @@ public class Properties extends ConfigFoundation {
     @Override
     public String getStringProperty(String name) {
         String sys = System.getProperty(name);
-        return StringUtils.isNotBlank(sys) ? sys : getStringProperty(name, null);
+        return StringUtils.isNotBlank(sys) ? sys : super.getStringProperty(name);
+    }
+
+    /**
+     * Gets String property with default.
+     *
+     * @param name Property name.
+     * @param def  Default value.
+     * @return String.
+     */
+    @Override
+    public String getStringProperty(String name, String def) {
+        return hasProperty(name) ? getStringProperty(name) : super.getStringProperty(name, def);
     }
 
     /**
