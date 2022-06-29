@@ -49,7 +49,7 @@ public class Properties extends ConfigFoundation {
     @Override
     public String getStringProperty(String name) {
         String sys = System.getProperty(name);
-        return StringUtils.isNotBlank(sys) ? sys : super.getStringProperty(name);
+        return StringUtils.isNotBlank(sys) ? sys : getStringProperty(name, null);
     }
 
     /**
