@@ -89,7 +89,7 @@ public abstract class ConfigFoundation {
      * @param name Property name.
      * @return String.
      */
-    protected String getStringProperty(String name) {
+    public String getStringProperty(String name) {
         // TODO Make string never null and update all cases where != null checks need to be turned to StringUtils.isNotBlank().
         return map.get(name) != null ? (String) map.get(name) : null;
     }
@@ -102,7 +102,7 @@ public abstract class ConfigFoundation {
      * @return String.
      */
     public String getStringProperty(String name, String def) {
-        return hasProperty(name) ? getStringProperty(name) : getStringSubProperty(name, def);
+        return hasProperty(name) ? (String) map.get(name) : getStringSubProperty(name, def);
     }
 
     /**
