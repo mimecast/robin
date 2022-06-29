@@ -1,5 +1,6 @@
 package com.mimecast.robin.mime;
 
+import com.mimecast.robin.main.Config;
 import com.mimecast.robin.mime.headers.MimeHeader;
 import com.mimecast.robin.mime.parts.MimePart;
 import com.mimecast.robin.smtp.MessageEnvelope;
@@ -12,7 +13,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -102,7 +106,7 @@ public class EmailBuilder {
 
         // Date
         if (!addedHeaders.contains("date")) {
-            DateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z", Locale.UK);
+            DateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z", Config.getProperties().getLocale());
             headers.add(new MimeHeader("Date", dateFormat.format(new Date())));
         }
 

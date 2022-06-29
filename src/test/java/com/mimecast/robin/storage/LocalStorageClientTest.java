@@ -1,5 +1,6 @@
 package com.mimecast.robin.storage;
 
+import com.mimecast.robin.main.Config;
 import com.mimecast.robin.main.Factories;
 import com.mimecast.robin.main.Foundation;
 import com.mimecast.robin.smtp.connection.Connection;
@@ -17,7 +18,6 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -34,7 +34,7 @@ class LocalStorageClientTest {
         LocalStorageClient localStorageClient = new LocalStorageClient().setConnection(new ConnectionMock(Factories.getSession())).setExtension("dat");
 
         assertTrue(localStorageClient.getToken().contains("/tmp/store/"));
-        assertTrue(localStorageClient.getToken().contains(new SimpleDateFormat("yyyyMMdd", Locale.UK).format(new Date()) + "."));
+        assertTrue(localStorageClient.getToken().contains(new SimpleDateFormat("yyyyMMdd", Config.getProperties().getLocale()).format(new Date()) + "."));
         assertTrue(localStorageClient.getToken().contains(".dat"));
     }
 
@@ -44,7 +44,7 @@ class LocalStorageClientTest {
         LocalStorageClient localStorageClient = new LocalStorageClient().setConnection(new ConnectionMock(Factories.getSession())).setExtension("dat").setConnection(connection);
 
         assertTrue(localStorageClient.getToken().contains("/tmp/store/mimecast.com/vmarian/"));
-        assertTrue(localStorageClient.getToken().contains(new SimpleDateFormat("yyyyMMdd", Locale.UK).format(new Date()) + "."));
+        assertTrue(localStorageClient.getToken().contains(new SimpleDateFormat("yyyyMMdd", Config.getProperties().getLocale()).format(new Date()) + "."));
         assertTrue(localStorageClient.getToken().contains(".dat"));
     }
 
