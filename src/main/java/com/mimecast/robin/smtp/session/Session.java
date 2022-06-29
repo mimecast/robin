@@ -272,7 +272,7 @@ public class Session {
      * Sets the date.
      */
     private void setDate() {
-        this.date = new SimpleDateFormat("E, d MMM yyyy HH:mm:ss Z", Locale.UK).format(new Date());
+        this.date = new SimpleDateFormat("E, d MMM yyyy HH:mm:ss Z", Config.getProperties().getLocale()).format(new Date());
     }
 
     /**

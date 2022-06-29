@@ -22,7 +22,6 @@ import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
-import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -71,7 +70,7 @@ public class LocalStorageClient implements StorageClient {
      * @return Self.
      */
     public LocalStorageClient setExtension(String extension) {
-        String now = new SimpleDateFormat("yyyyMMdd", Locale.UK).format(new Date());
+        String now = new SimpleDateFormat("yyyyMMdd", Config.getProperties().getLocale()).format(new Date());
 
         if (extension == null) {
             extension = ".dat";

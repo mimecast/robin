@@ -1,5 +1,6 @@
 package com.mimecast.robin.mime;
 
+import com.mimecast.robin.main.Config;
 import com.mimecast.robin.mime.parts.FileMimePart;
 import com.mimecast.robin.mime.parts.TextMimePart;
 import com.mimecast.robin.smtp.MessageEnvelope;
@@ -11,7 +12,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -39,7 +39,7 @@ class EmailBuilderTest {
     void providedDefaultHeaders() throws IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-        String date = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z", Locale.UK).format(new Date());
+        String date = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z", Config.getProperties().getLocale()).format(new Date());
         new EmailBuilder(new Session(), new MessageEnvelope())
                 .addHeader("Date", date)
                 .addHeader("Message-Id", "<test@id>")

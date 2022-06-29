@@ -2,6 +2,7 @@ package com.mimecast.robin.smtp;
 
 import com.mimecast.robin.config.assertion.AssertConfig;
 import com.mimecast.robin.config.assertion.MimeConfig;
+import com.mimecast.robin.main.Config;
 import com.mimecast.robin.util.PathUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -60,7 +61,7 @@ public class MessageEnvelope {
      * Constructs a new MessageEnvelope instance.
      */
     public MessageEnvelope() {
-        date = new SimpleDateFormat("E, d MMM yyyy HH:mm:ss Z", Locale.UK).format(new Date());
+        date = new SimpleDateFormat("E, d MMM yyyy HH:mm:ss Z", Config.getProperties().getLocale()).format(new Date());
         String now = String.valueOf(System.currentTimeMillis());
         String uid = UUID.randomUUID() + "-" + now;
 
