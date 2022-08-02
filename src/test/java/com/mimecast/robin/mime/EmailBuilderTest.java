@@ -58,11 +58,11 @@ class EmailBuilderTest {
     }
 
     @Test
-    void singlePart() throws IOException {
+    void singlePartWithUtf8Subject() throws IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
         new EmailBuilder(new Session(), new MessageEnvelope())
-                .addHeader("Subject", "Robin wrote")
+                .addHeader("Subject", "Mon chéri")
                 .addHeader("To", "Lady Robin <lady.robin@example.com>")
                 .addHeader("From", "Sir Robin <sir.robin@example.com>")
 
@@ -79,7 +79,7 @@ class EmailBuilderTest {
 
         Map<Integer, String> lines = StreamUtils.parseLines(outputStream);
         assertEquals("MIME-Version: 1.0\r\n", lines.get(1));
-        assertEquals("Subject: Robin wrote\r\n", lines.get(2));
+        assertEquals("Subject: =?UTF-8?Q?Mon_ch=C3=A9ri?=\r\n", lines.get(2));
         assertEquals("To: Lady Robin <lady.robin@example.com>\r\n", lines.get(3));
         assertEquals("From: Sir Robin <sir.robin@example.com>\r\n", lines.get(4));
         assertTrue(lines.get(5).startsWith("Date: "));
@@ -91,11 +91,11 @@ class EmailBuilderTest {
     }
 
     @Test
-    void multiPart() throws IOException {
+    void multiPartWithMultilineSubject() throws IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
         new EmailBuilder(new Session(), new MessageEnvelope())
-                .addHeader("Subject", "Robin wrote")
+                .addHeader("Subject", "Mon\r\nchéri")
                 .addHeader("To", "Sir Robin <sir.robin@example.com>")
                 .addHeader("From", "Lady Robin <lady.robin@example.com>")
 
@@ -124,7 +124,7 @@ class EmailBuilderTest {
 
         Map<Integer, String> lines = StreamUtils.parseLines(outputStream);
         assertEquals("MIME-Version: 1.0\r\n", lines.get(1));
-        assertEquals("Subject: Robin wrote\r\n", lines.get(2));
+        assertEquals("Subject: =?UTF-8?B?TW9uDQpjaMOpcmk=?=\r\n", lines.get(2));
         assertEquals("To: Sir Robin <sir.robin@example.com>\r\n", lines.get(3));
         assertEquals("From: Lady Robin <lady.robin@example.com>\r\n", lines.get(4));
         assertTrue(lines.get(5).startsWith("Date: "));

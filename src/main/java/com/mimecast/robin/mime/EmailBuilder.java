@@ -5,12 +5,15 @@ import com.mimecast.robin.mime.headers.MimeHeader;
 import com.mimecast.robin.mime.parts.MimePart;
 import com.mimecast.robin.smtp.MessageEnvelope;
 import com.mimecast.robin.smtp.session.Session;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.mail.internet.MimeUtility;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -92,7 +95,17 @@ public class EmailBuilder {
      * @return Self.
      */
     public EmailBuilder addHeader(String name, String value) {
-        headers.add(new MimeHeader(name, value));
+        try {
+            boolean multiline = value.contains("\r") || value.contains("\n");
+            headers.add(new MimeHeader(name,
+                    multiline ?
+                            "=?UTF-8?B?" + Base64.encodeBase64String(value.getBytes()).trim() + "?=" :
+                            MimeUtility.encodeText(value)
+            ));
+        } catch (UnsupportedEncodingException e) {
+            log.warn("Unable to encode header value: {}", e.getMessage());
+            headers.add(new MimeHeader(name, value.replaceAll("\n", "\n\t")));
+        }
         return this;
     }
 
