@@ -16,7 +16,7 @@ Glossary
 #### Destination
 - **mx** - _(List, String, IP, FQD)_ [default: 127.0.0.1] MX server list.
 - **port** - _(Integer)_ [default: 25] MX port.
-- **route** - _(String, Name)_ [default: none] Selects a preconfigured route by name from _client.json_ routes if any.
+- **route** - _(String, Name)_ [default: none] Selects a preconfigured route by name from _client.json5_ routes if any.
 
 
 #### Encryption
@@ -49,8 +49,8 @@ Glossary
 
 
 ### Envelope
-- **mail** - _(String, Email Address)_ [default: client.json] Sender email address.
-- **rcpt** - _(List, String, Email Address)_ [default: client.json] Recipients list of email addresses.
+- **mail** - _(String, Email Address)_ [default: client.json5] Sender email address.
+- **rcpt** - _(List, String, Email Address)_ [default: client.json5] Recipients list of email addresses.
 - **headers** - _(List, String, String)_ List of headers to be injected by magic.
 
 
@@ -200,7 +200,9 @@ Case
                         [ "RCPT", "^250" ],
                         [ "BDAT", "^250" ]
                     ],
-                    "mta": {
+                    external: [
+                      {
+                        type: "logs",
                         "wait": 10,
                         "retry": 2,
                         "delay": 5,
@@ -211,7 +213,8 @@ Case
                             [ "MAPREDUCE:RCPT", "Custody=true", "Storage=check" ]
                             [ "250", "Received OK" ]
                         ]
-                    }
+                      }
+                    ]
                 }
             }
         ],
@@ -228,7 +231,7 @@ Case
 
 Configuration
 -------------
-*client.json*
+*client.json5*
 
     {
         "mx": [

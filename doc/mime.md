@@ -70,13 +70,21 @@ or dynamically generate a file using the magic variables:
                }
               }
 
-Sadly JSON doesn't do multiline strings, so you'll have some long lines there.
+JSON doesn't do multiline strings so best to stick with JSON5 to avoid long lines like in above example. 
+
+The below example uses JSON5 multiline string. Don;t fetget the backslash. 
 
                 headers: [
                   ["Content-Type", "text/plain; charset=\"UTF-8\""],
                   ["Content-Transfer-Encoding", "quoted-printable"]
                 ],
-                message: "Mon chéri,\r\n\r\nPlease review this lovely blog post I have written about myself.\r\nHuge ego, right?\r\n\r\nKisses,\r\nYour Robin."
+            message: "Mon chéri,\
+     \
+     Please review this lovely blog post I have written about myself.\
+     Huge ego, right?\
+     \
+     Kisses,\
+     Your Robin."
               },
               {
                 headers: [

@@ -22,7 +22,7 @@ Glossary
 
 Configuration
 -------------
-*server.json*
+*server.json5*
 
     {
         "bind": "::",
