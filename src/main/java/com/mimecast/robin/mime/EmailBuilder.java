@@ -69,7 +69,7 @@ public class EmailBuilder {
      */
     public EmailBuilder buildMime() {
         if (envelope.getMime() != null && !envelope.getMime().isEmpty()) {
-            envelope.getMime().getHeaders().forEach(h -> headers.add(new MimeHeader(h.getName(), session.magicReplace(h.getValue()))));
+            envelope.getMime().getHeaders().forEach(h -> addHeader(h.getName(), session.magicReplace(h.getValue())));
 
             for (MimePart part : envelope.getMime().getParts(session, envelope)) {
                 if (part.getHeader("Content-ID") != null) {
