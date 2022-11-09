@@ -11,9 +11,12 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.naming.ConfigurationException;
 import java.io.IOException;
+import java.util.AbstractMap;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Implementation of client CLI.
@@ -68,7 +71,7 @@ public class ClientCLI {
      * Instantiate client and send.
      *
      * @param cmd CommandLine instance.
-     * @throws AssertException Assertion exception.
+     * @throws AssertException        Assertion exception.
      * @throws ConfigurationException Unable to read/parse config file.
      */
     private void send(CommandLine cmd) throws AssertException, ConfigurationException {
@@ -81,13 +84,15 @@ public class ClientCLI {
 
                 CaseConfig caseConfig = new CaseConfig();
                 Map<String, Object> map = caseConfig.getMap();
-                map.put("file", cmd.getOptionValue("file"));
                 map.put("mx", Collections.singletonList(cmd.getOptionValue("mx")));
-                map.put("mail", cmd.getOptionValue("mail"));
-                map.put("rcpt", cmd.getOptionValue("rcpt"));
                 if (StringUtils.isNotBlank(cmd.getOptionValue("port"))) {
-                    map.put("port", cmd.getOptionValue("port"));
+                    map.put("port", Integer.valueOf(cmd.getOptionValue("port")));
                 }
+                map.put("envelopes", Collections.singletonList(Stream.of(
+                        new AbstractMap.SimpleEntry<>("mail", cmd.getOptionValue("mail")),
+                        new AbstractMap.SimpleEntry<>("rcpt", Collections.singletonList(cmd.getOptionValue("rcpt"))),
+                        new AbstractMap.SimpleEntry<>("file", cmd.getOptionValue("file"))
+                ).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))));
                 client.send(caseConfig);
             }
         } catch (IOException e) {
