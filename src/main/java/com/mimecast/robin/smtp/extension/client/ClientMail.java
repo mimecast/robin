@@ -40,7 +40,7 @@ public class ClientMail extends ClientProcessor {
 
         // Sender.
         int size = sizeMessage(envelope);
-        String write = "MAIL FROM:<" + envelope.getMail() + ">" + (size > 0 ? " SIZE=" + size : "") + (smtpUtf8 ? " SMTPUTF8" : "");
+        String write = "MAIL FROM:<" + envelope.getMail() + ">" + (size > 0 ? " SIZE=" + size : "") + (smtpUtf8 ? " SMTPUTF8" : "") + envelope.getParams("mail");
         connection.write(write);
 
         String read = connection.read("250");

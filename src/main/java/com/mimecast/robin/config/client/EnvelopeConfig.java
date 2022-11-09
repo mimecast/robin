@@ -50,6 +50,15 @@ public class EnvelopeConfig extends ConfigFoundation {
     }
 
     /**
+     * Gets parameters.
+     *
+     * @return Map of String, List of String.
+     */
+    public Map<String, List<String>> getParams() {
+        return getMapProperty("params");
+    }
+
+    /**
      * Gets headers.
      *
      * @return Map of String, Object.

@@ -124,6 +124,11 @@ public class ConfigMapper {
             envelope.getRcpts().add(magicReplace(rcpt));
         }
 
+        // Magic params.
+        for (Map.Entry<String, List<String>> param : envelopeConfig.getParams().entrySet()) {
+            param.getValue().forEach(e -> envelope.addParam(param.getKey().toLowerCase(), magicReplace(e)));
+        }
+
         // Magic headers.
         envelopeConfig.getHeaders().forEach((k, v) -> {
             if (v instanceof String) {

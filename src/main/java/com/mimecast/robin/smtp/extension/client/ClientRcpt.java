@@ -34,7 +34,7 @@ public class ClientRcpt extends ClientProcessor {
         String read;
         boolean accepting = false;
         for (String to : envelope.getRcpts()) {
-            write = "RCPT TO:<" + to + ">";
+            write = "RCPT TO:<" + to + ">" + envelope.getParams("rcpt");
             connection.write(write);
 
             read = connection.read("250");

@@ -9,6 +9,8 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Message envelope.
@@ -22,7 +24,8 @@ public class MessageEnvelope {
     private String mail = null;
     private String rcpt = null;
     private List<String> rcpts = new ArrayList<>();
-    private Map<String, String> headers = new HashMap<>();
+    private final Map<String, List<String>> params = new HashMap<>();
+    private final Map<String, String> headers = new HashMap<>();
 
     // Set MimeConfig.
     private MimeConfig mime = null;
@@ -184,6 +187,34 @@ public class MessageEnvelope {
     public MessageEnvelope setRcpts(List<String> rcpts) {
         this.rcpts = rcpts;
         return this;
+    }
+
+    /**
+     * Add SMTP parameters.
+     *
+     * @param extension SMTP extension to add parameter too.
+     * @param param     Param and value if any.
+     * @return Self.
+     */
+    public MessageEnvelope addParam(String extension, String param) {
+        if (params.containsKey("extension")) {
+            params.put(extension, Stream.concat(params.get(extension).stream(), Stream.of(param))
+                    .collect(Collectors.toList()));
+        } else {
+            params.put(extension.toLowerCase(), Stream.of(param).collect(Collectors.toList()));
+        }
+        return this;
+    }
+
+    /**
+     * Gets SMTP parameter by name.
+     *
+     * @param extension SMTP extension to get parameter for.
+     * @return String.
+     */
+    public String getParams(String extension) {
+        List<String> param = params.get(extension);
+        return param != null && !param.isEmpty() ? " " + String.join(" ", param) : "";
     }
 
     /**
