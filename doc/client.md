@@ -52,6 +52,9 @@ Usage
     envelope.addHeader("From", "jarvis@example.com");
     envelope.addHeader("To", "friday@example.com");
 
+    // MAIL and RCPT custom params.
+    envelope.addParam("MAIL", "XOORG=example.com");
+
 
     // Email stream // Preferred when available.
     envelope.setStream(new FileInputStream(new File("src/test/resources/lipsum.eml")));

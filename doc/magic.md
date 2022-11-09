@@ -17,6 +17,8 @@ Use these to program your emails to autocomplete information.
 - **{$RANDCH}** - Random 20 alpha characters.
 - **{$RANDNO#}** - Generates random number of given length (example: **{$RANDNO3}**).
 - **{$RANDCH#}** - Random alpha characters of given length (example: **{$RANDCH15}**).
+- **{$HEADERS}** - Add all custom headers.
+- **{$HEADERS[#]}** - Add header value by key (example: **{$HEADERS[FROM]}**).
 
 
 Magic headers

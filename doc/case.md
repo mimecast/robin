@@ -51,7 +51,32 @@ Glossary
 ### Envelope
 - **mail** - _(String, Email Address)_ [default: client.json5] Sender email address.
 - **rcpt** - _(List, String, Email Address)_ [default: client.json5] Recipients list of email addresses.
+
+- **params** - Allows usage of custom parameters for special enviroments.
+
+Will auto-inject list elements at the end of the MAIL or RCPT commands separated by space.
+
+**Example case config:**
+
+        params: {
+            MAIL: [ "XOORG=example.com" ],
+            RCPT: [ "ACCEPT" ]
+        },
+
 - **headers** - _(List, String, String)_ List of headers to be injected by magic.
+
+Handy for EJF automation and more.
+
+**Example case config:**
+
+        "headers": {
+            "from": "{$mail}",
+            "to": [ "{$rcpt}" ],
+            "sender": "{$mail}",
+            "recipient": [ "{$rcpt}" ]
+        },
+
+Can be injected in the eml via `{$HEADERS}` magic variable or selective by providing the key like `{$HEADERS[FROM]}`.
 
 
 #### Transfer
@@ -141,6 +166,7 @@ _See LogsClient.java interface for implementation of external clients._
 - **match** - _(List of List, String, Regex)_ Regex assertions to run against log lines. Multiple expressions can run on the same line. All must match.
 - **refuse** - _(List of List, String, Regex)_ The opposite of match. Will stop and error on first match.
 
+        "type": "logs",
         "wait": 10,
         "retry": 2,
         "delay": 5,
@@ -187,6 +213,11 @@ Case
                 "chunkSize": 20480,
                 "chunkBdat": true,
                 "chunkWrite": true,
+
+                params: {
+                    MAIL: [ "XOORG=example.com" ],
+                    RCPT: [ "ACCEPT" ]
+                },
 
                 "file": "src/test/resources/lipsum.eml",
 
