@@ -13,21 +13,6 @@ import java.util.stream.Collectors;
 
 /**
  * Assertions config extension for matching calls.
- * <pre>
- *     {
- *       "type": "logs",
- *       "wait": 10,
- *       "delay": 10,
- *       "retry": 3,
- *       "verify": ["MTAJNLPROCSUMMARY"],
- *       "match": [
- *         ["MTARCPT", "Dir=Jnl"],
- *       ],
- *       "refuse": [
- *          ["java.lang.NullPointerException"]
- *       ]
- *   }
- * </pre>
  */
 public class MatchExternalClientConfig extends ExternalConfig {
 

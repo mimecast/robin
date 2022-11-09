@@ -9,36 +9,6 @@ import java.util.Map;
 
 /**
  * Logs assertions config.
- *
- * <p>This should be constructed using a map like the following:
- * <pre>
- *     {
- *       "type": "logs",
- *       "wait": 10,
- *       "delay": 10,
- *       "retry": 3,
- *       "grep": [
- *         {
- *           "parameter": "-E",
- *           "pattern": "{$uid}"
- *         },
- *         {
- *           "pattern": "SmtpThread"
- *         },
- *         {
- *           "parameter": "-vE",
- *           "pattern": "DEBUG|TRACE"
- *         }
- *       ],
- *       "verify": ["MTAJNLPROCSUMMARY"],
- *       "match": [
- *         ["MTARCPT", "Dir=Jnl"],
- *       ],
- *       "refuse": [
- *          ["java.lang.NullPointerException"]
- *       ]
- *   }
- * </pre>
  */
 public final class LogsExternalClientConfig extends MatchExternalClientConfig {
 

@@ -7,15 +7,6 @@ import java.util.Map;
 /**
  * External assertions config.
  *
- * <p>This should constructed using a map like the following:
- * <pre>
- *     {
- *       "wait": 10,
- *       "delay": 10,
- *       "retry": 3,
- *   }
- * </pre>
- *
  * <p>This may be present at envelope level only.
  */
 public class ExternalConfig extends BasicConfig {
