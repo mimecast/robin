@@ -8,6 +8,7 @@ import com.mimecast.robin.smtp.session.Session;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -98,6 +99,13 @@ public class ConfigMapper {
                             rcptList.add(session.magicReplace(address));
                         }
                         envelopeMap.put("rcpt", rcptList);
+                    }
+                    if (envelopeMap.containsKey("params")) {
+                        Map<String, List<String>> params = new HashMap<>();
+                        for (Map.Entry<String, List<String>> param : ((Map<String, List<String>>) envelopeMap.get("params")).entrySet()) {
+                            params.put(param.getKey(), param.getValue().stream().map(e -> e = session.magicReplace(e)).collect(Collectors.toList()));
+                        }
+                        envelopeMap.put("params", params);
                     }
                 }
             }
