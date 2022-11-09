@@ -8,5 +8,9 @@
     "connectTimeout": 20,
     "writeTimeout": 20,
     "readTimeout": 90
+  },
+  humio: {
+    auth: "YOUR_API_KEY",
+    url: "https://humio.example.com/"
   }
 }
