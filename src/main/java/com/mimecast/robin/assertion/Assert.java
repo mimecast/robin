@@ -122,17 +122,22 @@ public class Assert {
         if (!connection.getSession().getEnvelopes().isEmpty() && !connection.getSessionTransactionList().getEnvelopes().isEmpty()) {
             for (int i = 0; i < connection.getSession().getEnvelopes().size(); i++) {
                 MessageEnvelope envelope = connection.getSession().getEnvelopes().get(i);
-                EnvelopeTransactionList envelopeTransactionList = connection.getSessionTransactionList().getEnvelopes().get(i);
+                List<EnvelopeTransactionList> envelopeTransactions = connection.getSessionTransactionList().getEnvelopes();
+                if (envelopeTransactions.size() > i) {
+                    EnvelopeTransactionList envelopeTransactionList = envelopeTransactions.get(i);
 
-                if (envelope.getAssertions() != null) {
-                    if (!envelope.getAssertions().getSmtp().isEmpty()) {
-                        assertSmtp(envelope.getAssertions().getSmtp(), envelopeTransactionList);
-                    }
+                    if (envelope.getAssertions() != null) {
+                        if (!envelope.getAssertions().getSmtp().isEmpty()) {
+                            assertSmtp(envelope.getAssertions().getSmtp(), envelopeTransactionList);
+                        }
 
-                    // External.
-                    if (runExternal) {
-                        assertExternal(envelope.getAssertions().getExternal(), i);
+                        // External.
+                        if (runExternal) {
+                            assertExternal(envelope.getAssertions().getExternal(), i);
+                        }
                     }
+                } else {
+                    throw new AssertException("Assert envelope " + i + " not found");
                 }
             }
         }
