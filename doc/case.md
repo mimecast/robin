@@ -181,6 +181,17 @@ _See LogsClient.java interface for implementation of external clients._
             [ "java.lang.NullPointerException" ]
         ]
 
+#### Humio
+
+With the addition of Humio plugin you can simply use `"type": "humio",` instead of logs to pull logs from configured Humio instance.
+
+##### Humio config in properties.json
+
+        "humio": {
+            "auth": "YOUR_API_KEY",
+            "url": "https://humio.example.com/"
+        }
+
 
 Case
 ----
