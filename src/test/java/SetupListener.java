@@ -51,7 +51,7 @@ public class SetupListener implements LauncherSessionListener {
     /**
      * Initializer class.
      * <p>Will initialise only if <code>init.path</code> system property is defined.
-     * <p>Example VM options: -Dinit.path=src/main/resources/
+     * <p>Example VM options: -Dinit.path=cfg/
      */
     static class Initializer {
 
