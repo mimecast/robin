@@ -1,13 +1,10 @@
 ---
 component: Robin
 project_name: Robin
-full_path: https://gitlab.devuk.mimecast.lan/Messaging/robin
+full_path: 'https://github.com/mimecast/robin'
 component_usage: Open Source
-risk_category: Low
-application_purpose: Poc
+owning_team: Vlad Marian
+risk_category: low
+application_purpose: testing
 dev_language:
-- Java
-- CSS
-development_strategy: 
-code_repository_type: Gitlab
-owner: Vlad Marian
+  - Java
