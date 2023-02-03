@@ -138,7 +138,7 @@ public class MagicInputStream extends LineInputStream {
                     key = matcher.group();
                 }
                 String replacement = getReplacement(key);
-                if (!replacement.isEmpty()) {
+                if (replacement != null) {
                     line = entry.getValue().matcher(line).replaceAll(replacement);
                 }
             }
