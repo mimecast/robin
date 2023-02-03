@@ -233,9 +233,9 @@ class ClientDataTest {
         assertEquals("Subject: Lipsum\r\n", connection.getLine(7));
         assertEquals("Content-Type: multipart/alternative;\r\n", connection.getLine(8));
         assertEquals("Lorem ipsum dolor sit amet, consectetur adipiscing elit.\r\n", connection.getLine(15));
-        assertEquals("VestibuluBDAT 512\r\n", connection.getLine(18));
+        assertEquals("Vestibulum nunc massa, porttitor vel jusBDAT 512\r\n", connection.getLine(18));
         assertEquals("--MCBoundary11505141140170031\r\n", connection.getLine(32));
-        assertEquals("<br>Integer at finibus BDAT 512\r\n", connection.getLine(54));
+        assertEquals("<br>Vestibulum nunc massBDAT 512\r\n", connection.getLine(55));
         assertEquals("--MCBoundary11505141140170031--\r\n", connection.getLine(71));
     }
 }
