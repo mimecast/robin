@@ -46,7 +46,7 @@ class ChunkedInputStreamTest {
         for (int i = 0; i < chunks.size() - 1; i++) {
             assertEquals(256, chunks.get(i).size());
         }
-        assertEquals(245, chunks.get(10).size());
+        assertEquals(214, chunks.get(10).size());
     }
 
     @Test
@@ -61,7 +61,7 @@ class ChunkedInputStreamTest {
 
         assertEquals(2, chunks.size());
         assertEquals(2048, chunks.get(0).size());
-        assertEquals(757, chunks.get(1).size());
+        assertEquals(726, chunks.get(1).size());
     }
 
     @Test
@@ -76,7 +76,7 @@ class ChunkedInputStreamTest {
 
         assertEquals(2, chunks.size());
         assertEquals(2048, chunks.get(0).size());
-        assertEquals(757, chunks.get(1).size());
+        assertEquals(726, chunks.get(1).size());
     }
 
     @Test
@@ -90,7 +90,7 @@ class ChunkedInputStreamTest {
         }
 
         assertEquals(6, chunks.size());
-        assertEquals(271, chunks.get(0).size());
+        assertEquals(240, chunks.get(0).size());
         assertEquals(512, chunks.get(1).size());
         assertEquals(512, chunks.get(2).size());
         assertEquals(512, chunks.get(3).size());
