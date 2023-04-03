@@ -1,16 +1,28 @@
 {
+  // Path to MTA logs if one running on local host.
   "logs.local.dir": "/home/robin/log/",
+
+  // Pattern to match UID out of SMT responses.
   "uid.pattern": "\\s\\[([a-z0-9\\-_]+)]",
-  "logging": {
-    "data": false
+
+  // Logging config.
+  logging: {
+    data: false // Log email DATA sent and received.
   },
-  "request": {
-    "connectTimeout": 20,
-    "writeTimeout": 20,
-    "readTimeout": 90
+
+  // HTTP Requests configuration.
+  request: {
+    connectTimeout: 20,
+    writeTimeout: 20,
+    readTimeout: 90
   },
+
+  // Humio configuration.
   humio: {
     auth: "YOUR_API_KEY",
-    url: "https://humio.example.com/"
+    url: "https://humio.example.com/",
+    connectTimeout: 20,
+    writeTimeout: 20,
+    readTimeout: 90
   }
 }
