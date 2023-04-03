@@ -36,10 +36,6 @@ public class ConfigLoader {
         if (path == null) path = "cfg" + File.separator;
 
         String propertiesFile = "properties.json5";
-        if (Config.getProperties().hasProperty("properties")) {
-            propertiesFile = Config.getProperties().getStringProperty("properties");
-        }
-
         String propertiesPath = Paths.get(path, propertiesFile).toString();
         if (PathUtils.isFile(propertiesPath)) {
             try {
@@ -49,6 +45,21 @@ public class ConfigLoader {
                 log.fatal("Error reading {}.", propertiesFile);
                 throw new ConfigurationException("Can't read " + propertiesFile + ".");
             }
+        }
+
+        if (Config.getProperties().hasProperty("properties")) {
+            propertiesFile = Config.getProperties().getStringProperty("properties");
+            propertiesPath = Paths.get(path, propertiesFile).toString();
+            if (PathUtils.isFile(propertiesPath)) {
+                try {
+                    Config.getProperties().getMap().putAll(new Properties(propertiesPath).getMap());
+                    log.debug("Custom properties: {}", propertiesPath);
+                } catch (IOException e) {
+                    log.fatal("Error reading {}.", propertiesFile);
+                    throw new ConfigurationException("Can't read " + propertiesFile + ".");
+                }
+            }
+
         }
 
         String serverPath = Paths.get(path, "server.json5").toString();
