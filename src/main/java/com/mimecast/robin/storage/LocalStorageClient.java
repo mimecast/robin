@@ -78,7 +78,7 @@ public class LocalStorageClient implements StorageClient {
             extension = "." + extension;
         }
 
-        fileName = now + "." + connection.getSession() + extension;
+        fileName = now + "." + connection.getSession().getUID() + extension;
 
         return this;
     }
