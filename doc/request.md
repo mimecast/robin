@@ -19,18 +19,18 @@ Examples
 ### POST JSON
 Make a JSON POST request.
 
-      "request": {
-        "url": "https://robin.requestcatcher.com/",
-        "type": "POST",
-        "headers": [
+      request: {
+        url: "https://robin.requestcatcher.com/",
+        type: "POST",
+        headers: [
           {
-            "name": "Cache-Control",
-            "value": "no-cache"
+            name: "Cache-Control",
+            value: "no-cache"
           }
         ],
-        "content": {
-          "payload": "{\"name\": \"Robin\"}",
-          "mimeType": "application/json"
+        content: {
+          payload: "{\"name\": \"Robin\"}",
+          mimeType: "application/json"
         }
     }
 
@@ -38,19 +38,19 @@ Make a JSON POST request.
 ### POST with parameters
 Make a POST with form data.
 
-      "request": {
-        "url": "https://robin.requestcatcher.com/",
-        "type": "POST",
-        "headers": [
+      request: {
+        url: "https://robin.requestcatcher.com/",
+        type: "POST",
+        headers: [
           {
-            "name": "Content-Type",
-            "value": "text/html"
+            name: "Content-Type",
+            value: "text/html"
           }
         ],
-        "params": [
+        params: [
           {
-            "name": "name",
-            "value": "Robin"
+            name: "name",
+            value: "Robin"
           }
         ]
     }
@@ -59,29 +59,29 @@ Make a POST with form data.
 ### POST with parameters and files
 Make a POST with multipart form data (file upload).
 
-      "request": {
-        "url": "https://robin.requestcatcher.com/",
-        "type": "POST",
-        "headers": [
+      request: {
+        url: "https://robin.requestcatcher.com/",
+        type: "POST",
+        headers: [
           {
-            "name": "Content-Type",
-            "value": "text/html"
+            name: "Content-Type",
+            value: "text/html"
           }
         ],
-        "params": [
+        params: [
           {
-            "name": "name",
-            "value": "Robin"
+            name: "name",
+            value: "Robin"
           }
         ],
-        "files": [
+        files: [
           {
-            "name": "logo",
-            "value": "src/test/resources/mime/logo.jpg"
+            name: "logo",
+            value: "src/test/resources/mime/logo.jpg"
           },
           {
-            "name": "photo",
-            "value": "src/test/resources/mime/selfie.jpg"
+            name: "photo",
+            value: "src/test/resources/mime/selfie.jpg"
           }
         ]
     }

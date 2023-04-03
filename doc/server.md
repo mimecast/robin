@@ -5,78 +5,112 @@ It supports user authentication and EHLO scenarios.
 Outside of the given scenarios will accept everything.
 
 
-Glossary
---------
-- **bind** - Interface the server will bind too (default: ::).
-- **port** - Port the server will listen too (default: 25).
-- **backlog** - Number of connections to be allowed in the backlog (default: 25).
-- **errorLimit** - Number of SMTP errors to allow before terminating connection (default: 3).
-- **auth** - Advertise AUTH support (default: true).
-- **starttls** - Advertise STARTTLS support (default: true).
-- **chunking** - Advertise CHUNKING support (default: true).
-- **keystore** - Java keystore (default: /usr/local/keystore.jks).
-- **keystorepassword** - Keystore password (default: changeThis).
-- **users** - Users allowed to authorize to the server.
-- **scenarios** - Predefined server response scenarios based on EHLO value.
-
-
 Configuration
 -------------
 *server.json5*
 
     {
-        "bind": "::",
-        "port": 25,
-        "backlog": 25,
-        "errorLimit": 3,
+        // Hostname to declare in welcome message.
+        hostname: "example.com",
 
-        "auth": true,
-        "starttls": true,
-        "chunking": true,
+        // Interface the server will bind too (default: ::).
+        bind: "::",
 
-        "keystore": "/usr/local/keystore.jks",
-        "keystorepassword": "avengers",
+        // Port the server will listen too (default: 25).
+        port: 25,
 
-        "users": [
+        // Number of connections to be allowed in the backlog (default: 25).
+        backlog: 25,
+
+        // Maximum number of SMTP transactions to process ofver a connection.
+        transactionsLimit: 200,
+
+        // Number of SMTP errors to allow before terminating connection (default: 3).
+        errorLimit: 3,
+
+        // Advertise AUTH support (default: true).
+        auth: true,
+
+        // Advertise STARTTLS support (default: true).
+        starttls: true,
+
+        // Advertise CHUNKING support (default: true).
+        chunking: true,
+
+        // Java keystore (default: /usr/local/keystore.jks).
+        keystore: "/usr/local/keystore",
+
+        // Keystore password.
+        keystorepassword: "avengers",
+
+        // Email storage configuration.
+        storage: {
+            enabled: true,
+
+            // Path to storage folder.
+            path: "/usr/local/store",
+
+            // Auto clean storage on service start.
+            clean: true,
+
+            // Auto clean delete matching filenames only.
+            patterns: [
+            "^([0-9]{8}\\.)"
+          ]
+        },
+      
+        // Users allowed to authorize to the server.
+        users: [
             {
-                "name": "tony@example.com",
-                "pass": "giveHerTheRing"
+                name: "tony@example.com",
+                pass: "giveHerTheRing"
             }
         ],
 
-        "scenarios": {
+        // Predefined server response scenarios based on EHLO value.
+        scenarios: {
+
+            // Default scenario to use if no others match.
             "*": {
-                "rcpt": [
+                rcpt: [
+                    // Custom response for addresses matching value regex.
                     {
-                        "value": "friday\\-[0-9]+@example\\.com",
-                        "response": "252 I think I know this user"
+                        value: "friday\\-[0-9]+@example\\.com",
+                        response: "252 I think I know this user"
                     }
                 ]
             },
 
+            // How to reject mail at different commands.
             "reject.com": {
-                "ehlo": "501 Not talking to you",
-                "mail": "451 I'm not listening to you",
-                "rcpt": [
+                // Custom response for EHLO.
+                ehlo: "501 Not talking to you",
+
+                // Custom response for MAIL.
+                mail: "451 I'm not listening to you",
+
+                // Custom response for given recipients.
+                rcpt: [
                     {
-                        "value": "ultron@reject\\.com",
-                        "response": "501 Heart not found"
+                        value: "ultron@reject\\.com",
+                        response: "501 Heart not found"
                     }
                 ],
-                "data": "554 Your data is corrupted"
+
+                // Custom response for DATA.
+                data: "554 Your data is corrupted"
             },
 
-            "rejectmail.com": {
-                "rcpt": [
-                    {
-                        "value": "jane@example\\.com",
-                        "response": "501 Invalid address"
-                    }
-                ]
-            },
-
-            "helo.com": {
-                "ehlo": "500 ESMTP Error (Try again using SMTP)"
+            // How to configure TLS for failure using a deprecated version and weak cipher.
+            "failtls.com": {
+            
+                // Custom response for STARTTLS.
+                // STARTTLS also supports a list of protocols and ciphers to use handshake. 
+                starttls: {
+                    response: "220 You will fail",
+                    protocols: ["TLSv1.0"],
+                    ciphers: ["TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA"],
+                }
             }
         }
     }

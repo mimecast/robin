@@ -269,7 +269,7 @@ public class Factories {
                 return externalClients.get(key).call().setConnection(connection)
                         .setConfig(config);
             } catch (Exception e) {
-                log.error("Error calling storage client: {}", e.getMessage());
+                log.error("Error calling external client: {}", e.getMessage());
             }
         }
 

@@ -136,9 +136,13 @@ public class LogsExternalClient extends ExternalClient {
                 log.info("AssertExternal logs fetch verify {}", (count < config.getRetry() - 1 ? "failure" : "attempts spent"));
             }
 
-            if (logsList == null || logsList.isEmpty()) {
-                throw new AssertException("No logs found to assert against");
+            if (!assertVerifyFails) {
+                skip = true;
+                log.warn("Skipping");
+                return;
             }
+
+            throw new AssertException("No logs found to assert against");
         }
     }
 

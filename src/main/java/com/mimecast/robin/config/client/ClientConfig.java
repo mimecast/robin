@@ -1,6 +1,7 @@
 package com.mimecast.robin.config.client;
 
 import com.mimecast.robin.config.ConfigFoundation;
+import com.mimecast.robin.config.assertion.AssertConfig;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -57,10 +58,19 @@ public class ClientConfig extends ConfigFoundation {
     }
 
     /**
+     * Gets assertion configuration.
+     *
+     * @return AssertConfig instance.
+     */
+    public AssertConfig getAssertions() {
+        return new AssertConfig(getMapProperty("assertions"));
+    }
+
+    /**
      * Gets route if any.
      *
      * @param name Route name.
-     * @return Route configuration instance.
+     * @return RouteConfig instance.
      */
     public RouteConfig getRoute(String name) {
         return routes.stream().filter(route -> route.getName().equals(name)).findFirst().orElse(null);

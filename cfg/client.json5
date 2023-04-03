@@ -1,16 +1,20 @@
 {
-  "$schema": "schema/client.schema.json",
+  $schema: "../src/main/resources/schema/client.schema.json",
 
-  "mx": [
+  // Default MX list and port to attempt to deliver the email to.
+  mx: [
     "127.0.0.1"
   ],
-  "port": 25,
+  port: 25,
 
-  "tls": true,
-  "protocols": [
+  // Default TLS enablement.
+  tls: true,
+
+  // Default supported protocols and ciphers.
+  protocols: [
     "TLSv1.2", "TLSv1.3"
   ],
-  "ciphers": [
+  ciphers: [
     "TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384",
     "TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384",
     "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
@@ -26,30 +30,41 @@
     "TLS_DHE_RSA_WITH_AES_128_CBC_SHA256"
   ],
 
-  "ehlo": "mimecast.net",
-  "mail": "robin@mimecast.net",
-  "rcpt": [
+  // Default EHLO to use.
+  ehlo: "mimecast.net",
+
+
+  // Default sender and recipients.
+  mail: "robin@mimecast.net",
+  rcpt: [
     "robin@example.com"
   ],
 
-  "routes": [
+  // Default asserting configuration.
+  assertions: {
+    smtpFails: true, // If SMTP assertion fails, fail test/exit gracefully.
+    verifyFails: true // If external verify checks fail, fail test/exit gracefully.
+  },
+
+  // Predefined delivery routes to use instead of MX and port.
+  routes: [
     {
-      "name": "com",
-      "mx": [
+      name: "com",
+      mx: [
         "example.com"
       ],
-      "port": 25
+      port: 25
     },
 
     {
-      "name": "net",
-      "mx": [
+      name: "net",
+      mx: [
         "example.net"
       ],
-      "port": 465,
-      "auth": true,
-      "user": "tony@example.com",
-      "pass": "giveHerTheRing"
+      port: 465,
+      auth: true,
+      user: "tony@example.com",
+      pass: "giveHerTheRing"
     }
   ]
 }

@@ -3,6 +3,7 @@ package com.mimecast.robin.assertion.client;
 import com.mimecast.robin.assertion.Assert;
 import com.mimecast.robin.assertion.AssertException;
 import com.mimecast.robin.config.BasicConfig;
+import com.mimecast.robin.main.Config;
 import com.mimecast.robin.main.Factories;
 import com.mimecast.robin.smtp.connection.Connection;
 import org.apache.logging.log4j.LogManager;
@@ -32,6 +33,16 @@ public abstract class ExternalClient {
     protected int transactionId = -1;
 
     /**
+     * Fail test for External verify failure.
+     */
+    protected Boolean assertVerifyFails;
+
+    /**
+     * Skip asserting and exit gracefully.
+     */
+    protected Boolean skip = false;
+
+    /**
      * Sets Connection.
      *
      * @param connection Connection instance.
@@ -39,6 +50,7 @@ public abstract class ExternalClient {
      */
     public ExternalClient setConnection(Connection connection) {
         this.connection = connection;
+        this.assertVerifyFails = connection.getSession().getAssertions().getVerifyFails(Config.getClient().getAssertions().getVerifyFails());
         return this;
     }
 
@@ -70,6 +82,13 @@ public abstract class ExternalClient {
      * @throws AssertException Assertion exception.
      */
     public abstract void run() throws AssertException;
+
+    /**
+     * Runs assertions.
+     */
+    public Boolean skip() {
+        return skip;
+    }
 
     /**
      * Magic replace.

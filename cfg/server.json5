@@ -1,63 +1,105 @@
 {
-  "hostname": "example.com",
-  "bind": "::",
-  "port": 25,
-  "backlog": 25,
-  "transactionsLimit": 200,
-  "errorLimit": 3,
+  // Hostname to declare in welcome message.
+  hostname: "example.com",
 
-  "auth": true,
-  "starttls": true,
-  "chunking": true,
+  // Interface the server will bind too (default: ::).
+  bind: "::",
 
-  "keystore": "/usr/local/keystore",
-  "keystorepassword": "avengers",
+  // Port the server will listen too (default: 25).
+  port: 25,
 
-  "storage": {
-    "enabled": true,
-    "path": "/usr/local/store",
-    "clean": true,
-    "patterns": [
+  // Number of connections to be allowed in the backlog (default: 25).
+  backlog: 25,
+
+  // Maximum number of SMTP transactions to process ofver a connection.
+  transactionsLimit: 200,
+
+  // Number of SMTP errors to allow before terminating connection (default: 3).
+  errorLimit: 3,
+
+  // Advertise AUTH support (default: true).
+  auth: true,
+
+  // Advertise STARTTLS support (default: true).
+  starttls: true,
+
+  // Advertise CHUNKING support (default: true).
+  chunking: true,
+
+  // Java keystore (default: /usr/local/keystore.jks).
+  keystore: "/usr/local/keystore",
+
+  // Keystore password.
+  keystorepassword: "avengers",
+
+  // Email storage configuration.
+  storage: {
+    enabled: true,
+
+    // Path to storage folder.
+    path: "/usr/local/store",
+
+    // Auto clean storage on service start.
+    clean: true,
+
+    // Auto clean delete matching filenames only.
+    patterns: [
       "^([0-9]{8}\\.)"
     ]
   },
 
-  "users": [
+  // Users allowed to authorize to the server.
+  users: [
     {
-      "name": "vmarian@mimecast.com",
-      "pass": "notMyPassword"
+      name: "tony@example.com",
+      pass: "giveHerTheRing"
     }
   ],
 
-  "scenarios": {
+  // Predefined server response scenarios based on EHLO value.
+  scenarios: {
+
+    // Default scenario to use if no others match.
     "*": {
-      "rcpt": [
+      rcpt: [
+        // Custom response for addresses matching value regex.
         {
-          "value": ".*",
-          "response": "501 Invalid address"
+          value: "friday\\-[0-9]+@example\\.com",
+          response: "252 I think I know this user"
         }
       ]
     },
-    "failtls.com": {
-      "starttls": {
-        "protocols": ["TLSv1.0"],
-        "ciphers": ["TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA"],
-        "response": "220 You will fail"
-      }
-    },
+
+    // How to reject mail at different commands.
     "reject.com": {
-      "ehlo": "501 Argument not allowed.",
-      "mail": "451 Unable to process email at this time",
-      "rcpt": [
+      // Custom response for EHLO.
+      ehlo: "501 Not talking to you",
+
+      // Custom response for MAIL.
+      mail: "451 I'm not listening to you",
+
+      // Custom response for given recipients.
+      rcpt: [
         {
-          "value": "john@reject.com",
-          "response": "501 Invalid address"
+          value: "ultron@reject\\.com",
+          response: "501 Heart not found"
         }
       ],
-      "data": "554 Email rejected due to security policies"
+
+      // Custom response for DATA.
+      data: "554 Your data is corrupted"
     },
-    "mimecast.net": {
-      "data": "250 2.0.0 Received email OKAY"
+
+    // How to configure TLS for failure using a deprecated version and weak cipher.
+    "failtls.com" : {
+
+      // Custom response for STARTTLS.
+      // STARTTLS also supports a list of protocols and ciphers to use handshake.
+      starttls: {
+        response: "220 You will fail",
+        protocols: ["TLSv1.0"],
+        ciphers: ["TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA"],
+      }
     }
   }
 }

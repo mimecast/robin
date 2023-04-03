@@ -2,12 +2,15 @@ package com.mimecast.robin.assertion;
 
 import com.mimecast.robin.assertion.client.ExternalClient;
 import com.mimecast.robin.config.BasicConfig;
+import com.mimecast.robin.main.Config;
 import com.mimecast.robin.main.Factories;
 import com.mimecast.robin.smtp.MessageEnvelope;
 import com.mimecast.robin.smtp.connection.Connection;
 import com.mimecast.robin.smtp.transaction.EnvelopeTransactionList;
 import com.mimecast.robin.smtp.transaction.Transaction;
 import com.mimecast.robin.smtp.transaction.TransactionList;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 import java.util.regex.Pattern;
@@ -24,6 +27,7 @@ import java.util.regex.Pattern;
  * @see ExternalClient
  */
 public class Assert {
+    protected static final Logger log = LogManager.getLogger(Assert.class);
 
     /**
      * Session instance.
@@ -36,12 +40,23 @@ public class Assert {
     protected Boolean runExternal = true;
 
     /**
+     * Fail test for SMTP assertion failure.
+     */
+    protected Boolean assertSmtpFails;
+
+    /**
+     * Skip asserting and exit gracefully.
+     */
+    protected Boolean skip = false;
+
+    /**
      * Constructs a new Assert instance with given Connection.
      *
      * @param connection Connection instance.
      */
     public Assert(Connection connection) {
         this.connection = connection;
+        this.assertSmtpFails = connection.getSession().getAssertions().getSmtpFails(Config.getClient().getAssertions().getSmtpFails());
     }
 
     /**
@@ -63,6 +78,7 @@ public class Assert {
         if (!connection.getSession().getAssertions().isEmpty()) {
             assertSmtp(connection.getSession().getAssertions().getSmtp(), connection.getSessionTransactionList());
         }
+
         assertEnvelopes();
 
         if (runExternal) {
@@ -80,10 +96,17 @@ public class Assert {
     private void assertSmtp(List<List<String>> list, TransactionList transactionList) throws AssertException {
         if (list != null && !list.isEmpty()) {
             for (List<String> assertion : list) {
-                if (assertion.size() == 2) {
+                if (assertion.size() == 2 && !skip) {
                     List<Transaction> transactions = transactionList.getTransactions(assertion.get(0));
-                    if (transactions.isEmpty())
-                        throw new AssertException("Assert unable to find transaction for [" + assertion.get(0) + "]");
+                    if (transactions.isEmpty()) {
+                        if (assertSmtpFails) {
+                            throw new AssertException("Assert unable to find transaction for [" + assertion.get(0) + "]");
+                        } else {
+                            log.error("Assert unable to find transaction for [{}], skipping", assertion.get(0));
+                            skip = true;
+                            return;
+                        }
+                    }
                     assertTransactions(transactions, assertion.get(1));
                 }
             }
@@ -110,7 +133,14 @@ public class Assert {
             }
         }
 
-        if (!matched) throw new AssertException("Assert unable to match [" + regex + "]");
+        if (!matched) {
+            if (assertSmtpFails) {
+                throw new AssertException("Assert unable to match [" + regex + "]");
+            } else {
+                log.warn("Assert unable to match [{}], skipping", regex);
+                skip = true;
+            }
+        }
     }
 
     /**
@@ -119,6 +149,8 @@ public class Assert {
      * @throws AssertException Assertion exception.
      */
     private void assertEnvelopes() throws AssertException {
+        if (skip) return; // Skip asserting and exit gracefully.
+
         if (!connection.getSession().getEnvelopes().isEmpty() && !connection.getSessionTransactionList().getEnvelopes().isEmpty()) {
             for (int i = 0; i < connection.getSession().getEnvelopes().size(); i++) {
                 MessageEnvelope envelope = connection.getSession().getEnvelopes().get(i);
@@ -161,7 +193,7 @@ public class Assert {
      * @throws AssertException Assertion exception.
      */
     private void assertExternal(List<BasicConfig> assertions, int transactionId) throws AssertException {
-        if (Factories.getExternalKeys().isEmpty()) return;
+        if (Factories.getExternalKeys().isEmpty() || skip) return; // Skip asserting and exit gracefully.
 
         List<String> keys = Factories.getExternalKeys();
         for (BasicConfig assertion : assertions) {
@@ -173,6 +205,7 @@ public class Assert {
                         client.setTransactionId(transactionId);
                     }
                     client.run();
+                    skip = client.skip();
 
                 } else {
                     throw new AssertException("Assert external client not instanciated");

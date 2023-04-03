@@ -42,6 +42,44 @@ public class AssertConfig extends ConfigFoundation {
     }
 
     /**
+     * Gets assert SMTP fails.
+     *
+     * @return Boolean.
+     */
+    public Boolean getSmtpFails() {
+        return getBooleanProperty("smtpFails");
+    }
+
+    /**
+     * Gets assert SMTP fails or default.
+     *
+     * @param def Default value.
+     * @return Boolean.
+     */
+    public Boolean getSmtpFails(boolean def) {
+        return getBooleanProperty("smtpFails", def);
+    }
+
+    /**
+     * Gets assert verify fails.
+     *
+     * @return Boolean.
+     */
+    public Boolean getVerifyFails() {
+        return getBooleanProperty("verifyFails");
+    }
+
+    /**
+     * Gets assert verify fails or default.
+     *
+     * @param def Default value.
+     * @return Boolean.
+     */
+    public Boolean getVerifyFails(boolean def) {
+        return getBooleanProperty("verifyFails", def);
+    }
+
+    /**
      * Gets SMTP assertion list.
      *
      * @return List in list.

@@ -69,11 +69,11 @@ Handy for EJF automation and more.
 
 **Example case config:**
 
-        "headers": {
-            "from": "{$mail}",
-            "to": [ "{$rcpt}" ],
-            "sender": "{$mail}",
-            "recipient": [ "{$rcpt}" ]
+        headers: {
+            from: "{$mail}",
+            to: [ "{$rcpt}" ],
+            sender: "{$mail}",
+            recipient: [ "{$rcpt}" ]
         },
 
 Can be injected in the eml via `{$HEADERS}` magic variable or selective by providing the key like `{$HEADERS[FROM]}`.
@@ -166,30 +166,30 @@ _See LogsClient.java interface for implementation of external clients._
 - **match** - _(List of List, String, Regex)_ Regex assertions to run against log lines. Multiple expressions can run on the same line. All must match.
 - **refuse** - _(List of List, String, Regex)_ The opposite of match. Will stop and error on first match.
 
-        "type": "logs",
-        "wait": 10,
-        "retry": 2,
-        "delay": 5,
-        "verify": [ "MAPREDUCE:RCPT" ],
-        "match": [
+        type: "logs",
+        wait: 10,
+        retry: 2,
+        delay: 5,
+        verify: [ "MAPREDUCE:RCPT" ],
+        match: [
             [ "250", "Sender OK" ]
             [ "250", "Recipient OK" ]
             [ "MAPREDUCE:RCPT", "Custody=true", "Storage=check" ]
             [ "250", "Received OK" ]
         ],
-        "refuse": [
+        refuse: [
             [ "java.lang.NullPointerException" ]
         ]
 
 #### Humio
 
-With the addition of Humio plugin you can simply use `"type": "humio",` instead of logs to pull logs from configured Humio instance.
+With the addition of Humio plugin you can simply use `type: "humio",` instead of logs to pull logs from configured Humio instance.
 
 ##### Humio config in properties.json
 
-        "humio": {
-            "auth": "YOUR_API_KEY",
-            "url": "https://humio.example.com/"
+        humio: {
+            auth: "YOUR_API_KEY",
+            url: "https://humio.example.com/"
         }
 
 
@@ -197,59 +197,96 @@ Case
 ----
 
     {
-        "mx": [
+        // MX list and port to attempt to deliver the email to.
+        mx: [
             "example.com"
         ],
-        "port": 25,
+        port: 25,
 
-        "tls": true,
-        "protocols": [
-            "TLSv1", "TLSv1.1", "TLSv1.2"
+        // How many times to try and establish a connection to remote server. First counts.
+        retry: 2,
+
+        // Delay between tries.
+        delay: 5,
+    
+        // Enable TLS.
+        tls: true,
+
+        // Set supported protocols.
+        protocols: [
+            "TLSv1.2", "TLSv1.3"
         ],
 
-        "ehlo": "example.com",
+        // Set EHLO to use.
+        ehlo: "example.com",
 
-        "auth": true,
-        "user": "tony@example.com",
-        "pass": "giveHerTheRing",
+        // Enable authentication.
+        auth: true,
+        user: "tony@example.com",
+        pass: "giveHerTheRing",
 
-        "mail": "tony@example.com",
-        "rcpt": [
+        // Set sender and recipients.
+        mail: "tony@example.com",
+        rcpt: [
             "pepper@example.com",
             "happy@example.com"
         ],
 
-        "envelopes": [
-            {
-                "chunkSize": 20480,
-                "chunkBdat": true,
-                "chunkWrite": true,
 
+      // Email envelopes.
+      envelopes: [
+        // Envelope one.
+        {
+                // Configure chunking parameters to use if CHUNKING supported by recipient server.
+                chunkSize: 20480,
+                chunkBdat: true,
+                chunkWrite: true,
+
+                // Set custom params to send with MAIL and/or RCPT.
                 params: {
                     MAIL: [ "XOORG=example.com" ],
                     RCPT: [ "ACCEPT" ]
                 },
 
-                "file": "src/test/resources/lipsum.eml",
+                // Email eml file to transmit.
+                file: "src/test/resources/cases/sources/lipsum.eml",
+      
+                // Configure early email transfer termination.
+                terminateAfterBytes: 1024,
+                terminateBeforeDot: true,
+                terminateAfterDot: true,
 
-                "terminateAfterBytes": 1024,
-                "terminateBeforeDot": true,
-                "terminateAfterDot": true,
-
-                "assertions": {
-                    "smtp": [
+                // Assertions to run against the envelope.
+                assertions: {
+          
+                    // Protocol assertions.
+                    // Check SMTP responses match regular expressions.
+                    smtp: [
                         [ "MAIL", "^250" ],
                         [ "RCPT", "^250" ],
                         [ "BDAT", "^250" ]
                     ],
+    
+                    // External assertions.
                     external: [
                       {
+                        // Assertion type logs for pulling logs from FFS.
                         type: "logs",
-                        "wait": 10,
-                        "retry": 2,
-                        "delay": 5,
-                        "verify": [ "MAPREDUCE:RCPT" ],
-                        "match": [
+            
+                        // How long to wait before asserting.
+                        wait: 10,
+            
+                        // How many times to retry should no logs be found or valid.
+                        retry: 2,
+            
+                        // Delay between log pulling attempts.
+                        delay: 5,
+            
+                        // Verify regular expressions that would confirm logs fetched are complete.
+                        verify: [ "MAPREDUCE:RCPT" ],
+            
+                        // Match regular expressions to run agaisnt logs to pass the test.
+                        match: [
                             [ "250", "Sender OK" ]
                             [ "250", "Recipient OK" ]
                             [ "MAPREDUCE:RCPT", "Custody=true", "Storage=check" ]
@@ -261,8 +298,15 @@ Case
             }
         ],
 
-        "assertions": {
-            "smtp": [
+        // Assertions to run against the connection.
+        assertions: {
+            // Asserting configuration.
+            smtpFails: false, // If SMTP assertion fails, fail test/exit gracefully.
+            verifyFails: false, // If external verify checks fail, fail test/exit gracefully.
+        
+            // Protocol assertions.
+            // Check SMTP responses match regular expressions.
+            smtp: [
                 [ "SMTP", "^220" ],
                 [ "EHLO", "STARTTLS" ],
                 [ "SHLO", "250 HELP" ]
@@ -271,57 +315,7 @@ Case
     }
 
 
-Configuration
--------------
-*client.json5*
-
-    {
-        "mx": [
-            "example.com"
-        ],
-        "port": 25,
-        
-        "tls": true,
-        "protocols": [
-            "TLSv1.1", "TLSv1.2"
-        ],
-        "ciphers": [
-            "TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384",
-            "TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384",
-            "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
-            "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384"
-        ],
-        
-        "ehlo": "example.com",
-        "mail": "tony@example.com",
-        "rcpt": [
-            "pepper@example.com",
-            "happy@example.com"
-        ],
-        
-        "routes": [
-            {
-                "name": "com",
-                "mx": [
-                    "example.com"
-                ],
-                "port": 25
-            },
-            
-            {
-                "name": "net",
-                "mx": [
-                    "example.net"
-                ],
-                "port": 465,
-                "auth": true,
-                "user": "tony@example.com",
-                "pass": "giveHerTheRing"
-            }
-        ]
-    }
-
- Maven execution
+Maven execution
 ----------------
 Example commandline for running cases.
 
