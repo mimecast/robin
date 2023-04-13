@@ -112,7 +112,7 @@ public class DefaultTLSSocket implements TLSSocket {
 
         // Get the default SSLSocketFactory.
         @SuppressWarnings("squid:S4423")
-        SSLContext sc = SSLContext.getInstance("SSL");
+        SSLContext sc = SSLContext.getInstance("TLS");
         sc.init(km, tm, new SecureRandom());
         SSLSocketFactory sf = sc.getSocketFactory();
 
