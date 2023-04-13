@@ -70,11 +70,21 @@ public class Assert {
     }
 
     /**
+     * Have assertions been skipped?
+     *
+     * @return Boolean.
+     */
+    public boolean skipped() {
+        return skip;
+    }
+
+    /**
      * Run assertions.
      *
      * @throws AssertException Assertion exception.
+     * @return Self.
      */
-    public void run() throws AssertException {
+    public Assert run() throws AssertException {
         if (!connection.getSession().getAssertions().isEmpty()) {
             assertSmtp(connection.getSession().getAssertions().getSmtp(), connection.getSessionTransactionList());
         }
@@ -84,6 +94,8 @@ public class Assert {
         if (runExternal) {
             assertExternal(connection.getSession().getAssertions().getExternal());
         }
+
+        return this;
     }
 
     /**

@@ -18,6 +18,11 @@ import java.io.IOException;
 public class Client extends Foundation {
 
     /**
+     * Have assertions been skipped?
+     */
+    protected Boolean skipped = false;
+
+    /**
      * Constructs a new Client instance.
      * <p>To be used in combination with the Junit launcher service.
      */
@@ -41,9 +46,10 @@ public class Client extends Foundation {
      * @param casePath File path.
      * @throws AssertException Assertion exception.
      * @throws IOException     Unable to communicate.
+     * @return Self.
      */
-    public void send(String casePath) throws AssertException, IOException {
-        send(new CaseConfig(casePath));
+    public Client send(String casePath) throws AssertException, IOException {
+        return send(new CaseConfig(casePath));
     }
 
     /**
@@ -51,8 +57,9 @@ public class Client extends Foundation {
      *
      * @param caseConfig CaseConfig instance.
      * @throws AssertException Assertion exception.
+     * @return Self.
      */
-    public void send(CaseConfig caseConfig) throws AssertException {
+    public Client send(CaseConfig caseConfig) throws AssertException {
         // Delivery Session.
         Session session = Factories.getSession();
         session.map(caseConfig);
@@ -62,6 +69,7 @@ public class Client extends Foundation {
 
         // Assert.
         assertion(emailDelivery);
+        return this;
     }
 
     /**
@@ -71,6 +79,15 @@ public class Client extends Foundation {
      * @throws AssertException Assertion exception.
      */
     protected void assertion(EmailDelivery emailDelivery) throws AssertException {
-        new Assert(emailDelivery.getConnection()).run();
+        skipped = new Assert(emailDelivery.getConnection()).run().skipped();
+    }
+
+    /**
+     * Have assertions been skipped?
+     *
+     * @return Boolean.
+     */
+    public boolean skipped() {
+        return skipped;
     }
 }
