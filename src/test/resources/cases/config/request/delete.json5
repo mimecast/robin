@@ -1,0 +1,23 @@
+{
+  $schema: "../../../../../main/resources/schema/case.schema.json",
+
+  retry: 1,
+  delay: 2,
+
+  request: {
+    url: "https://robin.requestcatcher.com/",
+    type: "DELETE",
+    headers: [
+      {
+        name: "Content-Type",
+        value: "text/html"
+      }
+    ]
+  },
+
+  assertions: {
+    external: [
+      // External assertions.
+    ]
+  }
+}

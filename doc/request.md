@@ -1,6 +1,6 @@
 HTTP/S Cases
 ============
-HTTP/S cases leverage a HTTP client instead of a SMTP one to make API calls and assert using the external assertions.
+HTTP/S cases leverage an HTTP client instead of an SMTP one to make API calls and assert using the external assertions.
 
 Details
 -------
@@ -16,12 +16,12 @@ _You will need to make your own client and implement any response body data hand
 Examples
 -------
 
-### POST JSON
-Make a JSON POST request.
+### POST/PUT JSON
+Make a JSON POST/PUT request.
 
       request: {
         url: "https://robin.requestcatcher.com/",
-        type: "POST",
+        type: "POST/PUT", // Either POST or PUT.
         headers: [
           {
             name: "Cache-Control",
@@ -32,15 +32,15 @@ Make a JSON POST request.
           payload: "{\"name\": \"Robin\"}",
           mimeType: "application/json"
         }
-    }
+      }
 
 
-### POST with parameters
-Make a POST with form data.
+### POST/PUT with parameters
+Make a POST/PUT with form data.
 
       request: {
         url: "https://robin.requestcatcher.com/",
-        type: "POST",
+        type: "POST/PUT", // Either POST or PUT.
         headers: [
           {
             name: "Content-Type",
@@ -53,15 +53,15 @@ Make a POST with form data.
             value: "Robin"
           }
         ]
-    }
+      }
 
 
-### POST with parameters and files
-Make a POST with multipart form data (file upload).
+### POST/PUT with parameters and files
+Make a POST/PUT with multipart form data (file upload).
 
       request: {
         url: "https://robin.requestcatcher.com/",
-        type: "POST",
+        type: "POST/PUT", // Either POST or PUT.
         headers: [
           {
             name: "Content-Type",
@@ -84,4 +84,18 @@ Make a POST with multipart form data (file upload).
             value: "src/test/resources/mime/selfie.jpg"
           }
         ]
-    }
+      }
+
+### DELETE
+Make a DELETE request
+
+      request: {
+        url: "https://robin.requestcatcher.com/",
+        type: "DELETE",
+        headers: [
+          {
+            name: "Content-Type",
+            value: "text/html"
+          }
+        ]
+      }

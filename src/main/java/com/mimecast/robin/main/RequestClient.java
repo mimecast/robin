@@ -25,6 +25,16 @@ import java.util.Collections;
 public final class RequestClient extends Foundation {
 
     /**
+     * Supported request types.
+     */
+    enum RequestType {
+        DELETE,
+        POST,
+        PUT,
+        GET
+    }
+
+    /**
      * Permissive trust manager.
      */
     private final X509TrustManager trustManager = Factories.getTrustManager();
@@ -53,6 +63,7 @@ public final class RequestClient extends Foundation {
         config = new BasicConfig(Config.getProperties().getMapProperty("request"));
     }
 
+
     /**
      * Make request with configuration path.
      *
@@ -65,8 +76,29 @@ public final class RequestClient extends Foundation {
         RequestConfig requestConfig = new RequestConfig(caseConfig.getMapProperty("request"));
 
         try {
+            // Selecting the HTTP Request method.
+            HttpMethod method;
+            switch (requestConfig.getType()) {
+                case "DELETE":
+                    method = HttpMethod.DELETE;
+                    break;
+
+                case "POST":
+                    method = HttpMethod.POST;
+                    break;
+
+                case "PUT":
+                    method = HttpMethod.PUT;
+                    break;
+
+                default:
+                    method = HttpMethod.GET;
+                    break;
+
+            }
+
             // Build request.
-            HttpRequest request = new HttpRequest(requestConfig.getUrl(), requestConfig.getType().equalsIgnoreCase("get") ? HttpMethod.GET : HttpMethod.POST);
+            HttpRequest request = new HttpRequest(requestConfig.getUrl(), method);
 
             // Add headers.
             InternetHeaders headers = requestConfig.getHeaders();

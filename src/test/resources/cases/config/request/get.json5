@@ -1,0 +1,20 @@
+{
+  $schema: "../../../../../main/resources/schema/case.schema.json",
+
+  request: {
+    url: "https://robin.requestcatcher.com/",
+    type: "GET",
+    headers: [
+      {
+        name: "Content-Type",
+        value: "text/html"
+      }
+    ]
+  },
+
+  assertions: {
+    external: [
+      // External assertions.
+    ]
+  }
+}
