@@ -6,14 +6,24 @@ package com.mimecast.robin.http;
 public enum HttpMethod {
 
     /**
-     * GET method.
+     * DELETE method.
      */
-    GET("GET"),
+    DELETE("DELETE"),
 
     /**
      * POST method.
      */
-    POST("POST");
+    POST("POST"),
+
+    /**
+     * PUT method.
+     */
+    PUT("PUT"),
+
+    /**
+     * GET method.
+     */
+    GET("GET");
 
     /**
      * Method.

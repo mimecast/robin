@@ -1,0 +1,24 @@
+{
+  $schema: "../../../../../main/resources/schema/case.schema.json",
+
+  request: {
+    url: "https://robin.requestcatcher.com/",
+    type: "PUT",
+    headers: [
+      {
+        name: "Cache-Control",
+        value: "no-cache"
+      }
+    ],
+    content: {
+      payload: "{\"name\": \"Robin\"}",
+      mimeType: "application/json"
+    }
+  },
+
+  assertions: {
+    external: [
+      // External assertions.
+    ]
+  }
+}

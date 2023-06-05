@@ -85,11 +85,24 @@ public class HttpClient {
         // Add headers.
         request.getHeaders().forEach(builder::addHeader);
 
-        // HTTP/S POST
-        if (request.getMethod().equals(HttpMethod.POST)) {
-            // JSON post.
+        FormBody.Builder form = new FormBody.Builder();
+        request.getParams().forEach(form::add); // Add form data params.
+
+        // HTTP/S DELETE
+        if (request.getMethod().equals(HttpMethod.DELETE)) {
+            builder.delete();
+        }
+
+        // HTTP/S POST/PUT
+        else if (request.getMethod().equals(HttpMethod.POST) || request.getMethod().equals(HttpMethod.PUT)) {
+            // JSON.
             if (request.getContent() != null) {
-                builder.post(RequestBody.create(request.getContent().getKey(), MediaType.parse(request.getContent().getValue())));
+
+                if (request.getMethod().equals(HttpMethod.PUT)) {
+                    builder.put(RequestBody.create(request.getContent().getKey(), MediaType.parse(request.getContent().getValue())));
+                } else {
+                    builder.post(RequestBody.create(request.getContent().getKey(), MediaType.parse(request.getContent().getValue())));
+                }
             }
 
             // Multipart request if files provided.
@@ -101,15 +114,21 @@ public class HttpClient {
                         RequestBody.create(new File(value.getKey()), MediaType.parse(value.getValue()))));
 
                 request.getParams().forEach(multipart::addFormDataPart); // Add multipart data params.
-                builder.post(multipart.build());
 
+                if (request.getMethod().equals(HttpMethod.PUT)) {
+                    builder.put(multipart.build());
+                } else {
+                    builder.post(multipart.build());
+                }
             }
 
             // Simple form data.
             else {
-                FormBody.Builder form = new FormBody.Builder();
-                request.getParams().forEach(form::add); // Add form data params.
-                builder.post(form.build());
+                if (request.getMethod().equals(HttpMethod.PUT)) {
+                    builder.put(form.build());
+                } else {
+                    builder.post(form.build());
+                }
             }
         }
 

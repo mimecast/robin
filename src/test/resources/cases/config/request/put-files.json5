@@ -1,0 +1,36 @@
+{
+  $schema: "../../../../../main/resources/schema/case.schema.json",
+
+  request: {
+    url: "https://robin.requestcatcher.com/",
+    type: "PUT",
+    headers: [
+      {
+        name: "Content-Type",
+        value: "text/html"
+      }
+    ],
+    params: [
+      {
+        name: "name",
+        value: "Robin"
+      }
+    ],
+    files: [
+      {
+        name: "logo",
+        value: "src/test/resources/mime/logo.jpg"
+      },
+      {
+        name: "photo",
+        value: "src/test/resources/mime/selfie.jpg"
+      }
+    ]
+  },
+
+  assertions: {
+    external: [
+      // External assertions.
+    ]
+  }
+}
