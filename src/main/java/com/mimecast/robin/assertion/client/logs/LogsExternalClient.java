@@ -55,7 +55,7 @@ public class LogsExternalClient extends ExternalClient {
      * Constructs a new LogsExternalClient instance.
      */
     public LogsExternalClient() {
-        this.dir = Config.getProperties().getStringProperty("logs.local.dir", "");
+        this.dir = Config.getProperties().getStringProperty("localLogsDir", Config.getProperties().getStringProperty("logs.local.dir", ""));
         this.file = dir + new SimpleDateFormat("yyyyMMdd", Config.getProperties().getLocale()).format(new Date()) + ".log";
     }
 

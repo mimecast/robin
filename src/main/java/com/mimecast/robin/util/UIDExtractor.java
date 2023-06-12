@@ -20,7 +20,7 @@ public class UIDExtractor {
     protected static final Pattern uidPattern;
     static {
         uidPattern = Pattern.compile(
-                Config.getProperties().getStringProperty("uid.pattern", "\\s\\[([a-z0-9\\-_]+)]"),
+                Config.getProperties().getStringProperty("uidPattern", Config.getProperties().getStringProperty("uid.pattern", "\\s\\[([a-z0-9\\-_]+)]")),
                 Pattern.CASE_INSENSITIVE
         );
     }
