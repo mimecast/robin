@@ -159,6 +159,7 @@ A local logs client is provided to deemonstrate.
 
 _See LogsClient.java interface for implementation of external clients._
 
+- **logPrecedence** - _(String)_ Prepends provided string to the log filename which is otherwise `yyyyMMdd`.log.
 - **wait** - _(Integer, Seconds)_ [default: 2, min: 2] Initial wait before calling the external client.
 - **retry** - _(Integer, Attempts)_ [default: 1, min: 1] How many times to attempt if verify fails.
 - **delay** - _(Integer, Attempts)_ [default: 2, min: 2] Delay between attempts.
@@ -167,6 +168,7 @@ _See LogsClient.java interface for implementation of external clients._
 - **refuse** - _(List of List, String, Regex)_ The opposite of match. Will stop and error on first match.
 
         type: "logs",
+        logPrecedence: "fast-",
         wait: 10,
         retry: 2,
         delay: 5,

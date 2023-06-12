@@ -12,6 +12,7 @@ import com.mimecast.robin.util.UIDExtractor;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -55,8 +56,10 @@ public class LogsExternalClient extends ExternalClient {
      * Constructs a new LogsExternalClient instance.
      */
     public LogsExternalClient() {
-        this.dir = Config.getProperties().getStringProperty("localLogsDir", Config.getProperties().getStringProperty("logs.local.dir", ""));
-        this.file = dir + new SimpleDateFormat("yyyyMMdd", Config.getProperties().getLocale()).format(new Date()) + ".log";
+        dir = Config.getProperties().getStringProperty("localLogsDir", Config.getProperties().getStringProperty("logs.local.dir", ""));
+
+        String fileName = new SimpleDateFormat("yyyyMMdd", Config.getProperties().getLocale()).format(new Date()) + ".log";
+        file = Paths.get(dir, config != null ? config.getStringProperty("logPrecedence", "") + fileName : fileName).toString();
     }
 
     /**
