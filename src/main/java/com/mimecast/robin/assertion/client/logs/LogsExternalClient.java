@@ -50,16 +50,17 @@ public class LogsExternalClient extends ExternalClient {
 
     // Storage dir and log file.
     protected String dir;
-    protected String file;
+    protected String fileName;
+    protected String path;
 
     /**
      * Constructs a new LogsExternalClient instance.
      */
     public LogsExternalClient() {
         dir = Config.getProperties().getStringProperty("localLogsDir", Config.getProperties().getStringProperty("logs.local.dir", ""));
+        fileName = new SimpleDateFormat("yyyyMMdd", Config.getProperties().getLocale()).format(new Date()) + ".log";
 
-        String fileName = new SimpleDateFormat("yyyyMMdd", Config.getProperties().getLocale()).format(new Date()) + ".log";
-        file = Paths.get(dir, config != null ? config.getStringProperty("logPrecedence", "") + fileName : fileName).toString();
+        setPath(fileName);
     }
 
     /**
@@ -71,7 +72,20 @@ public class LogsExternalClient extends ExternalClient {
     @Override
     public ExternalClient setConfig(BasicConfig config) {
         this.config = new LogsExternalClientConfig(config.getMap());
+
+        // Update file path.
+        setPath(config.getStringProperty("logPrecedence", "") + fileName);
+
         return this;
+    }
+
+    /**
+     * Sets path.
+     *
+     * @param fileName String.
+     */
+    protected void setPath(String fileName) {
+        path = Paths.get(dir, fileName).toString();
     }
 
     /**
@@ -111,7 +125,7 @@ public class LogsExternalClient extends ExternalClient {
                 Sleep.nap((int) delay);
                 log.info("AssertExternal logs fetching locally");
 
-                try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+                try (BufferedReader br = new BufferedReader(new FileReader(path))) {
                     String uid = UIDExtractor.getUID(connection, transactionId);
 
                     if (uid != null) {
