@@ -147,7 +147,11 @@ public final class RequestClient extends Foundation {
             // TODO Extend this to add magic from response body accordingly.
 
             // Assert.
-            new Assert(new Connection(session).setServer(getUrlHost(requestConfig.getUrl()))).run();
+            if (response.isSuccessfull()) {
+                new Assert(new Connection(session).setServer(getUrlHost(requestConfig.getUrl()))).run();
+            } else {
+                throw new AssertException("Unsuccessful request");
+            }
 
         } catch (GeneralSecurityException | IOException e) {
             log.error("Connection failure: {}", e.getMessage());
