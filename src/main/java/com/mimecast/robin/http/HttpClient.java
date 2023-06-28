@@ -1,5 +1,6 @@
 package com.mimecast.robin.http;
 
+import com.google.gson.Gson;
 import com.mimecast.robin.config.BasicConfig;
 import okhttp3.*;
 import org.apache.commons.io.FilenameUtils;
@@ -12,6 +13,7 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import java.io.File;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.TimeUnit;
@@ -67,9 +69,17 @@ public class HttpClient {
             // Add headers.
             response.headers().toMultimap().forEach((key, value) -> value.forEach(v -> httpResponse.addHeader(key, v)));
 
-            return response.body() != null ? // Add body.
-                    httpResponse.addBody(response.body().string()) :
-                    httpResponse;
+            // Add body.
+            String body = "";
+            if (response.body() != null) {
+                if (response.body().contentType().toString().equals("application/binary")) {
+                    httpResponse.addBody(new Gson().toJson(new ObjectInputStream(response.body().byteStream()).readAllBytes()));
+                } else {
+                    httpResponse.addBody(response.body().string());
+                }
+            }
+
+            return httpResponse;
         }
     }
 
