@@ -47,6 +47,11 @@ public class HttpRequest {
     private Pair<String, String> content;
 
     /**
+     * Object container.
+     */
+    private Pair<byte[], String> object;
+
+    /**
      * Constructs a new HttpRequest instance with given URL and request method.
      *
      * @param url    Request URL.
@@ -167,6 +172,28 @@ public class HttpRequest {
      */
     public HttpRequest addContent(String content, String type) {
         this.content = new ImmutablePair<>(content, type);
+        return this;
+    }
+
+    /**
+     * Gets HTTP/S POST object.
+     *
+     * @return Pair of byte[], String.
+     */
+    public Pair<byte[], String> getObject() {
+        return object;
+    }
+
+    /**
+     * Adds HTTP/S POST object.
+     * <p>If set POST will NOT send params and files if any.
+     *
+     * @param bytes   Content bytes.
+     * @param type    Content MIME type.
+     * @return Self.
+     */
+    public HttpRequest addObject(byte[] bytes, String type) {
+        this.object = new ImmutablePair<>(bytes, type);
         return this;
     }
 

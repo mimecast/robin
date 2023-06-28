@@ -16,6 +16,8 @@ import javax.mail.internet.InternetHeaders;
 import javax.naming.ConfigurationException;
 import javax.net.ssl.X509TrustManager;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
 
@@ -45,11 +47,17 @@ public final class RequestClient extends Foundation {
     private final BasicConfig config;
 
     /**
+     * Session instance.
+     */
+    private final Session session;
+
+    /**
      * Constructs a new RequestClient instance with given client configuration path.
      * <p>To be used in combination with the Junit launcher service.
      */
     public RequestClient() {
         config = new BasicConfig(Config.getProperties().getMapProperty("request"));
+        session = Factories.getSession();
     }
 
     /**
@@ -61,6 +69,7 @@ public final class RequestClient extends Foundation {
     public RequestClient(String configDirPath) throws ConfigurationException {
         init(configDirPath);
         config = new BasicConfig(Config.getProperties().getMapProperty("request"));
+        session = Factories.getSession();
     }
 
 
@@ -73,7 +82,8 @@ public final class RequestClient extends Foundation {
      */
     public void request(String casePath) throws AssertException, IOException {
         CaseConfig caseConfig = new CaseConfig(casePath);
-        RequestConfig requestConfig = new RequestConfig(caseConfig.getMapProperty("request"));
+        session.map(caseConfig);
+        RequestConfig requestConfig = new RequestConfig(caseConfig.getMapProperty("request"), session);
 
         try {
             // Selecting the HTTP Request method.
@@ -120,6 +130,11 @@ public final class RequestClient extends Foundation {
                 request.addContent(requestConfig.getContent().getKey(), requestConfig.getContent().getValue());
             }
 
+            // Add object.
+            if (requestConfig.getObject() != null) {
+                request.addObject(requestConfig.getObject().getKey(), requestConfig.getObject().getValue());
+            }
+
             // Request.
             log.info("Request Client Request: {}", request);
             HttpResponse response = new HttpClient(config, trustManager).execute(request);
@@ -127,16 +142,25 @@ public final class RequestClient extends Foundation {
             log.info("Request Client Response: {}", response.getBody());
 
             // Session.
-            Session session = Factories.getSession();
             response.getHeaders().forEach(session::putMagic); // Add headers as magic
 
             // TODO Extend this to add magic from response body accordingly.
 
             // Assert.
-            new Assert(new Connection(session)).run();
+            new Assert(new Connection(session).setServer(getUrlHost(requestConfig.getUrl()))).run();
 
         } catch (GeneralSecurityException | IOException e) {
             log.error("Connection failure: {}", e.getMessage());
         }
+    }
+
+    private String getUrlHost(String url) {
+        try {
+            return new URI(url).getHost();
+        } catch (URISyntaxException e) {
+            log.error("Unable to parse URI: {}", e.getMessage());
+        }
+
+        return "";
     }
 }

@@ -56,20 +56,21 @@ public class HttpClient {
         SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
         sslContext.init(null, new TrustManager[]{trustManager}, null);
 
-        Response response = getBuilder(sslContext.getSocketFactory())
+        try (Response response = getBuilder(sslContext.getSocketFactory())
                 .build()
                 .newCall(getRequest(request))
-                .execute();
+                .execute()) {
 
-        HttpResponse httpResponse = new HttpResponse()
-                .setSuccess(response.isSuccessful()); // Set success.
+            HttpResponse httpResponse = new HttpResponse()
+                    .setSuccess(response.isSuccessful()); // Set success.
 
-        // Add headers.
-        response.headers().toMultimap().forEach((key, value) -> value.forEach(v -> httpResponse.addHeader(key, v)));
+            // Add headers.
+            response.headers().toMultimap().forEach((key, value) -> value.forEach(v -> httpResponse.addHeader(key, v)));
 
-        return response.body() != null ? // Add body.
-                httpResponse.addBody(response.body().string()) :
-                httpResponse;
+            return response.body() != null ? // Add body.
+                    httpResponse.addBody(response.body().string()) :
+                    httpResponse;
+        }
     }
 
     /**
@@ -97,11 +98,19 @@ public class HttpClient {
         else if (request.getMethod().equals(HttpMethod.POST) || request.getMethod().equals(HttpMethod.PUT)) {
             // JSON.
             if (request.getContent() != null) {
-
                 if (request.getMethod().equals(HttpMethod.PUT)) {
                     builder.put(RequestBody.create(request.getContent().getKey(), MediaType.parse(request.getContent().getValue())));
                 } else {
                     builder.post(RequestBody.create(request.getContent().getKey(), MediaType.parse(request.getContent().getValue())));
+                }
+            }
+
+            // Object
+            else if (request.getObject() != null) {
+                if (request.getMethod().equals(HttpMethod.PUT)) {
+                    builder.put(RequestBody.create(request.getObject().getKey(), MediaType.parse(request.getObject().getValue())));
+                } else {
+                    builder.post(RequestBody.create(request.getObject().getKey(), MediaType.parse(request.getObject().getValue())));
                 }
             }
 

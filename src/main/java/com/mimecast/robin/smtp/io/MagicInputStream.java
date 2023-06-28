@@ -68,7 +68,7 @@ public class MagicInputStream extends LineInputStream {
      *
      * @param in InputStream instance.
      */
-    MagicInputStream(InputStream in) {
+    public MagicInputStream(InputStream in) {
         super(in);
     }
 

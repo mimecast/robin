@@ -240,6 +240,8 @@ public class Session {
      * Sets the magic.
      */
     private void setMagic() {
+        putMagic("uid", uid);
+
         List<String> args = ManagementFactory.getRuntimeMXBean().getInputArguments()
                 .stream()
                 .filter(s -> s.startsWith("-D"))
