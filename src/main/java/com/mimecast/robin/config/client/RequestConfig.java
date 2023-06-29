@@ -29,6 +29,31 @@ public class RequestConfig extends ConfigFoundation {
     private final Session session;
 
     /**
+     * InternetHeaders instance.
+     */
+    private InternetHeaders internetHeaders = new InternetHeaders();
+
+    /**
+     * Params container.
+     */
+    private Map<String, String> params = new HashMap<>();
+
+    /**
+     * Content container.
+     */
+    private Pair<String, String> content = null;
+
+    /**
+     * Object container.
+     */
+    private Pair<byte[], String> object = null;
+
+    /**
+     * Files container.
+     */
+    private Map<String, String> files = new HashMap<>();
+
+    /**
      * Constructs a new RequestConfig instance with given map.
      *
      * @param request Map.
@@ -64,13 +89,13 @@ public class RequestConfig extends ConfigFoundation {
      * @return InternetHeaders instance.
      */
     public InternetHeaders getHeaders() {
-        InternetHeaders internetHeaders = new InternetHeaders();
-
-        for (Object object : getListProperty("headers")) {
-            if (object instanceof Map) {
-                Map<String, String> header = (Map<String, String>) object;
-                if (header.size() > 1) {
-                    internetHeaders.addHeader(header.get("name"), header.get("value"));
+        if (!internetHeaders.getAllHeaders().asIterator().hasNext()) {
+            for (Object object : getListProperty("headers")) {
+                if (object instanceof Map) {
+                    Map<String, String> header = (Map<String, String>) object;
+                    if (header.size() > 1) {
+                        internetHeaders.addHeader(header.get("name"), header.get("value"));
+                    }
                 }
             }
         }
@@ -84,13 +109,13 @@ public class RequestConfig extends ConfigFoundation {
      * @return Map of String, String.
      */
     public Map<String, String> getParams() {
-        Map<String, String> params = new HashMap<>();
-
-        for (Object object : getListProperty("params")) {
-            if (object instanceof Map) {
-                Map<String, String> param = (Map<String, String>) object;
-                if (param.size() > 1) {
-                    params.put(param.get("name"), param.get("value"));
+        if (params.isEmpty()) {
+            for (Object object : getListProperty("params")) {
+                if (object instanceof Map) {
+                    Map<String, String> param = (Map<String, String>) object;
+                    if (param.size() > 1) {
+                        params.put(param.get("name"), param.get("value"));
+                    }
                 }
             }
         }
@@ -105,13 +130,13 @@ public class RequestConfig extends ConfigFoundation {
      */
     @SuppressWarnings("rawtypes")
     public Pair<String, String> getContent() {
-        Pair<String, String> content = null;
-
-        Map map = getMapProperty("content");
-        if (map != null && map.containsKey("payload")) {
-            String payload = (String) map.get("payload");
-            String mimeType = map.containsKey("mimeType") ? (String) map.get("mimeType") : "application/json";
-            content = new ImmutablePair<>(payload, mimeType);
+        if (content == null) {
+            Map map = getMapProperty("content");
+            if (map != null && map.containsKey("payload")) {
+                String payload = (String) map.get("payload");
+                String mimeType = map.containsKey("mimeType") ? (String) map.get("mimeType") : "application/json";
+                content = new ImmutablePair<>(payload, mimeType);
+            }
         }
 
         return content;
@@ -124,32 +149,32 @@ public class RequestConfig extends ConfigFoundation {
      */
     @SuppressWarnings("rawtypes")
     public Pair<byte[], String> getObject() {
-        Pair<byte[], String> object = null;
+        if (object == null) {
+            Map map = getMapProperty("object");
+            if (map != null && map.containsKey("path")) {
+                String path = (String) map.get("path");
+                byte[] bytes = new byte[0];
+                if (PathUtils.isFile(path)) {
+                    try {
+                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                        ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
 
-        Map map = getMapProperty("object");
-        if (map != null && map.containsKey("path")) {
-            String path = (String) map.get("path");
-            byte[] bytes = new byte[0];
-            if (PathUtils.isFile(path)) {
-                try {
-                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                    ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+                        StringBuilder json = new StringBuilder();
+                        LineInputStream stream = new LineInputStream(new MagicInputStream(new FileInputStream(path)));
+                        while ((bytes = stream.readLine()) != null) {
+                            json.append(session.magicReplace(new String(bytes)));
+                        }
 
-                    StringBuilder json = new StringBuilder();
-                    LineInputStream stream = new LineInputStream(new MagicInputStream(new FileInputStream(path)));
-                    while ((bytes = stream.readLine()) != null) {
-                        json.append(session.magicReplace(new String(bytes)));
+                        objectOutputStream.writeObject(new Gson().fromJson(json.toString(), Map.class));
+                        bytes = byteArrayOutputStream.toByteArray();
+                    } catch (IOException e) {
+                        log.error("File not found: {}", path);
                     }
-
-                    objectOutputStream.writeObject(new Gson().fromJson(json.toString(), Map.class));
-                    bytes = byteArrayOutputStream.toByteArray();
-                } catch (IOException e) {
-                    log.error("File not found: {}", path);
                 }
-            }
 
-            String mimeType = map.containsKey("mimeType") ? (String) map.get("mimeType") : "application/binary";
-            object = new ImmutablePair<>(bytes, mimeType);
+                String mimeType = map.containsKey("mimeType") ? (String) map.get("mimeType") : "application/binary";
+                object = new ImmutablePair<>(bytes, mimeType);
+            }
         }
 
         return object;
@@ -161,17 +186,17 @@ public class RequestConfig extends ConfigFoundation {
      * @return Map of String, String.
      */
     public Map<String, String> getFiles() {
-        Map<String, String> params = new HashMap<>();
-
-        for (Object object : getListProperty("files")) {
-            if (object instanceof Map) {
-                Map<String, String> param = (Map<String, String>) object;
-                if (param.size() > 1) {
-                    params.put(param.get("name"), param.get("value"));
+        if (files.isEmpty()) {
+            for (Object object : getListProperty("files")) {
+                if (object instanceof Map) {
+                    Map<String, String> file = (Map<String, String>) object;
+                    if (file.size() > 1) {
+                        files.put(file.get("name"), file.get("value"));
+                    }
                 }
             }
         }
 
-        return params;
+        return files;
     }
 }
