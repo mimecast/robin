@@ -14,9 +14,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -102,6 +100,7 @@ public class LogsExternalClient extends ExternalClient {
                 checkPatterns(true); // Match patters to log lines.
                 checkPatterns(false); // Refuse patters to log lines.
                 verifyMatches(); // Evaluate unmatched assertion and except.
+                magicMatches(); // Evaluate magic matches and record findings in Session magic.
             } catch (Exception e) {
                 throw new AssertException(e);
             }
@@ -270,7 +269,6 @@ public class LogsExternalClient extends ExternalClient {
 
                 // Loop and match.
                 matchLine(group, line, positive);
-
             }
         }
     }
@@ -308,6 +306,30 @@ public class LogsExternalClient extends ExternalClient {
         for (AssertExternalGroup group : matchGroups) {
             if (!group.hasMatched()) {
                 throw new AssertException("Unable to find pattern " + group.getUnmatched() + " in logs");
+            }
+        }
+    }
+
+    /**
+     * Record matches in Session magic.
+     * <p>Record group 1 is there is one else full match.
+     */
+    protected void magicMatches() throws AssertException {
+        if (logsList != null) {
+            Map<String, Pattern> patterns = new HashMap<>();
+            for (Map<String, String> magic : config.getMagic()) {
+                patterns.put(magic.get("name"), Pattern.compile(magic.get("pattern"), Pattern.CASE_INSENSITIVE));
+            }
+
+            for (Object line : logsList) {
+                if (line instanceof String) {
+                    for (Map.Entry<String, Pattern> pattern : patterns.entrySet()) {
+                        Matcher m = pattern.getValue().matcher((String) line);
+                        if (m.find()) {
+                            connection.getSession().putMagic(pattern.getKey(), m.groupCount() == 0 ? m.group() : m.group(1));
+                        }
+                    }
+                }
             }
         }
     }

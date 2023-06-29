@@ -52,6 +52,16 @@ public class MatchExternalClientConfig extends ExternalConfig {
     }
 
     /**
+     * Gets regex rules to NOT match against.
+     *
+     * @return List in list.
+     */
+    @SuppressWarnings("unchecked")
+    public List<Map<String, String>> getMagic() {
+        return getListProperty("magic");
+    }
+
+    /**
      * Gets regex rules to match against.
      *
      * @param connection    Connection instance.

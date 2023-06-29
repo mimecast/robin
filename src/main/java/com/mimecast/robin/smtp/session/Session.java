@@ -241,6 +241,7 @@ public class Session {
      */
     private void setMagic() {
         putMagic("uid", uid);
+        putMagic("yymd", new SimpleDateFormat("yyyyMMdd").format(new Date()));
 
         List<String> args = ManagementFactory.getRuntimeMXBean().getInputArguments()
                 .stream()
