@@ -1,3 +1,14 @@
+Magic client
+============
+
+Case files inherit the default config from client.json5.
+However, in some cases you may want to use the defaults in some cases.
+For those cases you may use the following magic variables in case files.
+
+- `{$mail}` - This always references the client.json5 mail param value if any.
+- `{$rcpt}` - This always references the client.json5 rcpt param first value if any.
+
+
 Magic session
 =============
 
@@ -20,8 +31,8 @@ Lastly the session also contains the following:
 All of these can be used throught the case files to aid testing automation.
 
 
-Magic case eml
-==============
+Magic eml
+=========
 
 Email (.eml) files may contain these magic variables.
 Use these to program your emails to autocomplete information.
@@ -43,8 +54,8 @@ Use these to program your emails to autocomplete information.
 - `{$HEADERS[#]}` - Add header value by key (example: `{$HEADERS[FROM]}`).
 
 
-Magic headers
-=============
+Magic eml headers
+=================
 
 The following headers will enable additional functionalities within the Robin server component uppon receipt.
 

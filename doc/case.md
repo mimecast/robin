@@ -69,6 +69,8 @@ Handy for EJF automation and more.
 
 **Example case config:**
 
+This uses magic client variables. See [magic.md](magic.md).
+
         headers: {
             from: "{$mail}",
             to: [ "{$rcpt}" ],
