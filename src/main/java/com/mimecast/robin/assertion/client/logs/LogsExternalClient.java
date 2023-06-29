@@ -326,7 +326,9 @@ public class LogsExternalClient extends ExternalClient {
                     for (Map.Entry<String, Pattern> pattern : patterns.entrySet()) {
                         Matcher m = pattern.getValue().matcher((String) line);
                         if (m.find()) {
-                            connection.getSession().putMagic(pattern.getKey(), m.groupCount() == 0 ? m.group() : m.group(1));
+                            String group = m.groupCount() == 0 ? m.group() : m.group(1);
+                            connection.getSession().putMagic(pattern.getKey(), group);
+                            log.info("AssertExternal matched and saved magic: {} = {}", pattern.getKey(), group);
                         }
                     }
                 }
