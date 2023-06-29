@@ -267,7 +267,7 @@ public class Session {
      * @return String.
      */
     public String getUID() {
-        return date;
+        return uid;
     }
 
     /**
