@@ -8,51 +8,51 @@ Glossary
 
 ### Session
 #### Connection
-- **retry** - _(Integer, Attempts)_ [default: 1] How many times to attempt connection.
-- **delay** - _(Integer, Seconds)_ [default: 0] Delay between connection retries.
-- **timeout** - _(Integer, Milliseconds)_ [default: Java] Socket timeout.
+- `retry` - _(Integer, Attempts)_ [default: 1] How many times to attempt connection.
+- `delay` - _(Integer, Seconds)_ [default: 0] Delay between connection retries.
+- `timeout` - _(Integer, Milliseconds)_ [default: Java] Socket timeout.
 
 
 #### Destination
-- **mx** - _(List, String, IP, FQD)_ [default: 127.0.0.1] MX server list.
-- **port** - _(Integer)_ [default: 25] MX port.
-- **route** - _(String, Name)_ [default: none] Selects a preconfigured route by name from _client.json5_ routes if any.
+- `mx` - _(List, String, IP, FQD)_ [default: 127.0.0.1] MX server list.
+- `port` - _(Integer)_ [default: 25] MX port.
+- `route` - _(String, Name)_ [default: none] Selects a preconfigured route by name from _client.json5_ routes if any.
 
 
 #### Encryption
-- **tls** - _(Boolean)_ [default: false] Allows the client to do TLS when _STARTTLS_ is advertised.
-- **protocols** - _(List, String)_ [default: Java] TLS protocols to support.
-- **ciphers** - _(List, String)_ [default: Java] TLS ciphers to support.
+- `tls` - _(Boolean)_ [default: false] Allows the client to do TLS when _STARTTLS_ is advertised.
+- `protocols` - _(List, String)_ [default: Java] TLS protocols to support.
+- `ciphers` - _(List, String)_ [default: Java] TLS ciphers to support.
 
 
 #### Authentication
-- **auth** - _(Boolean)_ [default: false] SMTP authentication.
-- **user** - _(String)_ Authentication username.
-- **pass** - _(String)_ Authentication password.
+- `auth` - _(Boolean)_ [default: false] SMTP authentication.
+- `user` - _(String)_ Authentication username.
+- `pass` - _(String)_ Authentication password.
 
 
 #### Authentication Config
-- **authBeforeTls**  - _(Boolean)_ [default: false] Send _AUTH_ withot requireing TLS. **_Vulnerable behaviour._**
-- **authLoginCombined**  - _(Boolean)_ [default: false] Send username and password in one line for _AUTH LOGIN_.
-- **authLoginRetry**  - _(Boolean)_ [default: false] Disable authLoginCombined and retry _AUTH LOGIN_.
+- `authBeforeTls`  - _(Boolean)_ [default: false] Send _AUTH_ withot requireing TLS. **_Vulnerable behaviour._**
+- `authLoginCombined`  - _(Boolean)_ [default: false] Send username and password in one line for _AUTH LOGIN_.
+- `authLoginRetry`  - _(Boolean)_ [default: false] Disable authLoginCombined and retry _AUTH LOGIN_.
 
 
 #### EHLO
-- **ehlo** - _(String, IP, FQD)_ [default: hostname] _EHLO_ domain.
+- `ehlo` - _(String, IP, FQD)_ [default: hostname] _EHLO_ domain.
 
 
 #### XCLIENT
-- **xclient** - _(SMTP command)_ Special feature allowing enumation of client info:
+- `xclient` - _(SMTP command)_ Special feature allowing enumation of client info:
   - addr - IP address.
   - name - Reverse DNS.
   - helo - HELO/EHLO domain.
 
 
 ### Envelope
-- **mail** - _(String, Email Address)_ [default: client.json5] Sender email address.
-- **rcpt** - _(List, String, Email Address)_ [default: client.json5] Recipients list of email addresses.
+- `mail` - _(String, Email Address)_ [default: client.json5] Sender email address.
+- `rcpt` - _(List, String, Email Address)_ [default: client.json5] Recipients list of email addresses.
 
-- **params** - Allows usage of custom parameters for special enviroments.
+- `params` - Allows usage of custom parameters for special enviroments.
 
 Will auto-inject list elements at the end of the MAIL or RCPT commands separated by space.
 
@@ -63,7 +63,7 @@ Will auto-inject list elements at the end of the MAIL or RCPT commands separated
             RCPT: [ "ACCEPT" ]
         },
 
-- **headers** - _(List, String, String)_ List of headers to be injected by magic.
+- `headers` - _(List, String, String)_ List of headers to be injected by magic.
 
 Handy for EJF automation and more.
 
@@ -81,25 +81,25 @@ Can be injected in the eml via `{$HEADERS}` magic variable or selective by provi
 
 #### Transfer
 ##### BDAT Config
-- **chunkSize** - _(Integer, Bytes)_ [default: 2048, min: 128] Enables _CHUNKING_ if grater than minimum.
-- **chunkBdat**  - _(Boolean)_ [default: false] Writes _BDAT_ command to socket along with the first chunk.
-- **chunkWrite** - _(Boolean)_ [default: false] Writes to socket in uneven chunks between 1024 and 2048 bytes if _chunkSize_ at least 2048.
+- `chunkSize` - _(Integer, Bytes)_ [default: 2048, min: 128] Enables _CHUNKING_ if grater than minimum.
+- `chunkBdat`  - _(Boolean)_ [default: false] Writes _BDAT_ command to socket along with the first chunk.
+- `chunkWrite` - _(Boolean)_ [default: false] Writes to socket in uneven chunks between 1024 and 2048 bytes if _chunkSize_ at least 2048.
 
 
 ##### DATA Config
 _Only one may be used at the same time (Order of priority)._
-- **terminateAfterBytes** - _(Integer, Bytes)_ [default: 0, min: 1] Terminates connection after transfering given bytes of _DATA_ when greater. Enables _terminateBeforeDot_.
-- **terminateBeforeDot** - _(Boolean)_ [default: false] Terminates connection right before transfering _DATA_ terminator &lt;CRLF&gt;.&lt;CRLF&gt;.
-- **terminateAfterDot** - _(Boolean)_ [default: false] Terminates connection right after transfering _DATA_ terminator &lt;CRLF&gt;.&lt;CRLF&gt;.
+- `terminateAfterBytes` - _(Integer, Bytes)_ [default: 0, min: 1] Terminates connection after transfering given bytes of _DATA_ when greater. Enables _terminateBeforeDot_.
+- `terminateBeforeDot` - _(Boolean)_ [default: false] Terminates connection right before transfering _DATA_ terminator &lt;CRLF&gt;.&lt;CRLF&gt;.
+- `terminateAfterDot` - _(Boolean)_ [default: false] Terminates connection right after transfering _DATA_ terminator &lt;CRLF&gt;.&lt;CRLF&gt;.
 
 
 ##### Speed
-- **slowBytes** - _(Integer, Bytes)_ [default: 1, min: 128]  Write delay every n number of bytes.
-- **slowWait** - _(Integer, Milliseconds)_ [default: 0, min: 100]  Write delay wait time in milliseconds.
+- `slowBytes` - _(Integer, Bytes)_ [default: 1, min: 128]  Write delay every n number of bytes.
+- `slowWait` - _(Integer, Milliseconds)_ [default: 0, min: 100]  Write delay wait time in milliseconds.
 
 
 ##### Load
-- **repeat** - _(Integer, Times)_ [default: 0]  How many times to ressed the same envelope after the first time. Will stop if any delivery fails.
+- `repeat` - _(Integer, Times)_ [default: 0]  How many times to ressed the same envelope after the first time. Will stop if any delivery fails.
 
 
 #### Message (envelope)
@@ -107,10 +107,10 @@ Every message should have either a file or a subject/message pair!
 If a file is not defined a MIME source will be generated from envelope date along with subject and message.
 Shile message is mandatory subject may be left blank.
 
-- **file** - _(String, Path)_ Path to eml file to be transmitted.
-- **folder** - _(String, Path)_ Path to eml containing folder. A random eml file will be chosen for each DATA transmission.
-- **subject** - _(String)_ Email subject.
-- **message** - _(String)_ Email text/plain message.
+- `file` - _(String, Path)_ Path to eml file to be transmitted.
+- `folder` - _(String, Path)_ Path to eml containing folder. A random eml file will be chosen for each DATA transmission.
+- `subject` - _(String)_ Email subject.
+- `message` - _(String)_ Email text/plain message.
 
 
 SMTP Assertions
@@ -159,13 +159,13 @@ A local logs client is provided to deemonstrate.
 
 _See LogsClient.java interface for implementation of external clients._
 
-- **logPrecedence** - _(String)_ Prepends provided string to the log filename which is otherwise `yyyyMMdd`.log.
-- **wait** - _(Integer, Seconds)_ [default: 2, min: 2] Initial wait before calling the external client.
-- **retry** - _(Integer, Attempts)_ [default: 1, min: 1] How many times to attempt if verify fails.
-- **delay** - _(Integer, Attempts)_ [default: 2, min: 2] Delay between attempts.
-- **verify** - _(List, String, Regex)_ List of regex matches to verify bottom most needed logs received. Provides stability when MTA takes more time.
-- **match** - _(List of List, String, Regex)_ Regex assertions to run against log lines. Multiple expressions can run on the same line. All must match.
-- **refuse** - _(List of List, String, Regex)_ The opposite of match. Will stop and error on first match.
+- `logPrecedence` - _(String)_ Prepends provided string to the log filename which is otherwise `yyyyMMdd`.log.
+- `wait` - _(Integer, Seconds)_ [default: 2, min: 2] Initial wait before calling the external client.
+- `retry` - _(Integer, Attempts)_ [default: 1, min: 1] How many times to attempt if verify fails.
+- `delay` - _(Integer, Attempts)_ [default: 2, min: 2] Delay between attempts.
+- `verify` - _(List, String, Regex)_ List of regex matches to verify bottom most needed logs received. Provides stability when MTA takes more time.
+- `match` - _(List of List, String, Regex)_ Regex assertions to run against log lines. Multiple expressions can run on the same line. All must match.
+- `refuse` - _(List of List, String, Regex)_ The opposite of match. Will stop and error on first match.
 
         type: "logs",
         logPrecedence: "fast-",
@@ -293,6 +293,15 @@ Case
                             [ "250", "Recipient OK" ]
                             [ "MAPREDUCE:RCPT", "Custody=true", "Storage=check" ]
                             [ "250", "Received OK" ]
+                        ]
+
+                        // Magic regular expressions that will record data in Session magic for use in following assertions.
+                        // This will record group 1 is there is one else full match.
+                        magic: [
+                          {
+                            name: "ruid",
+                            pattern: "Received OK \\[(.*)\\]"
+                          }
                         ]
                       }
                     ]
