@@ -48,5 +48,5 @@ Magic headers
 
 The following headers will enable additional functionalities within the Robin server component uppon receipt.
 
-- `X-Robin-Filename` - If a value is present and valid filename, this will be used to rename the stored eml file. 
+- `X-Robin-Filename` - If a value is present and valid filename, this will be used to rename the stored eml file.
 - `X-Robin-Relay` - If a value is present and valid server name and optional port number emai will be relayed to it post receipt.

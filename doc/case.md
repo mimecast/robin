@@ -99,7 +99,7 @@ _Only one may be used at the same time (Order of priority)._
 
 
 ##### Load
-- `repeat` - _(Integer, Times)_ [default: 0]  How many times to ressed the same envelope after the first time. Will stop if any delivery fails.
+- `repeat` - _(Integer, Times)_ [default: 0]  How many times to resend the same envelope after the first time. Will stop if any delivery fails.
 
 
 #### Message (envelope)
@@ -199,6 +199,14 @@ Case
 ----
 
     {
+        // Magic variables.
+        $: { // Use the dollar sign to define a map to hold them.
+            fromAddress: "robin@mimecast.net",
+            toUser: "smoke",
+            toDomain: "mta11.goldcheesyfish.com",
+            toAddress: "{$toUser}@{$toDomain}" // Can be used immediatelly after defined above.
+        },
+        
         // MX list and port to attempt to deliver the email to.
         mx: [
             "example.com"
@@ -227,13 +235,6 @@ Case
         user: "tony@example.com",
         pass: "giveHerTheRing",
 
-        // Set sender and recipients.
-        mail: "tony@example.com",
-        rcpt: [
-            "pepper@example.com",
-            "happy@example.com"
-        ],
-
 
       // Email envelopes.
       envelopes: [
@@ -243,6 +244,12 @@ Case
                 chunkSize: 20480,
                 chunkBdat: true,
                 chunkWrite: true,
+
+                // Magic sender and recipient.
+                mail: "{$fromAddress}",
+                rcpt: [
+                    "{$toAddress}"
+                ],
 
                 // Set custom params to send with MAIL and/or RCPT.
                 params: {
