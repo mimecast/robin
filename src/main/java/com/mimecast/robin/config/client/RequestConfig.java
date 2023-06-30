@@ -132,10 +132,16 @@ public class RequestConfig extends ConfigFoundation {
     public Pair<String, String> getContent() {
         if (content == null) {
             Map map = getMapProperty("content");
-            if (map != null && map.containsKey("payload")) {
-                String payload = (String) map.get("payload");
+
+            if (map != null) {
                 String mimeType = map.containsKey("mimeType") ? (String) map.get("mimeType") : "application/json";
-                content = new ImmutablePair<>(payload, mimeType);
+
+                if (map.containsKey("path")) {
+                    content = new ImmutablePair<>(getFile((String) map.get("path")), mimeType);
+                }
+                else if (map.containsKey("payload")) {
+                    content = new ImmutablePair<>((String) map.get("payload"), mimeType);
+                }
             }
         }
 
@@ -159,16 +165,10 @@ public class RequestConfig extends ConfigFoundation {
                         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                         ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
 
-                        StringBuilder json = new StringBuilder();
-                        LineInputStream stream = new LineInputStream(new MagicInputStream(new FileInputStream(path)));
-                        while ((bytes = stream.readLine()) != null) {
-                            json.append(session.magicReplace(new String(bytes)));
-                        }
-
-                        objectOutputStream.writeObject(new Gson().fromJson(json.toString(), Map.class));
+                        objectOutputStream.writeObject(new Gson().fromJson(getFile(path), Map.class));
                         bytes = byteArrayOutputStream.toByteArray();
                     } catch (IOException e) {
-                        log.error("File not found: {}", path);
+                        log.error("Unable to build object: {}", e.getMessage());
                     }
                 }
 
@@ -178,6 +178,27 @@ public class RequestConfig extends ConfigFoundation {
         }
 
         return object;
+    }
+
+    /**
+     * Gets file content with magic applied to each line.
+     *
+     * @return String.
+     */
+    public String getFile(String path) {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        try {
+            LineInputStream stream = new LineInputStream(new MagicInputStream(new FileInputStream(path)));
+            byte[] bytes;
+            while ((bytes = stream.readLine()) != null) {
+                stringBuilder.append(session.magicReplace(new String(bytes)));
+            }
+        } catch (IOException e) {
+            log.error("Unable to read file {} due to {}", path, e.getMessage());
+        }
+
+        return stringBuilder.toString();
     }
 
     /**
