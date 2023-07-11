@@ -18,9 +18,23 @@ import java.io.IOException;
 public class Client extends Foundation {
 
     /**
+     * Session instance.
+     */
+    private Session session;
+
+    /**
      * Have assertions been skipped?
      */
     protected Boolean skipped = false;
+
+    /**
+     * Constructs a new RequestClient instance with given Session instance.
+     *
+     * @param session Session instance.
+     */
+    public Client(Session session) {
+        this.session = session;
+    }
 
     /**
      * Constructs a new Client instance.
@@ -44,9 +58,9 @@ public class Client extends Foundation {
      * Deliver email with given case configuration path.
      *
      * @param casePath File path.
+     * @return Self.
      * @throws AssertException Assertion exception.
      * @throws IOException     Unable to communicate.
-     * @return Self.
      */
     public Client send(String casePath) throws AssertException, IOException {
         return send(new CaseConfig(casePath));
@@ -56,12 +70,12 @@ public class Client extends Foundation {
      * Deliver email with given CaseConfig instance.
      *
      * @param caseConfig CaseConfig instance.
-     * @throws AssertException Assertion exception.
      * @return Self.
+     * @throws AssertException Assertion exception.
      */
     public Client send(CaseConfig caseConfig) throws AssertException {
         // Delivery Session.
-        Session session = Factories.getSession();
+        session = Factories.getSession();
         session.map(caseConfig);
 
         // Send.
@@ -89,5 +103,9 @@ public class Client extends Foundation {
      */
     public boolean skipped() {
         return skipped;
+    }
+
+    public Session getSession() {
+        return session;
     }
 }

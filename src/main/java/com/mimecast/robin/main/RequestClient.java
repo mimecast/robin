@@ -61,6 +61,16 @@ public final class RequestClient extends Foundation {
     }
 
     /**
+     * Constructs a new RequestClient instance with given Session instance.
+     *
+     * @param session Session instance.
+     */
+    public RequestClient(Session session) {
+        config = new BasicConfig(Config.getProperties().getMapProperty("request"));
+        this.session = session;
+    }
+
+    /**
      * Constructs a new RequestClient instance with given client configuration path.
      *
      * @param configDirPath Directory path.
@@ -166,5 +176,9 @@ public final class RequestClient extends Foundation {
         }
 
         return "";
+    }
+
+    public Session getSession() {
+        return session;
     }
 }
