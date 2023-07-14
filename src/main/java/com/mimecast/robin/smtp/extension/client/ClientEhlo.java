@@ -57,7 +57,7 @@ public class ClientEhlo extends ClientProcessor {
         String write = "EHLO ";
 
         if (StringUtils.isNotBlank(connection.getSession().getEhlo())) {
-            write += connection.getSession().getEhlo();
+            write += connection.getSession().magicReplace(connection.getSession().getEhlo());
         } else {
             try {
                 write += InetAddress.getLocalHost().getHostName();
