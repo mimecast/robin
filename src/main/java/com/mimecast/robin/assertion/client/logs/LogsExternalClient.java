@@ -17,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Logs external client.
@@ -34,6 +35,11 @@ public class LogsExternalClient extends ExternalClient {
      * Logs list.
      */
     protected List<Object> logsList;
+
+    /**
+     * Verify no logs found.
+     */
+    protected Boolean verifyNone = false;
 
     /**
      * Verify patterns.
@@ -73,6 +79,7 @@ public class LogsExternalClient extends ExternalClient {
 
         // Update file path.
         setPath(config.getStringProperty("logPrecedence", "") + fileName);
+        verifyNone = config.getBooleanProperty("verifyNone", false);
 
         return this;
     }
@@ -93,14 +100,23 @@ public class LogsExternalClient extends ExternalClient {
     public void run() throws AssertException {
         if (!config.isEmpty()) {
             try {
-                compileVerify(); // Precompile verify patterns for performance.
+                if (!verifyNone) {
+                    compileVerify(); // Precompile verify patterns for performance.
+                }
                 findLogs(); // Get the logs for that UID and verify.
-                compilePatterns(config.getMatch(connection, transactionId), matchGroups); // Precompile match patterns for performance.
-                compilePatterns(config.getRefuse(), refuseGroups); // Precompile refuse patterns for performance.
-                checkPatterns(true); // Match patters to log lines.
-                checkPatterns(false); // Refuse patters to log lines.
-                verifyMatches(); // Evaluate unmatched assertion and except.
-                magicMatches(); // Evaluate magic matches and record findings in Session magic.
+
+                // Verify no logs were found.
+                if (verifyNone) {
+                    log.info("AssertExternal logs verify none");
+
+                } else {
+                    compilePatterns(config.getMatch(connection, transactionId), matchGroups); // Precompile match patterns for performance.
+                    compilePatterns(config.getRefuse(), refuseGroups); // Precompile refuse patterns for performance.
+                    checkPatterns(true); // Match patters to log lines.
+                    checkPatterns(false); // Refuse patters to log lines.
+                    verifyMatches(); // Evaluate unmatched assertion and except.
+                    magicMatches(); // Evaluate magic matches and record findings in Session magic.
+                }
             } catch (Exception e) {
                 throw new AssertException(e);
             }
@@ -117,8 +133,8 @@ public class LogsExternalClient extends ExternalClient {
 
         if (dir.isEmpty()) {
             log.error("AssertExternal logs.local.dir not found in properties");
-        } else {
 
+        } else {
             long delay = config.getWait() > 0 ? config.getWait() * 1000L : 0L;
             for (int count = 0; count < config.getRetry(); count++) {
                 Sleep.nap((int) delay);
@@ -126,13 +142,13 @@ public class LogsExternalClient extends ExternalClient {
 
                 try (BufferedReader br = new BufferedReader(new FileReader(path))) {
                     String uid = UIDExtractor.getUID(connection, transactionId);
+                    List<Pattern> patterns = getGreps();
 
-                    if (uid != null) {
-                        String line;
-                        while ((line = br.readLine()) != null) {
-                            if (line.contains(uid)) {
-                                logsList.add(line);
-                            }
+                    String line;
+                    while ((line = br.readLine()) != null) {
+                        String finalLine = line;
+                        if ((patterns.isEmpty() && (uid == null || line.contains(uid))) || patterns.stream().anyMatch(pattern -> pattern.matcher(finalLine).find())) {
+                            logsList.add(line);
                         }
                     }
 
@@ -143,6 +159,8 @@ public class LogsExternalClient extends ExternalClient {
                     throw new AssertException("No logs found to assert against");
                 }
 
+                if (verifyNone) break;
+
                 if (verifyLogs()) {
                     log.debug("AssertExternal logs fetch verify success");
                     break;
@@ -150,16 +168,38 @@ public class LogsExternalClient extends ExternalClient {
 
                 delay = config.getDelay() * 1000L; // Retry delay.
                 log.info("AssertExternal logs fetch verify {}", (count < config.getRetry() - 1 ? "failure" : "attempts spent"));
+
+                if (!assertVerifyFails) {
+                    skip = true;
+                    log.warn("Skipping");
+                    return;
+                }
             }
 
-            if (!assertVerifyFails) {
-                skip = true;
-                log.warn("Skipping");
-                return;
+            if (logsList == null || logsList.isEmpty()) {
+                if (!verifyNone) {
+                    throw new AssertException("No logs found to assert against");
+                }
             }
-
-            throw new AssertException("No logs found to assert against");
         }
+    }
+
+    /**
+     * Prepare grep patterns.
+     */
+    @SuppressWarnings("unchecked")
+    protected List<Pattern> getGreps() {
+        List<String> greps = ((List<Map<String, String>>) config.getListProperty("grep")).stream()
+                .filter(map -> !map.containsKey("parameter") || !map.get("parameter").contains("v")) // `grep -v` skip patterns.
+                .map(map -> {
+                    String pattern = connection.getSession().magicReplace(map.get("pattern"));
+                    return map.containsKey("parameter") && map.get("parameter").contains("E") ? pattern : Pattern.quote(pattern); // `grep -E` compile as is or escape.
+                })
+                .collect(Collectors.toList());
+
+        return greps.stream()
+                .map(string -> Pattern.compile(string, Pattern.CASE_INSENSITIVE))
+                .collect(Collectors.toList());
     }
 
     /**
@@ -216,7 +256,7 @@ public class LogsExternalClient extends ExternalClient {
      */
     protected void compilePatterns(List<List<String>> groups, List<AssertExternalGroup> container) {
         // Make new list of assertions with precompiled patterns for performance.
-        // Additionally we need a result field to track matches.
+        // Additionally, we need a result field to track matches.
         for (List<String> list : groups) {
             List<Pattern> compiled = new ArrayList<>();
             for (String assertion : list) {
@@ -287,10 +327,16 @@ public class LogsExternalClient extends ExternalClient {
             if (m.find()) {
                 group.addMatched(pattern);
 
+
                 // Break on first negative match
                 if (!positive) {
                     log.debug("AssertExternal log: {}", line);
                     log.error("AssertExternal matched refuse: {}", group.getMatched());
+                    if (!assertVerifyFails) {
+                        skip = true;
+                        log.warn("Skipping");
+                        return;
+                    }
                     throw new AssertException("Found refuse pattern " + group.getMatched() + " in logs");
                 }
             }
@@ -314,7 +360,7 @@ public class LogsExternalClient extends ExternalClient {
      * Record matches in Session magic.
      * <p>Record group 1 is there is one else full match.
      */
-    protected void magicMatches() throws AssertException {
+    protected void magicMatches() {
         if (logsList != null) {
             Map<String, Pattern> patterns = new HashMap<>();
             for (Map<String, String> magic : config.getMagic()) {

@@ -58,20 +58,24 @@ public class HumioExternalClient extends LogsExternalClient {
                 JSONArray logs = humioClient.run();
                 if (logs != null && !logs.isEmpty()) {
                     logsList = logs.toList();
-                    if (verifyLogs()) {
+                    if (!verifyNone && verifyLogs()) {
                         log.debug("AssertExternal logs fetch verify success");
                         break;
                     }
-                } else {
+                } else if (!verifyNone) {
                     log.debug("AssertExternal logs fetch got none");
                 }
+
+                if (verifyNone) break;
 
                 delay = config.getDelay() * 1000L; // Retry delay.
                 log.info("AssertExternal logs fetch verify {}", (count < config.getRetry() - 1 ? "failure" : "attempts spent"));
             }
 
             if (logsList == null || logsList.isEmpty()) {
-                throw new AssertException("No logs found to assert against");
+                if (!verifyNone) {
+                    throw new AssertException("No logs found to assert against");
+                }
             }
         }
     }

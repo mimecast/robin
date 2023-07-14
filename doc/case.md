@@ -165,15 +165,31 @@ _See LogsClient.java interface for implementation of external clients._
 - `wait` - _(Integer, Seconds)_ [default: 2, min: 2] Initial wait before calling the external client.
 - `retry` - _(Integer, Attempts)_ [default: 1, min: 1] How many times to attempt if verify fails.
 - `delay` - _(Integer, Attempts)_ [default: 2, min: 2] Delay between attempts.
+- `grep` - _(List of Map, String, Regex)_ Grep sequence to match/exclude logs. Default: `{$uid}`
+- `verifyNone` - _(Boolean)_ Verify that no logs were found. Disables all below functionalities.
 - `verify` - _(List, String, Regex)_ List of regex matches to verify bottom most needed logs received. Provides stability when MTA takes more time.
 - `match` - _(List of List, String, Regex)_ Regex assertions to run against log lines. Multiple expressions can run on the same line. All must match.
 - `refuse` - _(List of List, String, Regex)_ The opposite of match. Will stop and error on first match.
+- `magic` - _(List of Map, String, Regex)_ Collect matching group 1 or whole patters into magic variable.
+
+### Basic example.
 
         type: "logs",
         logPrecedence: "fast-",
         wait: 10,
         retry: 2,
         delay: 5,
+        grep: [
+          {
+            // Default match on UID.
+            pattern: "{$uid}"
+          },
+          {
+            // Exclude DEBUG and TRACE log lines.
+            parameter: "-vE",
+            pattern: "DEBUG|TRACE"
+          }
+        ]
         verify: [ "MAPREDUCE:RCPT" ],
         match: [
             [ "250", "Sender OK" ]
@@ -184,6 +200,19 @@ _See LogsClient.java interface for implementation of external clients._
         refuse: [
             [ "java.lang.NullPointerException" ]
         ]
+
+### Example for verify none.
+
+        type: "logs",
+        wait: 10,
+        grep: [
+          {
+            parameter: "-E",
+            pattern: "{$uid}"
+          },
+        ]
+        verifyNone: true
+
 
 #### Humio
 
@@ -292,6 +321,19 @@ Case
             
                         // Delay between log pulling attempts.
                         delay: 5,
+
+                        // Grep command to use to fetch logs.
+                        grep: [
+                          {
+                            // Default match on UID.
+                            pattern: "{$uid}"
+                          },
+                          {
+                            // Exclude DEBUG and TRACE log lines matched.
+                            parameter: "-vE",
+                            pattern: "DEBUG|TRACE"
+                          }
+                        ],
             
                         // Verify regular expressions that would confirm logs fetched are complete.
                         verify: [ "MAPREDUCE:RCPT" ],
