@@ -192,7 +192,7 @@ public class LogsExternalClient extends ExternalClient {
         List<String> greps = ((List<Map<String, String>>) config.getListProperty("grep")).stream()
                 .filter(map -> !map.containsKey("parameter") || !map.get("parameter").contains("v")) // `grep -v` skip patterns.
                 .map(map -> {
-                    String pattern = connection.getSession().magicReplace(map.get("pattern"));
+                    String pattern = connection.getSession().transactionMagicReplace(connection.getSession().magicReplace(map.get("pattern")), connection, transactionId);
                     return map.containsKey("parameter") && map.get("parameter").contains("E") ? pattern : Pattern.quote(pattern); // `grep -E` compile as is or escape.
                 })
                 .collect(Collectors.toList());

@@ -14,16 +14,16 @@ import com.mimecast.robin.smtp.session.Session;
 import com.mimecast.robin.smtp.transaction.SessionTransactionList;
 import com.mimecast.robin.smtp.transaction.Transaction;
 import com.mimecast.robin.util.Sleep;
+import com.mimecast.robin.util.UIDExtractor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.net.ssl.SSLSocket;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -182,6 +182,15 @@ public class Connection extends SmtpFoundation {
     }
 
     /**
+     * Gets SSL socket peer host.
+     *
+     * @return String.
+     */
+    public String getPeerHost() {
+        return socket instanceof SSLSocket ? ((SSLSocket) socket).getSession().getPeerHost() : "";
+    }
+
+    /**
      * [Client] Gets SessionTransactionList instance.
      *
      * @return SessionTransactionList instance.
@@ -254,39 +263,38 @@ public class Connection extends SmtpFoundation {
     }
 
     /**
-     * Gets magic variables.
+     * Put magic variables for transaction in session.
      *
      * @param transactionId Transaction id.
-     * @return Map of String, String.
      */
-    public Map<String, String> getMagic(int transactionId) {
-        Map<String, String> magicVariables = new HashMap<>();
-
+    public void putMagic(int transactionId) {
         if (!sessionTransactionList.getEnvelopes().isEmpty() && transactionId >= 0) {
             // Select transaction.
             Transaction transaction = sessionTransactionList.getEnvelopes().get(transactionId).getData();
 
             // Match UID pattern to transaction response.
+            String uid = null;
             String transactionResponse = null;
             if (transaction != null && transaction.getResponse().startsWith("250 ")) {
                 Matcher m = transactionPattern.matcher(transaction.getResponse());
                 if (m.find()) {
                     transactionResponse = m.group(1);
                 }
+                uid = UIDExtractor.getUID(this, transactionId);
             }
 
             // Register magic variables.
             MessageEnvelope envelope = session.getEnvelopes().get(transactionId);
 
-            magicVariables.put("transactionid", transactionResponse);
-            magicVariables.put("msgid", envelope.getMessageId());
-            magicVariables.put("date", envelope.getDate());
-            magicVariables.put("mailfrom", envelope.getMail());
-            magicVariables.put("rcptto", envelope.getRcpt());
+            session.putMagic("uid", uid);
+            session.putMagic("transactionid", transactionResponse);
+            session.putMagic("yymd", envelope.getYymd());
+            session.putMagic("msgid", envelope.getMessageId());
+            session.putMagic("date", envelope.getDate());
+            session.putMagic("mailfrom", envelope.getMail());
+            session.putMagic("rcptto", envelope.getRcpt());
 
-            envelope.getHeaders().forEach((key, value) -> magicVariables.put("headers[" + key + "]", value));
+            envelope.getHeaders().forEach((key, value) -> session.putMagic("headers[" + key + "]", value));
         }
-
-        return magicVariables;
     }
 }

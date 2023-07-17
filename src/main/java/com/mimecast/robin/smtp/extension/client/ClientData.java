@@ -21,6 +21,11 @@ public class ClientData extends ClientProcessor {
     /**
      * MessageEnvelope instance.
      */
+    protected int messageID;
+
+    /**
+     * MessageEnvelope instance.
+     */
     protected MessageEnvelope envelope;
 
     /**
@@ -40,7 +45,7 @@ public class ClientData extends ClientProcessor {
         super.process(connection);
 
         // Select message to send.
-        int messageID = connection.getSessionTransactionList().getEnvelopes().size() - 1; // Adjust as it's initially added in ClientMail.
+        messageID = connection.getSessionTransactionList().getEnvelopes().size() - 1; // Adjust as it's initially added in ClientMail.
 
         // Select message envelope and transactions.
         envelope = connection.getSession().getEnvelopes().get(messageID);
@@ -150,6 +155,7 @@ public class ClientData extends ClientProcessor {
         read = connection.read("250");
 
         envelopeTransactions.addTransaction(write, write, read, !read.startsWith("250"));
+        connection.putMagic(messageID);
         return read.startsWith("250");
     }
 
@@ -213,6 +219,7 @@ public class ClientData extends ClientProcessor {
 
         String read = connection.read("250");
         envelopeTransactions.addTransaction("BDAT", new String(bdat), read, !read.startsWith("250"));
+        connection.putMagic(messageID);
 
         return read;
     }

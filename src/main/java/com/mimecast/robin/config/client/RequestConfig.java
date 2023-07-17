@@ -197,7 +197,7 @@ public class RequestConfig extends ConfigFoundation {
 
             byte[] bytes;
             while ((bytes = stream.readLine()) != null) {
-                stringBuilder.append(match.magicReplace(session.magicReplace(new String(bytes)), connection, 0));
+                stringBuilder.append(connection.getSession().transactionMagicReplace(session.magicReplace(new String(bytes)), connection, 0));
             }
         } catch (IOException e) {
             log.error("Unable to read file {} due to {}", path, e.getMessage());

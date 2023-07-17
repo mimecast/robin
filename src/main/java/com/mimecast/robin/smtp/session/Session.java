@@ -5,6 +5,7 @@ import com.mimecast.robin.config.assertion.AssertConfig;
 import com.mimecast.robin.config.client.CaseConfig;
 import com.mimecast.robin.main.Config;
 import com.mimecast.robin.smtp.MessageEnvelope;
+import com.mimecast.robin.smtp.connection.Connection;
 import com.mimecast.robin.smtp.connection.SmtpFoundation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,6 +16,7 @@ import java.lang.management.ManagementFactory;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -122,6 +124,11 @@ public class Session {
     private boolean ehloTls = false;
 
     /**
+     * [Client] EHLO advertised SMTPUTF8.
+     */
+    private boolean smtpUtf8 = false;
+
+    /**
      * [Client] EHLO advertised 8BITMIME.
      */
     private boolean ehlo8bit = false;
@@ -223,6 +230,11 @@ public class Session {
     private final Map<String, List> savedResults = new HashMap<>();
 
     /**
+     * Magic variable pattern.
+     */
+    protected final static Pattern magicVariablePattern = Pattern.compile("\\{\\$([a-z0-9]+)(\\[([0-9]+)]\\[([a-z0-9]+)])?}", Pattern.CASE_INSENSITIVE);
+
+    /**
      * Constructs a new Session instance.
      */
     public Session() {
@@ -265,6 +277,7 @@ public class Session {
                 putMagic(entry.getKey(), entry.getValue());
             }
         }
+
     }
 
     /**
@@ -662,6 +675,26 @@ public class Session {
     }
 
     /**
+     * Gets EHLO advertised SMTPUTF8.
+     *
+     * @return Self.
+     */
+    public boolean isSmtpUtf8() {
+        return smtpUtf8;
+    }
+
+    /**
+     * Sets EHLO advertised SMTPUTF8.
+     *
+     * @param smtpUtf8 EHLO UTF-8 boolean.
+     * @return Self.
+     */
+    public Session setSmtpUtf8(boolean smtpUtf8) {
+        this.smtpUtf8 = smtpUtf8;
+        return this;
+    }
+
+    /**
      * Gets EHLO advertised 8BITMIME.
      *
      * @return Self.
@@ -1022,16 +1055,6 @@ public class Session {
     }
 
     /**
-     * Is key magic?
-     *
-     * @param key Magic key.
-     * @return Boolean.
-     */
-    public boolean isMagic(String key) {
-        return magic.containsKey(key);
-    }
-
-    /**
      * Gets magic by key.
      *
      * @param key Magic key.
@@ -1042,7 +1065,19 @@ public class Session {
     }
 
     /**
-     * Magic replace.
+     * Puts magic by key.
+     *
+     * @param key   Magic key.
+     * @param value Magic value of String or List of Strings.
+     * @return Self.
+     */
+    public Session putMagic(String key, Object value) {
+        magic.put(key, value);
+        return this;
+    }
+
+    /**
+     * Session magic replace.
      *
      * @param magicString Magic string.
      * @return Map of String, Object.
@@ -1063,14 +1098,42 @@ public class Session {
     }
 
     /**
-     * Puts magic by key.
+     * Transaction magic replace.
      *
-     * @param key   Magic key.
-     * @param value Magic value of String or List of Strings.
-     * @return Self.
+     * @param magicString   Magic string.
+     * @param connection    Connection instance.
+     * @param transactionId Transaction ID.
      */
-    public Session putMagic(String key, Object value) {
-        magic.put(key, value);
-        return this;
+    @SuppressWarnings("unchecked")
+    public String transactionMagicReplace(String magicString, Connection connection, int transactionId) {
+        Matcher matcher = magicVariablePattern.matcher(magicString);
+
+        while (matcher.find()) {
+            String magicVariable = matcher.group();
+
+            String magicName = matcher.group(1);
+            String resultColumn = matcher.group(4);
+            String value = null;
+
+            // Magic variables.
+            if (magic.containsKey(magicName)) {
+                value = (String) getMagic(magicName);
+            }
+
+            // Saved results
+            if (resultColumn != null && getSavedResults().containsKey(magicName)) {
+                int resultRow = Integer.parseInt(matcher.group(3));
+
+                if (getSavedResults().get(magicName) != null &&
+                        getSavedResults().get(magicName).get(resultRow) != null) {
+
+                    value = String.valueOf(((Map<String, String>) getSavedResults().get(magicName).get(resultRow)).get(resultColumn));
+                }
+            }
+
+            magicString = magicString.replace(magicVariable, value == null ? "null" : value);
+        }
+
+        return magicString;
     }
 }
