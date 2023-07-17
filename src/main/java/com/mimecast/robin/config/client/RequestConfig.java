@@ -2,6 +2,8 @@ package com.mimecast.robin.config.client;
 
 import com.google.gson.Gson;
 import com.mimecast.robin.config.ConfigFoundation;
+import com.mimecast.robin.config.assertion.external.MatchExternalClientConfig;
+import com.mimecast.robin.smtp.connection.Connection;
 import com.mimecast.robin.smtp.io.LineInputStream;
 import com.mimecast.robin.smtp.io.MagicInputStream;
 import com.mimecast.robin.smtp.session.Session;
@@ -138,8 +140,7 @@ public class RequestConfig extends ConfigFoundation {
 
                 if (map.containsKey("path")) {
                     content = new ImmutablePair<>(getFile((String) map.get("path")), mimeType);
-                }
-                else if (map.containsKey("payload")) {
+                } else if (map.containsKey("payload")) {
                     content = new ImmutablePair<>((String) map.get("payload"), mimeType);
                 }
             }
@@ -190,9 +191,13 @@ public class RequestConfig extends ConfigFoundation {
 
         try {
             LineInputStream stream = new LineInputStream(new MagicInputStream(new FileInputStream(path)));
+
+            MatchExternalClientConfig match = new MatchExternalClientConfig(null); // TODO Refactor into an utility and move saved items to open source.
+            Connection connection = new Connection(session);
+
             byte[] bytes;
             while ((bytes = stream.readLine()) != null) {
-                stringBuilder.append(session.magicReplace(new String(bytes)));
+                stringBuilder.append(match.magicReplace(session.magicReplace(new String(bytes)), connection, 0));
             }
         } catch (IOException e) {
             log.error("Unable to read file {} due to {}", path, e.getMessage());

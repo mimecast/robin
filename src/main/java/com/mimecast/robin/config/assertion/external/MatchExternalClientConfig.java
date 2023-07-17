@@ -92,14 +92,24 @@ public class MatchExternalClientConfig extends ExternalConfig {
      * @param transactionId Transaction ID.
      * @return String.
      */
+    @SuppressWarnings("unchecked")
     public String magicReplace(String magicString, Connection connection, int transactionId) {
         Matcher matcher = magicVariablePattern.matcher(magicString);
         Map<String, String> magic = connection.getMagic(transactionId);
 
-        // Add UID to magic here to keep internal.
-        String uid = UIDExtractor.getUID(connection, transactionId);
-        if (StringUtils.isNotBlank(uid)) {
-            magic.put("uid", uid);
+        // Add UID to magic.
+        if (!magic.containsKey("uid")) {
+            String uid = UIDExtractor.getUID(connection, transactionId);
+            if (StringUtils.isNotBlank(uid)) {
+                magic.put("uid", uid);
+            }
+        }
+
+        // Add yyyyMMdd date.
+        if (!magic.containsKey("yymd")) {
+            if (transactionId >= 0) {
+                magic.put("yymd", connection.getSession().getEnvelopes().get(transactionId).getYymd());
+            }
         }
 
         while (matcher.find()) {
@@ -119,7 +129,18 @@ public class MatchExternalClientConfig extends ExternalConfig {
                 value = magic.get(magicName);
             }
 
-            magicString = magicString.replace(magicVariable, value == null ? magicVariable : value);
+            // Saved results
+            if (resultColumn != null && connection.getSession().getSavedResults().containsKey(magicName)) {
+                int resultRow = Integer.parseInt(matcher.group(3));
+
+                if (connection.getSession().getSavedResults().get(magicName) != null &&
+                        connection.getSession().getSavedResults().get(magicName).get(resultRow) != null) {
+
+                    value = String.valueOf(((Map<String, String>) connection.getSession().getSavedResults().get(magicName).get(resultRow)).get(resultColumn));
+                }
+            }
+
+            magicString = magicString.replace(magicVariable, value == null ? "null" : value);
         }
 
         return magicString;

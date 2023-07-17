@@ -218,6 +218,11 @@ public class Session {
     private final Map<String, Object> magic = new HashMap<>();
 
     /**
+     * Saved results.
+     */
+    private final Map<String, List> savedResults = new HashMap<>();
+
+    /**
      * Constructs a new Session instance.
      */
     public Session() {
@@ -260,6 +265,25 @@ public class Session {
                 putMagic(entry.getKey(), entry.getValue());
             }
         }
+    }
+
+    /**
+     * Gets saved results.
+     *
+     * @return Map of String, List.
+     */
+    public Map<String, List> getSavedResults() {
+        return savedResults;
+    }
+
+    /**
+     * Saves results.
+     *
+     * @param key     Save name.
+     * @param results Results.
+     */
+    public void saveResults(String key, List results) {
+        savedResults.put(key, results);
     }
 
     /**
