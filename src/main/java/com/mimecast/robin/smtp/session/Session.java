@@ -13,6 +13,7 @@ import org.apache.logging.log4j.ThreadContext;
 
 import javax.mail.internet.InternetAddress;
 import java.lang.management.ManagementFactory;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -232,7 +233,12 @@ public class Session {
     /**
      * Magic variable pattern.
      */
-    protected final static Pattern magicVariablePattern = Pattern.compile("\\{\\$([a-z0-9]+)(\\[([0-9]+)]\\[([a-z0-9]+)])?}", Pattern.CASE_INSENSITIVE);
+    protected final static Pattern magicVariablePattern = Pattern.compile("\\{([a-z]+)?\\$([a-z0-9]+)(\\[([0-9]+)]\\[([a-z0-9]+)])?}", Pattern.CASE_INSENSITIVE);
+
+    /**
+     * Simple date format instance.
+     */
+    protected final static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 
     /**
      * Constructs a new Session instance.
@@ -1111,8 +1117,9 @@ public class Session {
         while (matcher.find()) {
             String magicVariable = matcher.group();
 
-            String magicName = matcher.group(1);
-            String resultColumn = matcher.group(4);
+            String magicfunction = matcher.group(1);
+            String magicName = matcher.group(2);
+            String resultColumn = matcher.group(5);
             String value = null;
 
             // Magic variables.
@@ -1122,7 +1129,7 @@ public class Session {
 
             // Saved results
             if (resultColumn != null && getSavedResults().containsKey(magicName)) {
-                int resultRow = Integer.parseInt(matcher.group(3));
+                int resultRow = Integer.parseInt(matcher.group(4));
 
                 if (getSavedResults().get(magicName) != null &&
                         getSavedResults().get(magicName).get(resultRow) != null) {
@@ -1131,9 +1138,29 @@ public class Session {
                 }
             }
 
+            // Magic function
+            if ("dateToMillis".equals(magicfunction)) {
+                value = dateToMillis(value);
+            }
+
             magicString = magicString.replace(magicVariable, value == null ? "null" : value);
         }
 
         return magicString;
+    }
+
+    /**
+     * Converts readable date to epoch millis.
+     *
+     * @param dateString String of date in format: yyyyMMddHHmmssSSS
+     */
+    public String dateToMillis(String dateString) {
+        try {
+            return String.valueOf(simpleDateFormat.parse(dateString).getTime());
+        } catch (ParseException e) {
+            log.error("Unable to convert date string to millis: {}", e.getMessage());
+        }
+
+        return dateString;
     }
 }
