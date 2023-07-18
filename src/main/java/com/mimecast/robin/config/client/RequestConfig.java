@@ -2,7 +2,6 @@ package com.mimecast.robin.config.client;
 
 import com.google.gson.Gson;
 import com.mimecast.robin.config.ConfigFoundation;
-import com.mimecast.robin.config.assertion.external.MatchExternalClientConfig;
 import com.mimecast.robin.smtp.connection.Connection;
 import com.mimecast.robin.smtp.io.LineInputStream;
 import com.mimecast.robin.smtp.io.MagicInputStream;
@@ -191,8 +190,6 @@ public class RequestConfig extends ConfigFoundation {
 
         try {
             LineInputStream stream = new LineInputStream(new MagicInputStream(new FileInputStream(path)));
-
-            MatchExternalClientConfig match = new MatchExternalClientConfig(null); // TODO Refactor into an utility and move saved items to open source.
             Connection connection = new Connection(session);
 
             byte[] bytes;
