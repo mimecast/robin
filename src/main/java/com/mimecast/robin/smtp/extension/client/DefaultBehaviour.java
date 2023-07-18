@@ -94,6 +94,7 @@ public class DefaultBehaviour implements Behaviour {
     void data() throws IOException {
         for (int i = 0; i < connection.getSession().getEnvelopes().size(); i++) {
             MessageEnvelope envelope = connection.getSession().getEnvelopes().get(i);
+            connection.putEnvelopeMagic(i);
             for (int j = 0; j < envelope.getRepeat() + 1; j++) {
                 // Reset transaction.
                 if (j > 0) {

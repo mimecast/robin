@@ -263,38 +263,41 @@ public class Connection extends SmtpFoundation {
     }
 
     /**
+     * Put magic variables for envelope in session.
+     *
+     * @param transactionId Transaction id.
+     */
+    public void putEnvelopeMagic(int transactionId) {
+        MessageEnvelope envelope = session.getEnvelopes().get(transactionId);
+
+        session.putMagic("yymd", envelope.getYymd());
+        session.putMagic("msgid", envelope.getMessageId());
+        session.putMagic("date", envelope.getDate());
+        session.putMagic("mailfrom", envelope.getMail());
+        session.putMagic("rcptto", envelope.getRcpt());
+
+        envelope.getHeaders().forEach((key, value) -> session.putMagic("headers[" + key + "]", value));
+    }
+
+    /**
      * Put magic variables for transaction in session.
      *
      * @param transactionId Transaction id.
      */
-    public void putMagic(int transactionId) {
+    public void putTransactionMagic(int transactionId) {
         if (!sessionTransactionList.getEnvelopes().isEmpty() && transactionId >= 0) {
-            // Select transaction.
-            Transaction transaction = sessionTransactionList.getEnvelopes().get(transactionId).getData();
 
-            // Match UID pattern to transaction response.
-            String uid = null;
-            String transactionResponse = null;
+            // Put transaction (SMTP DATA/BDAT response).
+            Transaction transaction = sessionTransactionList.getEnvelopes().get(transactionId).getData();
             if (transaction != null && transaction.getResponse().startsWith("250 ")) {
                 Matcher m = transactionPattern.matcher(transaction.getResponse());
                 if (m.find()) {
-                    transactionResponse = m.group(1);
+                    session.putMagic("transactionid", m.group(1));
                 }
-                uid = UIDExtractor.getUID(this, transactionId);
             }
 
-            // Register magic variables.
-            MessageEnvelope envelope = session.getEnvelopes().get(transactionId);
-
-            session.putMagic("uid", uid);
-            session.putMagic("transactionid", transactionResponse);
-            session.putMagic("yymd", envelope.getYymd());
-            session.putMagic("msgid", envelope.getMessageId());
-            session.putMagic("date", envelope.getDate());
-            session.putMagic("mailfrom", envelope.getMail());
-            session.putMagic("rcptto", envelope.getRcpt());
-
-            envelope.getHeaders().forEach((key, value) -> session.putMagic("headers[" + key + "]", value));
+            // Put UID.
+            session.putMagic("uid", UIDExtractor.getUID(this, transactionId));
         }
     }
 }
