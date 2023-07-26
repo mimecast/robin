@@ -24,7 +24,7 @@ import java.util.Collections;
 /**
  * HTTP/S request client.
  */
-public final class RequestClient extends Foundation {
+public class RequestClient extends Foundation {
 
     /**
      * Supported request types.
@@ -39,17 +39,17 @@ public final class RequestClient extends Foundation {
     /**
      * Permissive trust manager.
      */
-    private final X509TrustManager trustManager = Factories.getTrustManager();
+    protected final X509TrustManager trustManager = Factories.getTrustManager();
 
     /**
      * Confing instance.
      */
-    private final BasicConfig config;
+    protected final BasicConfig config;
 
     /**
      * Session instance.
      */
-    private final Session session;
+    protected final Session session;
 
     /**
      * Constructs a new RequestClient instance with given client configuration path.
@@ -124,7 +124,7 @@ public final class RequestClient extends Foundation {
      * @return RequestConfig instance.
      * @throws IOException Unable to communicate.
      */
-    private RequestConfig getConfig(String casePath) throws IOException {
+    protected RequestConfig getConfig(String casePath) throws IOException {
         CaseConfig caseConfig = new CaseConfig(casePath);
         session.map(caseConfig);
         return new RequestConfig(caseConfig.getMapProperty("request"), session);
@@ -137,7 +137,7 @@ public final class RequestClient extends Foundation {
      * @param requestConfig RequestConfig instance.
      * @return HttpRequest instance.
      */
-    private HttpRequest getRequest(String casePath, RequestConfig requestConfig) {
+    protected HttpRequest getRequest(String casePath, RequestConfig requestConfig) {
         // Selecting the HTTP Request method.
         HttpMethod method;
         switch (requestConfig.getType()) {
@@ -190,7 +190,7 @@ public final class RequestClient extends Foundation {
         return request;
     }
 
-    private String getUrlHost(String url) {
+    protected String getUrlHost(String url) {
         try {
             return new URI(url).getHost();
         } catch (URISyntaxException e) {
