@@ -91,61 +91,10 @@ public final class RequestClient extends Foundation {
      * @throws IOException     Unable to communicate.
      */
     public void request(String casePath) throws AssertException, IOException {
-        CaseConfig caseConfig = new CaseConfig(casePath);
-        session.map(caseConfig);
-        RequestConfig requestConfig = new RequestConfig(caseConfig.getMapProperty("request"), session);
+        RequestConfig requestConfig = getConfig(casePath);
 
         try {
-            // Selecting the HTTP Request method.
-            HttpMethod method;
-            switch (requestConfig.getType()) {
-                case "DELETE":
-                    method = HttpMethod.DELETE;
-                    break;
-
-                case "POST":
-                    method = HttpMethod.POST;
-                    break;
-
-                case "PUT":
-                    method = HttpMethod.PUT;
-                    break;
-
-                default:
-                    method = HttpMethod.GET;
-                    break;
-
-            }
-
-            // Build request.
-            HttpRequest request = new HttpRequest(requestConfig.getUrl(), method);
-
-            // Add headers.
-            InternetHeaders headers = requestConfig.getHeaders();
-            if (headers.getHeader("Cache-Control") == null) {
-                request.addHeader("Cache-Control", "no-cache");
-            }
-            Collections.list(headers.getAllHeaders()).forEach(h -> request.addHeader(h.getName(), h.getValue()));
-
-            // Add params.
-            requestConfig.getParams().forEach(request::addParam);
-
-            // Add files.
-            if (!requestConfig.getFiles().isEmpty()) {
-                requestConfig.getFiles().forEach((key, value) -> request.addFile(key, value, "application/octet-stream"));
-            }
-
-            // Add content.
-            if (requestConfig.getContent() != null) {
-                request.addContent(requestConfig.getContent().getKey(), requestConfig.getContent().getValue());
-            }
-
-            // Add object.
-            if (requestConfig.getObject() != null) {
-                request.addObject(requestConfig.getObject().getKey(), requestConfig.getObject().getValue());
-            }
-
-            // Request.
+            HttpRequest request = getRequest(casePath, requestConfig);
             log.info("Request Client Request: {}", request);
             HttpResponse response = new HttpClient(config, trustManager).execute(request);
             log.info("Request Client Headers: {}", response.getHeaders());
@@ -166,6 +115,79 @@ public final class RequestClient extends Foundation {
         } catch (GeneralSecurityException | IOException e) {
             log.error("Connection failure: {}", e.getMessage());
         }
+    }
+
+    /**
+     * Gets RequestConfig instance.
+     *
+     * @param casePath Case config path.
+     * @return RequestConfig instance.
+     * @throws IOException Unable to communicate.
+     */
+    private RequestConfig getConfig(String casePath) throws IOException {
+        CaseConfig caseConfig = new CaseConfig(casePath);
+        session.map(caseConfig);
+        return new RequestConfig(caseConfig.getMapProperty("request"), session);
+    }
+
+    /**
+     * Gets HttpRequest instance.
+     *
+     * @param casePath      Case config path.
+     * @param requestConfig RequestConfig instance.
+     * @return HttpRequest instance.
+     */
+    private HttpRequest getRequest(String casePath, RequestConfig requestConfig) {
+        // Selecting the HTTP Request method.
+        HttpMethod method;
+        switch (requestConfig.getType()) {
+            case "DELETE":
+                method = HttpMethod.DELETE;
+                break;
+
+            case "POST":
+                method = HttpMethod.POST;
+                break;
+
+            case "PUT":
+                method = HttpMethod.PUT;
+                break;
+
+            default:
+                method = HttpMethod.GET;
+                break;
+
+        }
+
+        // Build request.
+        HttpRequest request = new HttpRequest(requestConfig.getUrl(), method);
+
+        // Add headers.
+        InternetHeaders headers = requestConfig.getHeaders();
+        if (headers.getHeader("Cache-Control") == null) {
+            request.addHeader("Cache-Control", "no-cache");
+        }
+        Collections.list(headers.getAllHeaders()).forEach(h -> request.addHeader(h.getName(), h.getValue()));
+
+        // Add params.
+        requestConfig.getParams().forEach(request::addParam);
+
+        // Add files.
+        if (!requestConfig.getFiles().isEmpty()) {
+            requestConfig.getFiles().forEach((key, value) -> request.addFile(key, value, "application/octet-stream"));
+        }
+
+        // Add content.
+        if (requestConfig.getContent() != null) {
+            request.addContent(requestConfig.getContent().getKey(), requestConfig.getContent().getValue());
+        }
+
+        // Add object.
+        if (requestConfig.getObject() != null) {
+            request.addObject(requestConfig.getObject().getKey(), requestConfig.getObject().getValue());
+        }
+
+        return request;
     }
 
     private String getUrlHost(String url) {
