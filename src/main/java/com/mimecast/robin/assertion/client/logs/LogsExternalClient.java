@@ -147,7 +147,7 @@ public class LogsExternalClient extends ExternalClient {
                     String line;
                     while ((line = br.readLine()) != null) {
                         String finalLine = line;
-                        if ((patterns.isEmpty() && (uid == null || line.contains(uid))) || patterns.stream().anyMatch(pattern -> pattern.matcher(finalLine).find())) {
+                        if ((patterns.isEmpty() && (uid == null || line.contains(uid))) || patterns.stream().allMatch(pattern -> pattern.matcher(finalLine).find())) {
                             logsList.add(line);
                         }
                     }
