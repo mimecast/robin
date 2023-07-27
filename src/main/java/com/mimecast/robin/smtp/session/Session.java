@@ -266,17 +266,6 @@ public class Session {
         putMagic("uid", uid);
         putMagic("yymd", new SimpleDateFormat("yyyyMMdd").format(new Date()));
 
-        List<String> args = ManagementFactory.getRuntimeMXBean().getInputArguments()
-                .stream()
-                .filter(s -> s.startsWith("-D"))
-                .map(s -> s.replace("-D", "").replaceAll("=.*", ""))
-                .collect(Collectors.toList());
-
-        // Add magic arguments.
-        for (String key : args) {
-            putMagic(key, Config.getProperties().getStringProperty(key));
-        }
-
         // Add magic properties.
         for (Map.Entry<String, Object> entry : Config.getProperties().getMap().entrySet()) {
             if (entry.getValue() instanceof String) {
@@ -284,6 +273,16 @@ public class Session {
             }
         }
 
+        // Add magic arguments.
+        List<String> args = ManagementFactory.getRuntimeMXBean().getInputArguments()
+                .stream()
+                .filter(s -> s.startsWith("-D"))
+                .map(s -> s.replace("-D", "").replaceAll("=.*", ""))
+                .collect(Collectors.toList());
+
+        for (String key : args) {
+            putMagic(key, Config.getProperties().getStringProperty(key));
+        }
     }
 
     /**
