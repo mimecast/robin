@@ -1,6 +1,7 @@
 package com.mimecast.robin.config.client;
 
-import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.ToNumberPolicy;
 import com.mimecast.robin.config.ConfigFoundation;
 import com.mimecast.robin.smtp.connection.Connection;
 import com.mimecast.robin.smtp.io.LineInputStream;
@@ -151,33 +152,48 @@ public class RequestConfig extends ConfigFoundation {
     /**
      * Gets POST content as a byte array of an object loaded from JSON.
      *
-     * @return Map of String, String.
+     * @return Pair of Byte array, String.
      */
     @SuppressWarnings("rawtypes")
     public Pair<byte[], String> getObject() {
         if (object == null) {
-            Map map = getMapProperty("object");
-            if (map != null && map.containsKey("path")) {
-                String path = (String) map.get("path");
-                byte[] bytes = new byte[0];
-                if (PathUtils.isFile(path)) {
-                    try {
-                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                        ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+            Pair<Map, String> objectMap = getObjectMap();
+            if (objectMap != null) {
+                try {
+                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                    ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+                    objectOutputStream.writeObject(objectMap.getLeft());
 
-                        objectOutputStream.writeObject(new Gson().fromJson(getFile(path), Map.class));
-                        bytes = byteArrayOutputStream.toByteArray();
-                    } catch (IOException e) {
-                        log.error("Unable to build object: {}", e.getMessage());
-                    }
+                    object = new ImmutablePair<>(byteArrayOutputStream.toByteArray(), objectMap.getRight());
+                } catch (IOException e) {
+                    log.error("Unable to build object: {}", e.getMessage());
                 }
-
-                String mimeType = map.containsKey("mimeType") ? (String) map.get("mimeType") : "application/binary";
-                object = new ImmutablePair<>(bytes, mimeType);
             }
         }
 
         return object;
+    }
+
+    /**
+     * Gets Object as a Map and MIME Type.
+     *
+     * @return Pair of Map, String.
+     */
+    protected Pair<Map, String> getObjectMap() {
+        Map map = getMapProperty("object");
+        if (map != null && map.containsKey("path")) {
+            String path = (String) map.get("path");
+            if (PathUtils.isFile(path)) {
+                return new ImmutablePair<>(
+                        new GsonBuilder()
+                                .setObjectToNumberStrategy(ToNumberPolicy.LONG_OR_DOUBLE)
+                                .create().fromJson(getFile(path), Map.class),
+                        map.containsKey("mimeType") ? (String) map.get("mimeType") : "application/binary"
+                );
+            }
+        }
+
+        return null;
     }
 
     /**
