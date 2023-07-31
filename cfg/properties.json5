@@ -1,9 +1,9 @@
 {
   // Path to MTA logs if one running on local host.
-  "logs.local.dir": "/home/robin/log/",
+  logsLocalDir: "/home/robin/log/",
 
   // Pattern to match UID out of SMT responses.
-  "uid.pattern": "\\s\\[([a-z0-9\\-_]+)]",
+  uidPattern: "\\s\\[([a-z0-9\\-_]+)]",
 
   // Logging config.
   logging: {
