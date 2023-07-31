@@ -1,5 +1,6 @@
 package com.mimecast.robin.smtp.extension.client;
 
+import com.mimecast.robin.main.Config;
 import com.mimecast.robin.main.Extensions;
 import com.mimecast.robin.smtp.MessageEnvelope;
 import com.mimecast.robin.smtp.connection.Connection;
@@ -101,7 +102,9 @@ public class DefaultBehaviour implements Behaviour {
                     connection.getSessionTransactionList().getEnvelopes().remove(connection.getSessionTransactionList().getEnvelopes().size() - 1);
                 }
 
-                if ((i > 0 || j > 0) && !process("rset", connection)) return;
+                if (Config.getProperties().getBooleanProperty("rsetBetweenEnvelopes", false)) {
+                    if ((i > 0 || j > 0) && !process("rset", connection)) return;
+                }
                 send();
             }
         }

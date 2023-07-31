@@ -5,6 +5,9 @@
   // Pattern to match UID out of SMT responses.
   uidPattern: "\\s\\[([a-z0-9\\-_]+)]",
 
+  // Send RSET command before aditional envelopes.
+  rsetBetweenEnvelopes: false,
+
   // Logging config.
   logging: {
     data: false // Log email DATA sent and received.
