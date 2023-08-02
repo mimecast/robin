@@ -155,7 +155,6 @@ public class ClientData extends ClientProcessor {
         read = connection.read("250");
 
         envelopeTransactions.addTransaction(write, write, read, !read.startsWith("250"));
-        connection.putTransactionMagic(messageID);
         return read.startsWith("250");
     }
 
@@ -219,7 +218,6 @@ public class ClientData extends ClientProcessor {
 
         String read = connection.read("250");
         envelopeTransactions.addTransaction("BDAT", new String(bdat), read, !read.startsWith("250"));
-        connection.putTransactionMagic(messageID);
 
         return read;
     }

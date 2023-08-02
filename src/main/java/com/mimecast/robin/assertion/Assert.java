@@ -176,7 +176,11 @@ public class Assert {
                         }
 
                         // External.
-                        if (runExternal) {
+                        if (runExternal && !envelope.getAssertions().getExternal().isEmpty()) {
+                            // Add envelope and transaction magic for assertions to use.
+                            connection.putEnvelopeMagic(i);
+                            connection.putTransactionMagic(i);
+
                             assertExternal(envelope.getAssertions().getExternal(), i);
                         }
                     }
