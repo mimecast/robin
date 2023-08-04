@@ -15,7 +15,7 @@
         <javamail.version>1.6.2</javamail.version>
         <guava.version>32.1.2-jre</guava.version>
         <log4j.version>2.20.0</log4j.version>
-        <jmh.version>1.36</jmh.version>
+        <jmh.version>1.37</jmh.version>
     </properties>
 
     <distributionManagement>
