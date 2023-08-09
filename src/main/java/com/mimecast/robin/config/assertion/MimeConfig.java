@@ -43,13 +43,6 @@ public class MimeConfig extends ConfigFoundation {
     protected final List<MimePart> parts = new ArrayList<>();
 
     /**
-     * Constructs a new AssertConfig instance.
-     */
-    public MimeConfig() {
-        super();
-    }
-
-    /**
      * Constructs a new AssertConfig instance with given configuration map.
      *
      * @param map Configuration map.
@@ -99,7 +92,7 @@ public class MimeConfig extends ConfigFoundation {
     /**
      * Gets list of parts with magic.
      *
-     * @param session Session instance.
+     * @param session  Session instance.
      * @param envelope MessageEnvelope instance.
      * @return List of MimePart.
      */
@@ -122,7 +115,7 @@ public class MimeConfig extends ConfigFoundation {
                         MimeConfig pdfConfig = new MimeConfig(pdf);
 
                         // Magic.
-                        if (pdfConfig.hasProperty("text")) {
+                        if (session != null && pdfConfig.hasProperty("text")) {
                             pdfConfig.getMap().put("text", session.magicReplace(pdfConfig.getStringProperty("text")));
                         }
 
@@ -144,6 +137,9 @@ public class MimeConfig extends ConfigFoundation {
 
                     // Fallback to message or dummy else if file errors.
                     if (mimePart == null && message != null) {
+                        if (session != null) {
+                            message = session.magicReplace(message);
+                        }
                         mimePart = new TextMimePart(message.getBytes());
                     }
 
