@@ -1,5 +1,6 @@
 package com.mimecast.robin.mime;
 
+import com.mimecast.robin.config.client.LoggingConfig;
 import com.mimecast.robin.main.Config;
 import com.mimecast.robin.mime.headers.MimeHeader;
 import com.mimecast.robin.mime.parts.MimePart;
@@ -67,6 +68,7 @@ public class EmailBuilder {
      *
      * @return Self.
      */
+    @SuppressWarnings("unchecked")
     public EmailBuilder buildMime() {
         if (envelope.getMime() != null && !envelope.getMime().isEmpty()) {
             envelope.getMime().getHeaders().forEach(h -> addHeader(h.getName(), session.magicReplace(h.getValue())));
@@ -76,6 +78,16 @@ public class EmailBuilder {
                     related.add(part);
 
                 } else if (part.getHeader("Content-Type").getCleanValue().startsWith("text/")) {
+                    if (new LoggingConfig(Config.getProperties().getMapProperty("logging")).getBooleanProperty("textPartBody", false)) {
+                        try {
+                            log.info("Text Part Body: {}",
+                                    new String(envelope.putEnvelopeMagic(part.getBytes())).replaceAll("\r\n|\r|\n", "\\\\")
+                            );
+                        } catch (IOException e) {
+                            log.error("Text Part Body input error: {}", e.getMessage());
+                        }
+                    }
+
                     alternative.add(part);
 
                 } else {

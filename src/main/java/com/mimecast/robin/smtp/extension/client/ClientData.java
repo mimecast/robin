@@ -62,6 +62,7 @@ public class ClientData extends ClientProcessor {
 
             Path path = Files.createTempFile("robin-", ".eml");
             try (Closeable ignored = () -> Files.delete(path)) {
+                connection.putTransactionMagic(messageID); // Put magic early for EmailBuilder use.
                 new EmailBuilder(connection.getSession(), envelope)
                         .buildMime()
                         .writeTo(new FileOutputStream(path.toFile()));

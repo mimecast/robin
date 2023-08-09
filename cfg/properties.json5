@@ -10,7 +10,8 @@
 
   // Logging config.
   logging: {
-    data: false // Log email DATA sent and received.
+    data: false, // Log email DATA sent and received.
+    textPartBody: false // Log MIME build case text/* type part contents.
   },
 
   // HTTP Requests configuration.
