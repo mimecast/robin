@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
  *
  * <p>This is the primary container for session data.
  */
-@SuppressWarnings("UnusedReturnValue")
+@SuppressWarnings({"UnusedReturnValue", "rawtypes"})
 public class Session {
     private static final Logger log = LogManager.getLogger(Session.class);
 
@@ -234,11 +234,6 @@ public class Session {
      * Magic variable pattern.
      */
     protected final static Pattern magicVariablePattern = Pattern.compile("\\{([a-z]+)?\\$([a-z0-9]+)(\\[([0-9]+)]\\[([a-z0-9]+)])?}", Pattern.CASE_INSENSITIVE);
-
-    /**
-     * Simple date format instance.
-     */
-    protected final static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 
     /**
      * Constructs a new Session instance.
@@ -1126,7 +1121,7 @@ public class Session {
                 value = (String) getMagic(magicName);
             }
 
-            // Saved results
+            // Saved results.
             if (resultColumn != null && getSavedResults().containsKey(magicName)) {
                 int resultRow = Integer.parseInt(matcher.group(4));
 
@@ -1137,9 +1132,20 @@ public class Session {
                 }
             }
 
-            // Magic function
-            if ("dateToMillis".equals(magicfunction)) {
-                value = dateToMillis(value);
+            // Magic functions.
+            if (value != null) {
+                if ("dateToMillis".equals(magicfunction)) {
+                    value = dateToMillis(value);
+                }
+                if ("millisToDate".equals(magicfunction)) {
+                    value = millisToDate(value);
+                }
+                if ("toLowerCase".equals(magicfunction)) {
+                    value = value.toLowerCase();
+                }
+                if ("toUpperCase".equals(magicfunction)) {
+                    value = value.toUpperCase();
+                }
             }
 
             magicString = magicString.replace(magicVariable, value == null ? "null" : value);
@@ -1149,17 +1155,31 @@ public class Session {
     }
 
     /**
+     * Simple date format instance.
+     */
+    protected final static SimpleDateFormat millisDateFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+
+    /**
      * Converts readable date to epoch millis.
      *
      * @param dateString String of date in format: yyyyMMddHHmmssSSS
      */
     public String dateToMillis(String dateString) {
         try {
-            return String.valueOf(simpleDateFormat.parse(dateString).getTime());
+            return String.valueOf(millisDateFormat.parse(dateString).getTime());
         } catch (ParseException e) {
             log.error("Unable to convert date string to millis: {}", e.getMessage());
         }
 
         return dateString;
+    }
+
+    /**
+     * Converts epoch millis to readable date.
+     *
+     * @param millisString String of epoch millis.
+     */
+    protected String millisToDate(String millisString) {
+        return millisDateFormat.format(new Date(Long.parseLong(millisString)));
     }
 }
