@@ -2,6 +2,7 @@ package com.mimecast.robin.config.client;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.ToNumberPolicy;
+import com.mimecast.robin.config.BasicConfig;
 import com.mimecast.robin.config.ConfigFoundation;
 import com.mimecast.robin.smtp.connection.Connection;
 import com.mimecast.robin.smtp.io.LineInputStream;
@@ -33,12 +34,12 @@ public class RequestConfig extends ConfigFoundation {
     /**
      * InternetHeaders instance.
      */
-    private InternetHeaders internetHeaders = new InternetHeaders();
+    private final InternetHeaders internetHeaders = new InternetHeaders();
 
     /**
      * Params container.
      */
-    private Map<String, String> params = new HashMap<>();
+    private final Map<String, String> params = new HashMap<>();
 
     /**
      * Content container.
@@ -53,18 +54,40 @@ public class RequestConfig extends ConfigFoundation {
     /**
      * Files container.
      */
-    private Map<String, String> files = new HashMap<>();
+    private final Map<String, String> files = new HashMap<>();
 
     /**
      * Constructs a new RequestConfig instance with given map.
      *
      * @param request Map.
-     * @param session Session instance.
+     * @param session Connection instance.
      */
     @SuppressWarnings("rawtypes")
     public RequestConfig(Map request, Session session) {
         super(request);
         this.session = session;
+
+        // Load url, type and headers from config if any.
+        if (hasProperty("config")) {
+            try {
+                BasicConfig config = new BasicConfig(getStringProperty("config"));
+
+                if (config.hasProperty("url")) {
+                    map.put("url", config.getStringProperty("url"));
+                }
+
+                if (config.hasProperty("type")) {
+                    map.put("type", config.getStringProperty("type"));
+                }
+
+                if (config.hasProperty("headers")) {
+                    map.put("headers", config.getListProperty("headers"));
+                }
+
+            } catch (IOException e) {
+                log.error("Unable to load request config template: {}", e.getMessage());
+            }
+        }
     }
 
     /**
@@ -96,7 +119,10 @@ public class RequestConfig extends ConfigFoundation {
                 if (object instanceof Map) {
                     Map<String, String> header = (Map<String, String>) object;
                     if (header.size() > 1) {
-                        internetHeaders.addHeader(header.get("name"), header.get("value"));
+                        internetHeaders.addHeader(
+                                header.get("name"),
+                                session.transactionMagicReplace(session.magicReplace(header.get("value")), new Connection(session), 0)
+                        );
                     }
                 }
             }
@@ -179,6 +205,7 @@ public class RequestConfig extends ConfigFoundation {
      *
      * @return Pair of Map, String.
      */
+    @SuppressWarnings("rawtypes")
     protected Pair<Map, String> getObjectMap() {
         Map map = getMapProperty("object");
         if (map != null && map.containsKey("path")) {
@@ -206,11 +233,10 @@ public class RequestConfig extends ConfigFoundation {
 
         try {
             LineInputStream stream = new LineInputStream(new MagicInputStream(new FileInputStream(path)));
-            Connection connection = new Connection(session);
 
             byte[] bytes;
             while ((bytes = stream.readLine()) != null) {
-                stringBuilder.append(connection.getSession().transactionMagicReplace(session.magicReplace(new String(bytes)), connection, 0));
+                stringBuilder.append(session.transactionMagicReplace(session.magicReplace(new String(bytes)), new Connection(session), 0));
             }
         } catch (IOException e) {
             log.error("Unable to read file {} due to {}", path, e.getMessage());

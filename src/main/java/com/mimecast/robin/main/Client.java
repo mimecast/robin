@@ -4,6 +4,7 @@ import com.mimecast.robin.assertion.Assert;
 import com.mimecast.robin.assertion.AssertException;
 import com.mimecast.robin.config.client.CaseConfig;
 import com.mimecast.robin.smtp.EmailDelivery;
+import com.mimecast.robin.smtp.connection.Connection;
 import com.mimecast.robin.smtp.session.Session;
 
 import javax.naming.ConfigurationException;
@@ -21,6 +22,11 @@ public class Client extends Foundation {
      * Session instance.
      */
     private Session session;
+
+    /**
+     * Connection instance.
+     */
+    private Connection connection;
 
     /**
      * Have assertions been skipped?
@@ -80,20 +86,21 @@ public class Client extends Foundation {
 
         // Send.
         EmailDelivery emailDelivery = new EmailDelivery(session).send();
+        connection = emailDelivery.getConnection();
 
         // Assert.
-        assertion(emailDelivery);
+        assertion(connection);
         return this;
     }
 
     /**
      * Assert delivery successfull if any.
      *
-     * @param emailDelivery EmailDelivery instance.
+     * @param connection Connection instance.
      * @throws AssertException Assertion exception.
      */
-    protected void assertion(EmailDelivery emailDelivery) throws AssertException {
-        skipped = new Assert(emailDelivery.getConnection()).run().skipped();
+    protected void assertion(Connection connection) throws AssertException {
+        skipped = new Assert(connection).run().skipped();
     }
 
     /**
@@ -105,7 +112,21 @@ public class Client extends Foundation {
         return skipped;
     }
 
+    /**
+     * Gets Session instance.
+     *
+     * @return Session instance.
+     */
     public Session getSession() {
         return session;
+    }
+
+    /**
+     * Gets Connection instance.
+     *
+     * @return Connection instance.
+     */
+    public Connection getConnection() {
+        return connection;
     }
 }
