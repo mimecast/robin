@@ -2,6 +2,7 @@ package com.mimecast.robin.assertion.client.request;
 
 import com.mimecast.robin.assertion.AssertException;
 import com.mimecast.robin.config.client.RequestConfig;
+import com.mimecast.robin.http.HttpResponse;
 import com.mimecast.robin.main.RequestBase;
 import com.mimecast.robin.smtp.session.Session;
 
@@ -25,18 +26,19 @@ public class RequestClient extends RequestBase {
     /**
      * Make request with given RequestConfig instance.
      *
-     * @param requestConfig RequestConfig instance.
+     * @param config RequestConfig instance.
      * @throws AssertException Assertion exception.
      * @throws IOException     Unable to communicate.
      */
-    public void request(RequestConfig requestConfig) throws AssertException, IOException {
+    public HttpResponse request(RequestConfig config) throws AssertException, IOException {
+        HttpResponse httpResponse = null;
         try {
-            makeRequest(requestConfig);
-
-            // TODO Add assertion support.
+            httpResponse = makeRequest(config);
 
         } catch (GeneralSecurityException | IOException e) {
-            log.error("Connection failure: {}", e.getMessage());
+            log.error("Request Client: Request failure: {}", e.getMessage());
         }
+
+        return httpResponse;
     }
 }

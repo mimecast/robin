@@ -27,9 +27,9 @@ import java.util.Map;
 public class RequestConfig extends ConfigFoundation {
 
     /**
-     * Session instance.
+     * Connection instance.
      */
-    private final Session session;
+    private final Connection connection;
 
     /**
      * InternetHeaders instance.
@@ -65,7 +65,7 @@ public class RequestConfig extends ConfigFoundation {
     @SuppressWarnings("rawtypes")
     public RequestConfig(Map request, Session session) {
         super(request);
-        this.session = session;
+        this.connection = new Connection(session);
 
         // Load url, type and headers from config if any.
         if (hasProperty("config")) {
@@ -121,7 +121,7 @@ public class RequestConfig extends ConfigFoundation {
                     if (header.size() > 1) {
                         internetHeaders.addHeader(
                                 header.get("name"),
-                                session.transactionMagicReplace(session.magicReplace(header.get("value")), new Connection(session), 0)
+                                connection.getSession().transactionMagicReplace(connection.getSession().magicReplace(header.get("value")), connection, 0)
                         );
                     }
                 }
@@ -205,7 +205,6 @@ public class RequestConfig extends ConfigFoundation {
      *
      * @return Pair of Map, String.
      */
-    @SuppressWarnings("rawtypes")
     protected Pair<Map, String> getObjectMap() {
         Map map = getMapProperty("object");
         if (map != null && map.containsKey("path")) {
@@ -236,7 +235,7 @@ public class RequestConfig extends ConfigFoundation {
 
             byte[] bytes;
             while ((bytes = stream.readLine()) != null) {
-                stringBuilder.append(session.transactionMagicReplace(session.magicReplace(new String(bytes)), new Connection(session), 0));
+                stringBuilder.append(connection.getSession().transactionMagicReplace(connection.getSession().magicReplace(new String(bytes)), connection, 0));
             }
         } catch (IOException e) {
             log.error("Unable to read file {} due to {}", path, e.getMessage());
