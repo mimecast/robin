@@ -2,6 +2,7 @@ package com.mimecast.robin.mime.parts;
 
 import com.mimecast.robin.mime.headers.MimeHeader;
 
+import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -25,7 +26,21 @@ public class FileMimePart extends MimePart {
      * @throws IOException Unable to open/read from file.
      */
     public FileMimePart(String path) throws IOException {
-        body = new FileInputStream(path);
+        int defaultBufferSize = 8192;
+        body = new BufferedInputStream(new FileInputStream(path), defaultBufferSize);
+        body.mark(defaultBufferSize);
+    }
+
+    /**
+     * Constructs a new FileMimePart instance with given path and buffer size.
+     *
+     * @param path       Path to file.
+     * @param bufferSize Buffer size.
+     * @throws IOException Unable to open/read from file.
+     */
+    public FileMimePart(String path, int bufferSize) throws IOException {
+        body = new BufferedInputStream(new FileInputStream(path), bufferSize);
+        body.mark(bufferSize);
     }
 
     /**
