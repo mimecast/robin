@@ -1,17 +1,22 @@
 package com.mimecast.robin.main;
 
+import com.google.gson.Gson;
 import com.mimecast.robin.assertion.Assert;
 import com.mimecast.robin.assertion.AssertException;
 import com.mimecast.robin.config.client.RequestConfig;
 import com.mimecast.robin.http.HttpResponse;
 import com.mimecast.robin.smtp.connection.Connection;
 import com.mimecast.robin.smtp.session.Session;
+import com.mimecast.robin.util.MapUtils;
 
 import javax.naming.ConfigurationException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.GeneralSecurityException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * HTTP/S request client.
@@ -51,27 +56,43 @@ public class RequestClient extends RequestBase {
      * @throws AssertException Assertion exception.
      * @throws IOException     Unable to communicate.
      */
+    @SuppressWarnings("unchecked")
     public void request(String casePath) throws AssertException, IOException {
         RequestConfig requestConfig = getConfig(casePath);
 
+        HttpResponse httpResponse = null;
         try {
-            HttpResponse response = makeRequest(requestConfig);
+            httpResponse = makeRequest(requestConfig);
 
             // Session.
-            response.getHeaders().forEach(session::putMagic); // Add headers in magic.
+            httpResponse.getHeaders().forEach(session::putMagic); // Add headers in magic.
 
-            // TODO Save content in magic?
+            // Save results.
+            List<String> response = new ArrayList<>();
+            String responseCT = httpResponse.getHeaders().get("Content-Type");
 
-            // Assert.
-            if (response.isSuccessfull()) {
-                new Assert(new Connection(session).setServer(getUrlHost(requestConfig.getUrl())))
-                        .run();
+            if (responseCT != null && responseCT.toLowerCase().contains("/json")) {
+                MapUtils.flattenMap(new Gson().fromJson(httpResponse.getBody(), Map.class), "", response);
             } else {
-                throw new AssertException("Unsuccessful request");
+                response.addAll(List.of(httpResponse.getBody().split("\n")));
             }
 
+            session.saveResults("response", response);
+
         } catch (GeneralSecurityException | IOException e) {
-            log.error("Connection failure: {}", e.getMessage());
+            log.error("Request Client: Request failure: {}", e.getMessage());
+        }
+
+        // Assert.
+        if (httpResponse != null && httpResponse.isSuccessfull()) {
+            Connection connection = new Connection(session)
+                    .setServer(getUrlHost(requestConfig.getUrl()));
+            connection.getSessionTransactionList().addTransaction("HTTP", new Gson().toJson(httpResponse.getHeaders()), httpResponse.isSuccessfull());
+
+            new Assert(connection).run();
+
+        } else {
+            throw new AssertException("Request Client: Unable to make request");
         }
     }
 
