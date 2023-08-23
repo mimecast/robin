@@ -284,6 +284,8 @@ public class Connection extends SmtpFoundation {
      * @param transactionId Transaction id.
      */
     public void putTransactionMagic(int transactionId) {
+        session.putMagic("transactionId", String.valueOf(transactionId));
+
         if (!sessionTransactionList.getEnvelopes().isEmpty() && transactionId >= 0) {
 
             // Put transaction (SMTP DATA/BDAT response).
@@ -291,12 +293,15 @@ public class Connection extends SmtpFoundation {
             if (transaction != null && transaction.getResponse().startsWith("250 ")) {
                 Matcher m = transactionPattern.matcher(transaction.getResponse());
                 if (m.find()) {
-                    session.putMagic("transactionid", m.group(1));
+                    String group = m.group(1);
+                    session.putMagic("transactionResponse", group);
+                    session.putMagic("transactionid", group); // TODO Deprecate.
                 }
             }
 
             // Put UID.
-            session.putMagic("uid", UIDExtractor.getUID(this, transactionId));
+            session.putMagic("transactionUid", UIDExtractor.getUID(this, transactionId));
+            session.putMagic("uid", UIDExtractor.getUID(this, transactionId)); // TODO Deprecate.
         }
     }
 }
