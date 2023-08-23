@@ -152,8 +152,6 @@ public class LogsExternalClient extends ExternalClient {
                         }
                     }
 
-                    logResults(logsList);
-
                 } catch (IOException e) {
                     log.error("AssertExternal logs reading problems: {}", e.getMessage());
                     throw new AssertException("No logs found to assert against");
@@ -163,6 +161,7 @@ public class LogsExternalClient extends ExternalClient {
 
                 if (verifyLogs()) {
                     log.debug("AssertExternal logs fetch verify success");
+                    logResults(logsList);
                     break;
                 }
 
