@@ -270,7 +270,6 @@ public class Connection extends SmtpFoundation {
     public void putEnvelopeMagic(int transactionId) {
         MessageEnvelope envelope = session.getEnvelopes().get(transactionId);
 
-        session.putMagic("yymd", envelope.getYymd());
         session.putMagic("msgid", envelope.getMessageId());
         session.putMagic("date", envelope.getDate());
         session.putMagic("mailfrom", envelope.getMail());

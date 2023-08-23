@@ -263,7 +263,7 @@ public class Session {
      * Sets the magic.
      */
     private void setMagic() {
-        putMagic("uid", uid);
+        putMagic("robinUid", uid);
         putMagic("yymd", new SimpleDateFormat("yyyyMMdd").format(new Date()));
 
         // Add magic properties.
