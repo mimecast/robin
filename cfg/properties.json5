@@ -1,6 +1,6 @@
 {
   // Path to MTA logs if one running on local host.
-  logsLocalDir: "/home/robin/log/",
+  localLogsDir: "/home/robin/log/",
 
   // Pattern to match UID out of SMT responses.
   uidPattern: "\\s\\[([a-z0-9\\-_]+)]",
