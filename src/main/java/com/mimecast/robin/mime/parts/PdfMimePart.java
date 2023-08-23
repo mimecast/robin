@@ -101,7 +101,7 @@ public class PdfMimePart extends MimePart {
         html.append("</body>")
                 .append("</html>");
 
-        return new String(envelope.putEnvelopeMagic(html.toString().getBytes()));
+        return html.toString();
     }
 
     /**

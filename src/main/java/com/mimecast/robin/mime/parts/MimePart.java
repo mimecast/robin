@@ -126,7 +126,7 @@ public abstract class MimePart {
         }
 
         // Write content.
-        IOUtils.copy(body, writeStream);
+        writeStream.write(getBytes());
         writeStream.flush();
 
         // Ensure empty line at the end.

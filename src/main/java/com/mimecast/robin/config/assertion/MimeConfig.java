@@ -140,6 +140,9 @@ public class MimeConfig extends ConfigFoundation {
                         if (session != null) {
                             message = session.magicReplace(message);
                         }
+                        if (envelope != null) {
+                            message = new String(envelope.envelopeMagicReplace(message.getBytes()));
+                        }
                         mimePart = new TextMimePart(message.getBytes());
                     }
 

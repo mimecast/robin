@@ -624,7 +624,7 @@ public class MessageEnvelope {
      * @param bytes Byte array.
      * @return Byte array.
      */
-    public byte[] putEnvelopeMagic(byte[] bytes) {
+    public byte[] envelopeMagicReplace(byte[] bytes) {
         StringBuilder magicHtml = new StringBuilder();
         try {
             MagicInputStream magicInputStream = new MagicInputStream(new ByteArrayInputStream(bytes), this);
