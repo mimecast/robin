@@ -1,7 +1,7 @@
 package com.mimecast.robin.http;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * HTTP/S response container.
@@ -36,7 +36,7 @@ public class HttpResponse {
     /**
      * Headers container.
      */
-    private final Map<String, String> headers = new HashMap<>();
+    private final Map<String, String> headers = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     /**
      * Gets HTTP/S response headers.
@@ -45,6 +45,16 @@ public class HttpResponse {
      */
     public Map<String, String> getHeaders() {
         return headers;
+    }
+
+    /**
+     * Gets HTTP/S response header by name.
+     *
+     * @param name Header name.
+     * @return Self.
+     */
+    String getHeader(String name) {
+        return headers.get(name);
     }
 
     /**
