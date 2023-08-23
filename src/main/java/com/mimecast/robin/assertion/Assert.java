@@ -35,11 +35,6 @@ public class Assert {
     protected final Connection connection;
 
     /**
-     * Run external assertions.
-     */
-    protected Boolean runExternal = true;
-
-    /**
      * Fail test for SMTP assertion failure.
      */
     protected Boolean assertSmtpFails;
@@ -60,16 +55,6 @@ public class Assert {
     }
 
     /**
-     * Don't run external assertions.
-     *
-     * @return Self.
-     */
-    public Assert noExternal() {
-        runExternal = false;
-        return this;
-    }
-
-    /**
      * Have assertions been skipped?
      *
      * @return Boolean.
@@ -81,8 +66,8 @@ public class Assert {
     /**
      * Run assertions.
      *
-     * @throws AssertException Assertion exception.
      * @return Self.
+     * @throws AssertException Assertion exception.
      */
     public Assert run() throws AssertException {
         if (!connection.getSession().getAssertions().isEmpty()) {
@@ -90,10 +75,7 @@ public class Assert {
         }
 
         assertEnvelopes();
-
-        if (runExternal) {
-            assertExternal(connection.getSession().getAssertions().getExternal());
-        }
+        assertExternal(connection.getSession().getAssertions().getExternal());
 
         return this;
     }
@@ -176,7 +158,7 @@ public class Assert {
                         }
 
                         // External.
-                        if (runExternal && !envelope.getAssertions().getExternal().isEmpty()) {
+                        if (!envelope.getAssertions().getExternal().isEmpty()) {
                             // Add envelope and transaction magic for assertions to use.
                             connection.putEnvelopeMagic(i);
                             connection.putTransactionMagic(i);
