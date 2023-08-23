@@ -23,6 +23,15 @@ public class MatchExternalClientConfig extends ExternalConfig {
     }
 
     /**
+     * Gets verify no data found.
+     *
+     * @return Boolean.
+     */
+    public boolean getVerifyNone() {
+        return getBooleanProperty("verifyNone", false);
+    }
+
+    /**
      * Gets regex rules to verify logs.
      *
      * @return List.

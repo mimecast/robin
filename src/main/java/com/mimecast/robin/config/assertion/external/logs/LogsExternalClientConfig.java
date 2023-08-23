@@ -20,6 +20,15 @@ public final class LogsExternalClientConfig extends MatchExternalClientConfig {
     }
 
     /**
+     * Get log file name precedence.
+     *
+     * @return String.
+     */
+    public String getLogPrecedence() {
+        return hasProperty("logPrecedence") ? getStringProperty("logPrecedence") : "";
+    }
+
+    /**
      * Get service name.
      *
      * @return String.

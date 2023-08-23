@@ -1,6 +1,6 @@
 package com.mimecast.robin.assertion.client.humio;
 
-import com.mimecast.robin.config.assertion.external.logs.LogsExternalClientConfig;
+import com.mimecast.robin.config.assertion.external.MatchExternalClientConfig;
 import com.mimecast.robin.smtp.connection.Connection;
 import org.json.JSONArray;
 
@@ -10,10 +10,10 @@ class HumioClientMock extends HumioClient {
      * Constructs a new HumioClient instance.
      *
      * @param connection    Connection instance.
-     * @param config        LogsExternalClient instance.
+     * @param config        MatchExternalClientConfig instance.
      * @param transactionId Transaction ID.
      */
-    public HumioClientMock(Connection connection, LogsExternalClientConfig config, int transactionId) {
+    public HumioClientMock(Connection connection, MatchExternalClientConfig config, int transactionId) {
         super(connection, config, transactionId);
     }
 

@@ -1,12 +1,14 @@
 package com.mimecast.robin.assertion.client.humio;
 
 import com.mimecast.robin.assertion.AssertException;
-import com.mimecast.robin.assertion.client.ExternalClient;
 import com.mimecast.robin.assertion.client.logs.LogsExternalClient;
 import com.mimecast.robin.config.BasicConfig;
 import com.mimecast.robin.config.assertion.external.logs.LogsExternalClientConfig;
 import com.mimecast.robin.util.Sleep;
 import org.json.JSONArray;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Humio external client.
@@ -23,7 +25,7 @@ public class HumioExternalClient extends LogsExternalClient {
      * @return Self.
      */
     @Override
-    public ExternalClient setConfig(BasicConfig config) {
+    public LogsExternalClient setConfig(BasicConfig config) {
         this.config = new LogsExternalClientConfig(config.getMap());
         return this;
     }
@@ -38,27 +40,33 @@ public class HumioExternalClient extends LogsExternalClient {
     }
 
     /**
-     * Find logs using given client if any.
+     * Get logs.
      *
+     * @return List of String.
      * @throws AssertException Assertion exception.
      */
     @Override
-    protected void findLogs() throws AssertException {
+    protected List<String> getLogs() throws AssertException {
         HumioClient humioClient = getClient();
+        List<String> data;
 
         if (connection.getServer().startsWith("127.") || connection.getServer().startsWith("local")) {
-            super.findLogs();
+            data = super.getLogs();
 
         } else {
+            data = new ArrayList<>();
             long delay = config.getWait() > 0 ? config.getWait() * 1000L : 0L;
             for (int count = 0; count < config.getRetry(); count++) {
                 Sleep.nap((int) delay);
                 log.info("AssertExternal logs fetch attempt {} of {}", count + 1, config.getRetry());
 
-                JSONArray logs = humioClient.run();
-                if (logs != null && !logs.isEmpty()) {
-                    logsList = logs.toList();
-                    if (!verifyNone && verifyLogs()) {
+                JSONArray jsonArray = humioClient.run();
+                if (jsonArray != null && !jsonArray.isEmpty()) {
+                    jsonArray.toList().forEach(o -> {
+                        if (o instanceof String) data.add((String) o);
+                    });
+
+                    if (!verifyNone && checkVerify(data)) {
                         log.debug("AssertExternal logs fetch verify success");
                         break;
                     }
@@ -72,11 +80,13 @@ public class HumioExternalClient extends LogsExternalClient {
                 log.info("AssertExternal logs fetch verify {}", (count < config.getRetry() - 1 ? "failure" : "attempts spent"));
             }
 
-            if (logsList == null || logsList.isEmpty()) {
+            if (data.isEmpty()) {
                 if (!verifyNone) {
                     throw new AssertException("No logs found to assert against");
                 }
             }
         }
+
+        return data;
     }
 }

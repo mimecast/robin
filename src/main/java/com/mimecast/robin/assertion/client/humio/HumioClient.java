@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mimecast.robin.config.BasicConfig;
 import com.mimecast.robin.config.assertion.external.ExternalConfig;
+import com.mimecast.robin.config.assertion.external.MatchExternalClientConfig;
 import com.mimecast.robin.config.assertion.external.logs.LogsExternalClientConfig;
 import com.mimecast.robin.http.HttpClient;
 import com.mimecast.robin.http.HttpMethod;
@@ -52,10 +53,10 @@ public class HumioClient {
      * Constructs a new HumioClient instance.
      *
      * @param connection    Connection instance.
-     * @param config        HumioExternalClientConfig instance.
+     * @param config        MatchExternalClientConfig instance.
      * @param transactionId Transaction ID.
      */
-    public HumioClient(Connection connection, LogsExternalClientConfig config, int transactionId) {
+    public HumioClient(Connection connection, MatchExternalClientConfig config, int transactionId) {
         this.connection = connection;
         this.config = config;
         this.transactionId = transactionId;
