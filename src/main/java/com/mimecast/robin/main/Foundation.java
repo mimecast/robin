@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @see AnnotationLoader
  */
 public abstract class Foundation {
-    static final Logger log = LogManager.getLogger(Foundation.class);
+    protected static final Logger log = LogManager.getLogger(Foundation.class);
 
     /**
      * Run once boolean.
