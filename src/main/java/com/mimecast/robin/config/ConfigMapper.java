@@ -72,7 +72,9 @@ public class ConfigMapper {
         session.addAssertions(config.getAssertions());
 
         for (EnvelopeConfig envelope : config.getEnvelopes()) {
-            addEnvelope(session, envelope, config);
+            for (int i = 0; i < envelope.getRepeat() + 1; i++) {
+                addEnvelope(session, i == 0 ? envelope : envelope.copy(), config);
+            }
         }
     }
 

@@ -4,7 +4,9 @@ import com.mimecast.robin.config.ConfigFoundation;
 import com.mimecast.robin.config.assertion.AssertConfig;
 import com.mimecast.robin.config.assertion.MimeConfig;
 import com.mimecast.robin.smtp.MessageEnvelope;
+import org.apache.commons.lang3.SerializationUtils;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -213,5 +215,14 @@ public class EnvelopeConfig extends ConfigFoundation {
      */
     public AssertConfig getAssertions() {
         return new AssertConfig(getMapProperty("assertions"));
+    }
+
+    /**
+     * Copy instance.
+     *
+     * @return Assertions map.
+     */
+    public EnvelopeConfig copy() {
+        return new EnvelopeConfig(SerializationUtils.clone(new HashMap<>(map)));
     }
 }
