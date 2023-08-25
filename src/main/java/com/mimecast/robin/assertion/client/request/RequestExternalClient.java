@@ -7,10 +7,13 @@ import com.mimecast.robin.config.BasicConfig;
 import com.mimecast.robin.config.assertion.external.MatchExternalClientConfig;
 import com.mimecast.robin.config.client.RequestConfig;
 import com.mimecast.robin.http.HttpResponse;
+import com.mimecast.robin.main.RequestBase;
+import com.mimecast.robin.smtp.session.Session;
 import com.mimecast.robin.util.MapUtils;
 import com.mimecast.robin.util.Sleep;
 
 import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -158,7 +161,7 @@ public class RequestExternalClient extends MatchExternalClient {
 
             try {
                 RequestConfig requestConfig = new RequestConfig(config.getMapProperty("request"), connection.getSession());
-                httpResponse = new RequestClient(connection.getSession())
+                httpResponse = new RequestExternalClient.RequestClient(connection.getSession())
                         .request(requestConfig);
 
                 // Retry delay if needed.
@@ -188,5 +191,39 @@ public class RequestExternalClient extends MatchExternalClient {
         }
 
         return httpResponse;
+    }
+
+    /**
+     * HTTP/S request client.
+     */
+    class RequestClient extends RequestBase {
+
+        /**
+         * Constructs a new RequestClient instance with given Session instance.
+         *
+         * @param session Session instance.
+         */
+        public RequestClient(Session session) {
+            super(session);
+        }
+
+        /**
+         * Make request with given RequestConfig instance.
+         *
+         * @param config RequestConfig instance.
+         * @throws AssertException Assertion exception.
+         * @throws IOException     Unable to communicate.
+         */
+        public HttpResponse request(RequestConfig config) throws AssertException, IOException {
+            HttpResponse httpResponse = null;
+            try {
+                httpResponse = makeRequest(config);
+
+            } catch (GeneralSecurityException | IOException e) {
+                log.error("Request Client: Request failure: {}", e.getMessage());
+            }
+
+            return httpResponse;
+        }
     }
 }
