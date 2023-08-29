@@ -11,7 +11,6 @@ import com.mimecast.robin.smtp.EmailReceipt;
 import com.mimecast.robin.smtp.MessageEnvelope;
 import com.mimecast.robin.smtp.io.LineInputStream;
 import com.mimecast.robin.smtp.session.Session;
-import com.mimecast.robin.smtp.transaction.SessionTransactionList;
 import com.mimecast.robin.smtp.transaction.Transaction;
 import com.mimecast.robin.util.Sleep;
 import com.mimecast.robin.util.UIDExtractor;
@@ -41,12 +40,7 @@ public class Connection extends SmtpFoundation {
     /**
      * Session instance.
      */
-    private final Session session;
-
-    /**
-     * SessionTransactionList instance.
-     */
-    private SessionTransactionList sessionTransactionList = new SessionTransactionList();
+    protected final Session session;
 
     /**
      * Connection server.
@@ -62,18 +56,6 @@ public class Connection extends SmtpFoundation {
      * Transaction response pattern.
      */
     private static final Pattern transactionPattern = Pattern.compile("(250.*)\\s\\[[a-z0-9\\-_]+\\.[a-z]+([0-9]+)?]", Pattern.CASE_INSENSITIVE);
-
-    /**
-     * [Client] Constructs a new Connection instance with given Session.
-     * <p>This is primarly here for unit testing.
-     *
-     * @param session                Session instance.
-     * @param sessionTransactionList SessionTransactionList instance.
-     */
-    public Connection(Session session, SessionTransactionList sessionTransactionList) {
-        this(session);
-        this.sessionTransactionList = sessionTransactionList;
-    }
 
     /**
      * [Client] Constructs a new Connection instance with given Session.
@@ -143,13 +125,13 @@ public class Connection extends SmtpFoundation {
                 String read = read("220");
                 if (!read.startsWith("220")) {
                     if (i == retry - 1) {
-                        sessionTransactionList.addTransaction("SMTP", read, true);
+                        session.getSessionTransactionList().addTransaction("SMTP", read, true);
                         throw new SmtpException("SMTP");
                     } else {
                         close(); // Retry.
                     }
                 } else {
-                    sessionTransactionList.addTransaction("SMTP", read, false);
+                    session.getSessionTransactionList().addTransaction("SMTP", read, false);
                     break;
                 }
             } catch (IOException e) {
@@ -188,15 +170,6 @@ public class Connection extends SmtpFoundation {
      */
     public String getPeerHost() {
         return socket instanceof SSLSocket ? ((SSLSocket) socket).getSession().getPeerHost() : "";
-    }
-
-    /**
-     * [Client] Gets SessionTransactionList instance.
-     *
-     * @return SessionTransactionList instance.
-     */
-    public SessionTransactionList getSessionTransactionList() {
-        return sessionTransactionList;
     }
 
     /**
@@ -286,10 +259,10 @@ public class Connection extends SmtpFoundation {
     public void putTransactionMagic(int transactionId) {
         session.putMagic("transactionId", String.valueOf(transactionId));
 
-        if (!sessionTransactionList.getEnvelopes().isEmpty() && transactionId >= 0) {
+        if (!session.getSessionTransactionList().getEnvelopes().isEmpty() && transactionId >= 0) {
 
             // Put transaction (SMTP DATA/BDAT response).
-            Transaction transaction = sessionTransactionList.getEnvelopes().get(transactionId).getData();
+            Transaction transaction = session.getSessionTransactionList().getEnvelopes().get(transactionId).getData();
             if (transaction != null && transaction.getResponse().startsWith("250 ")) {
                 Matcher m = transactionPattern.matcher(transaction.getResponse());
                 if (m.find()) {

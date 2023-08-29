@@ -34,7 +34,7 @@ class ClientHelpTest {
         connection.parseLines();
         assertTrue(connection.getLine(1).startsWith("HELP"));
         
-        String response = connection.getSessionTransactionList().getLast("HELP").getResponse();
+        String response = connection.getSession().getSessionTransactionList().getLast("HELP").getResponse();
         assertTrue(response.contains("HELO"));
         assertTrue(response.contains("EHLO"));
         assertTrue(response.contains("STARTTLS"));

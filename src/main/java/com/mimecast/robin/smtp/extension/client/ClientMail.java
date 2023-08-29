@@ -29,7 +29,7 @@ public class ClientMail extends ClientProcessor {
         super.process(connection);
 
         // Select message to send.
-        int messageID = connection.getSessionTransactionList().getEnvelopes().size();
+        int messageID = connection.getSession().getSessionTransactionList().getEnvelopes().size();
         MessageEnvelope envelope = connection.getSession().getEnvelopes().get(messageID);
 
         // Construct delivery envelope.
@@ -48,7 +48,7 @@ public class ClientMail extends ClientProcessor {
         transactionList.addTransaction("MAIL", write, read, !read.startsWith("250"));
 
         // Add transaction list to envelope.
-        connection.getSessionTransactionList().addEnvelope(transactionList);
+        connection.getSession().getSessionTransactionList().addEnvelope(transactionList);
 
         return read.startsWith("250");
     }

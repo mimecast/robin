@@ -71,7 +71,7 @@ public class Assert {
      */
     public Assert run() throws AssertException {
         if (!connection.getSession().getAssertions().isEmpty()) {
-            assertProtocol(connection.getSession().getAssertions().getProtocol(), connection.getSessionTransactionList());
+            assertProtocol(connection.getSession().getAssertions().getProtocol(), connection.getSession().getSessionTransactionList());
         }
 
         assertEnvelopes();
@@ -145,10 +145,10 @@ public class Assert {
     private void assertEnvelopes() throws AssertException {
         if (skip) return; // Skip asserting and exit gracefully.
 
-        if (!connection.getSession().getEnvelopes().isEmpty() && !connection.getSessionTransactionList().getEnvelopes().isEmpty()) {
+        if (!connection.getSession().getEnvelopes().isEmpty() && !connection.getSession().getSessionTransactionList().getEnvelopes().isEmpty()) {
             for (int i = 0; i < connection.getSession().getEnvelopes().size(); i++) {
                 MessageEnvelope envelope = connection.getSession().getEnvelopes().get(i);
-                List<EnvelopeTransactionList> envelopeTransactions = connection.getSessionTransactionList().getEnvelopes();
+                List<EnvelopeTransactionList> envelopeTransactions = connection.getSession().getSessionTransactionList().getEnvelopes();
                 if (envelopeTransactions.size() > i) {
                     EnvelopeTransactionList envelopeTransactionList = envelopeTransactions.get(i);
 

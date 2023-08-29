@@ -5,7 +5,8 @@ import com.mimecast.robin.smtp.auth.DigestMD5Client;
 import com.mimecast.robin.smtp.auth.InstanceDigestCache;
 import com.mimecast.robin.smtp.auth.NotRandom;
 import com.mimecast.robin.smtp.connection.ConnectionMock;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import javax.naming.ConfigurationException;
 import java.io.IOException;
@@ -61,8 +62,8 @@ class ClientAuthTest {
         boolean process = auth.process(connection);
 
         assertFalse(false);
-        assertEquals(0, connection.getSessionTransactionList().getEnvelopes().size());
-        assertEquals(0, connection.getSessionTransactionList().getTransactions().size());
+        assertEquals(0, connection.getSession().getSessionTransactionList().getEnvelopes().size());
+        assertEquals(0, connection.getSession().getSessionTransactionList().getTransactions().size());
     }
 
     @Test
@@ -87,9 +88,9 @@ class ClientAuthTest {
                         "\r\n",
                 connection.getLine(2));
 
-        assertEquals(1, connection.getSessionTransactionList().getTransactions().size());
-        assertEquals("235 2.7.0 Authorized", connection.getSessionTransactionList().getLast("AUTH").getResponse());
-        assertFalse(connection.getSessionTransactionList().getLast("AUTH").isError());
+        assertEquals(1, connection.getSession().getSessionTransactionList().getTransactions().size());
+        assertEquals("235 2.7.0 Authorized", connection.getSession().getSessionTransactionList().getLast("AUTH").getResponse());
+        assertFalse(connection.getSession().getSessionTransactionList().getLast("AUTH").isError());
     }
 
     @Test
@@ -123,9 +124,9 @@ class ClientAuthTest {
                         "\r\n",
                 connection.getLine(1));
 
-        assertEquals(1, connection.getSessionTransactionList().getTransactions().size());
-        assertEquals("235 2.7.0 Authorized", connection.getSessionTransactionList().getLast("AUTH").getResponse());
-        assertFalse(connection.getSessionTransactionList().getLast("AUTH").isError());
+        assertEquals(1, connection.getSession().getSessionTransactionList().getTransactions().size());
+        assertEquals("235 2.7.0 Authorized", connection.getSession().getSessionTransactionList().getLast("AUTH").getResponse());
+        assertFalse(connection.getSession().getSessionTransactionList().getLast("AUTH").isError());
     }
 
     @Test
@@ -139,9 +140,9 @@ class ClientAuthTest {
 
         assertFalse(process);
 
-        assertEquals(1, connection.getSessionTransactionList().getTransactions().size());
-        assertEquals("504 5.7.4 Unrecognized authentication type", connection.getSessionTransactionList().getLast("AUTH").getResponse());
-        assertTrue(connection.getSessionTransactionList().getLast("AUTH").isError());
+        assertEquals(1, connection.getSession().getSessionTransactionList().getTransactions().size());
+        assertEquals("504 5.7.4 Unrecognized authentication type", connection.getSession().getSessionTransactionList().getLast("AUTH").getResponse());
+        assertTrue(connection.getSession().getSessionTransactionList().getLast("AUTH").isError());
     }
 
     @Test
@@ -156,9 +157,9 @@ class ClientAuthTest {
 
         assertFalse(process);
 
-        assertEquals(1, connection.getSessionTransactionList().getTransactions().size());
-        assertEquals("535 5.7.1 Unauthorized", connection.getSessionTransactionList().getLast("AUTH").getResponse());
-        assertTrue(connection.getSessionTransactionList().getLast("AUTH").isError());
+        assertEquals(1, connection.getSession().getSessionTransactionList().getTransactions().size());
+        assertEquals("535 5.7.1 Unauthorized", connection.getSession().getSessionTransactionList().getLast("AUTH").getResponse());
+        assertTrue(connection.getSession().getSessionTransactionList().getLast("AUTH").isError());
     }
 
     @Test
@@ -183,8 +184,8 @@ class ClientAuthTest {
                         "\r\n",
                 connection.getLine(2));
 
-        assertEquals(1, connection.getSessionTransactionList().getTransactions().size());
-        assertFalse(connection.getSessionTransactionList().getLast("AUTH").isError());
+        assertEquals(1, connection.getSession().getSessionTransactionList().getTransactions().size());
+        assertFalse(connection.getSession().getSessionTransactionList().getLast("AUTH").isError());
     }
 
     @Test
@@ -203,9 +204,9 @@ class ClientAuthTest {
         connection.parseLines();
         assertEquals("AUTH LOGIN dG9ueUBleGFtcGxlLmNvbQ== Z2l2ZUhlclRoZVJpbmc=\r\n", connection.getLine(1));
 
-        assertEquals(1, connection.getSessionTransactionList().getTransactions().size());
-        assertEquals("235 2.7.0 Authorized", connection.getSessionTransactionList().getLast("AUTH").getResponse());
-        assertFalse(connection.getSessionTransactionList().getLast("AUTH").isError());
+        assertEquals(1, connection.getSession().getSessionTransactionList().getTransactions().size());
+        assertEquals("235 2.7.0 Authorized", connection.getSession().getSessionTransactionList().getLast("AUTH").getResponse());
+        assertFalse(connection.getSession().getSessionTransactionList().getLast("AUTH").isError());
     }
 
     @Test
@@ -226,9 +227,9 @@ class ClientAuthTest {
         assertEquals("AUTH LOGIN dG9ueUBleGFtcGxlLmNvbQ== Z2l2ZUhlclRoZVJpbmc=\r\n", connection.getLine(1));
         assertEquals("Z2l2ZUhlclRoZVJpbmc=\r\n", connection.getLine(2));
 
-        assertEquals(1, connection.getSessionTransactionList().getTransactions().size());
-        assertEquals("235 2.7.0 Authorized", connection.getSessionTransactionList().getLast("AUTH").getResponse());
-        assertFalse(connection.getSessionTransactionList().getLast("AUTH").isError());
+        assertEquals(1, connection.getSession().getSessionTransactionList().getTransactions().size());
+        assertEquals("235 2.7.0 Authorized", connection.getSession().getSessionTransactionList().getLast("AUTH").getResponse());
+        assertFalse(connection.getSession().getSessionTransactionList().getLast("AUTH").isError());
     }
 
     @Test
@@ -247,9 +248,9 @@ class ClientAuthTest {
         connection.parseLines();
         assertEquals("AUTH LOGIN dG9ueUBleGFtcGxlLmNvbQ== Z2l2ZUhlclRoZVJpbmc=\r\n", connection.getLine(1));
 
-        assertEquals(1, connection.getSessionTransactionList().getTransactions().size());
-        assertEquals("535 5.7.1 Unauthorized", connection.getSessionTransactionList().getLast("AUTH").getResponse());
-        assertTrue(connection.getSessionTransactionList().getLast("AUTH").isError());
+        assertEquals(1, connection.getSession().getSessionTransactionList().getTransactions().size());
+        assertEquals("535 5.7.1 Unauthorized", connection.getSession().getSessionTransactionList().getLast("AUTH").getResponse());
+        assertTrue(connection.getSession().getSessionTransactionList().getLast("AUTH").isError());
     }
 
 
@@ -272,9 +273,9 @@ class ClientAuthTest {
         connection.parseLines();
         assertEquals("AUTH LOGIN dG9ueUBleGFtcGxlLmNvbQ== Z2l2ZUhlclRoZVJpbmc=\r\n", connection.getLine(1));
 
-        assertEquals(1, connection.getSessionTransactionList().getTransactions().size());
-        assertEquals("235 2.7.0 Authorized", connection.getSessionTransactionList().getLast("AUTH").getResponse());
-        assertFalse(connection.getSessionTransactionList().getLast("AUTH").isError());
+        assertEquals(1, connection.getSession().getSessionTransactionList().getTransactions().size());
+        assertEquals("235 2.7.0 Authorized", connection.getSession().getSessionTransactionList().getLast("AUTH").getResponse());
+        assertFalse(connection.getSession().getSessionTransactionList().getLast("AUTH").isError());
     }
 
     @Test
@@ -292,9 +293,9 @@ class ClientAuthTest {
         connection.parseLines();
         assertEquals("AUTH PLAIN dG9ueUBleGFtcGxlLmNvbQB0b255QGV4YW1wbGUuY29tAGdpdmVIZXJUaGVSaW5n\r\n", connection.getLine(1));
 
-        assertEquals(1, connection.getSessionTransactionList().getTransactions().size());
-        assertEquals("235 2.7.0 Authorized", connection.getSessionTransactionList().getLast("AUTH").getResponse());
-        assertFalse(connection.getSessionTransactionList().getLast("AUTH").isError());
+        assertEquals(1, connection.getSession().getSessionTransactionList().getTransactions().size());
+        assertEquals("235 2.7.0 Authorized", connection.getSession().getSessionTransactionList().getLast("AUTH").getResponse());
+        assertFalse(connection.getSession().getSessionTransactionList().getLast("AUTH").isError());
     }
 
     @Test
@@ -312,8 +313,8 @@ class ClientAuthTest {
         connection.parseLines();
         assertEquals("AUTH PLAIN dG9ueUBleGFtcGxlLmNvbQB0b255QGV4YW1wbGUuY29tAGdpdmVIZXJUaGVSaW5n\r\n", connection.getLine(1));
 
-        assertEquals(1, connection.getSessionTransactionList().getTransactions().size());
-        assertEquals("535 5.7.1 Unauthorized", connection.getSessionTransactionList().getLast("AUTH").getResponse());
-        assertTrue(connection.getSessionTransactionList().getLast("AUTH").isError());
+        assertEquals(1, connection.getSession().getSessionTransactionList().getTransactions().size());
+        assertEquals("535 5.7.1 Unauthorized", connection.getSession().getSessionTransactionList().getLast("AUTH").getResponse());
+        assertTrue(connection.getSession().getSessionTransactionList().getLast("AUTH").isError());
     }
 }

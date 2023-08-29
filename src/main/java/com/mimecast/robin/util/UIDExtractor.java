@@ -43,10 +43,10 @@ public class UIDExtractor {
         List<Transaction> transactions = new ArrayList<>();
 
         // Select transactions.
-        if (transactionId >= 0 && !connection.getSessionTransactionList().getEnvelopes().isEmpty()) {
-            transactions.addAll(connection.getSessionTransactionList().getEnvelopes().get(transactionId).getTransactions());
+        if (transactionId >= 0 && !connection.getSession().getSessionTransactionList().getEnvelopes().isEmpty()) {
+            transactions.addAll(connection.getSession().getSessionTransactionList().getEnvelopes().get(transactionId).getTransactions());
         } else {
-            transactions.addAll(connection.getSessionTransactionList().getTransactions());
+            transactions.addAll(connection.getSession().getSessionTransactionList().getTransactions());
         }
 
         // Match UID pattern to transaction response.

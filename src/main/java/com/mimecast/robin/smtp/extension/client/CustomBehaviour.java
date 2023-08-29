@@ -34,8 +34,8 @@ public class CustomBehaviour implements Behaviour {
         this.connection = connection;
 
         // Select message and envelope to send.
-        int messageID = !connection.getSessionTransactionList().getEnvelopes().isEmpty() ?
-                connection.getSessionTransactionList().getEnvelopes().size() - 1 :
+        int messageID = !connection.getSession().getSessionTransactionList().getEnvelopes().isEmpty() ?
+                connection.getSession().getSessionTransactionList().getEnvelopes().size() - 1 :
                 0; // Adjust as it's initially added in ClientMail or 0 if none yet.
         MessageEnvelope envelope = connection.getSession().getEnvelopes().get(messageID);
 

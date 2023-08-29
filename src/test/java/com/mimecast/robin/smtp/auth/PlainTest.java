@@ -24,7 +24,7 @@ class PlainTest {
         session.setUsername("giveHerTheRing");
 
         Plain plain = new Plain(new Connection(session));
-        Plain plainNoSession = new Plain(new Connection(null, null));
+        Plain plainNoSession = new Plain(new Connection(new Session()));
         assertEquals("Z2l2ZUhlclRoZVJpbmcAZ2l2ZUhlclRoZVJpbmcA", plain.getLogin());
         assertEquals("AAA=", plainNoSession.getLogin());
     }

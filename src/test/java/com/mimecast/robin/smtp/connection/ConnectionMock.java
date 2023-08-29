@@ -4,7 +4,6 @@ import com.mimecast.robin.main.Factories;
 import com.mimecast.robin.smtp.MessageEnvelope;
 import com.mimecast.robin.smtp.io.LineInputStream;
 import com.mimecast.robin.smtp.session.Session;
-import com.mimecast.robin.smtp.transaction.SessionTransactionList;
 import com.mimecast.robin.util.StreamUtils;
 
 import java.io.ByteArrayInputStream;
@@ -36,14 +35,10 @@ public class ConnectionMock extends Connection {
         super(session);
     }
 
-    public ConnectionMock(Session session, SessionTransactionList sessionTransactionList) {
-        super(session, sessionTransactionList);
-    }
-
     @Override
     public void connect() throws IOException {
         String read = read("220");
-        getSessionTransactionList().addTransaction("SMTP", read, !read.startsWith("220"));
+        session.getSessionTransactionList().addTransaction("SMTP", read, !read.startsWith("220"));
     }
 
     @Override

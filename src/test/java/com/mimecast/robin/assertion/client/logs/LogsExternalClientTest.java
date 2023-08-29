@@ -48,7 +48,7 @@ class LogsExternalClientTest {
 
         Connection connection = ConnectionMock.getConnection(stringBuilder)
                 .setServer("space.com");
-        connection.getSessionTransactionList().getEnvelopes().add(envelopeTransactionList);
+        connection.getSession().getSessionTransactionList().getEnvelopes().add(envelopeTransactionList);
 
         new LogsExternalClientMock()
                 .setConnection(connection)

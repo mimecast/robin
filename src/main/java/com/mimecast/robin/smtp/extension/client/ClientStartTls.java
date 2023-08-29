@@ -27,7 +27,7 @@ public class ClientStartTls extends ClientProcessor {
 
             String read = connection.read("220");
 
-            connection.getSessionTransactionList().addTransaction(write, write, read, !read.startsWith("220"));
+            connection.getSession().getSessionTransactionList().addTransaction(write, write, read, !read.startsWith("220"));
             if (!read.startsWith("220")) throw new SmtpException("STARTTLS");
 
             connection.setProtocols(connection.getSession().getProtocols());
@@ -35,10 +35,10 @@ public class ClientStartTls extends ClientProcessor {
 
             try {
                 connection.startTLS(true);
-                connection.getSessionTransactionList().addTransaction("TLS", "",
+                connection.getSession().getSessionTransactionList().addTransaction("TLS", "",
                         connection.getProtocol() + ":" + connection.getCipherSuite(), false);
             } catch (SmtpException e) {
-                connection.getSessionTransactionList().addTransaction("TLS", "",
+                connection.getSession().getSessionTransactionList().addTransaction("TLS", "",
                         e.getCause().getMessage(), true);
                 throw e;
             }

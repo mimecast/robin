@@ -78,7 +78,7 @@ public class ClientEhlo extends ClientProcessor {
      * @throws SmtpException SMTP delivery exception.
      */
     private void processResponse(String write, String read) throws SmtpException {
-        connection.getSessionTransactionList().addTransaction(connection.getSession().getEhloLog(), write, read, !read.startsWith("250"));
+        connection.getSession().getSessionTransactionList().addTransaction(connection.getSession().getEhloLog(), write, read, !read.startsWith("250"));
 
         if (read.isEmpty()) throw new SmtpException("EHLO");
     }

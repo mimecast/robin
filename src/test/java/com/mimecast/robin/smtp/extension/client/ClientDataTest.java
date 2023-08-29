@@ -33,7 +33,7 @@ class ClientDataTest {
 
         EnvelopeTransactionList transactionList = new EnvelopeTransactionList();
         transactionList.addTransaction("MAIL", "MAIL FROM:<tony@example.com>", "250 OK", false);
-        connection.getSessionTransactionList().addEnvelope(transactionList);
+        connection.getSession().getSessionTransactionList().addEnvelope(transactionList);
 
         ClientData data = new ClientData();
         boolean process = data.process(connection);
@@ -61,7 +61,7 @@ class ClientDataTest {
 
         EnvelopeTransactionList transactionList = new EnvelopeTransactionList();
         transactionList.addTransaction("MAIL", "MAIL FROM:<tony@example.com>", "250 OK", false);
-        connection.getSessionTransactionList().addEnvelope(transactionList);
+        connection.getSession().getSessionTransactionList().addEnvelope(transactionList);
 
         ClientData data = new ClientData();
         boolean process = data.process(connection);
@@ -102,7 +102,7 @@ class ClientDataTest {
 
         EnvelopeTransactionList transactionList = new EnvelopeTransactionList();
         transactionList.addTransaction("MAIL", "MAIL FROM:<tony@example.com>", "250 OK", false);
-        connection.getSessionTransactionList().addEnvelope(transactionList);
+        connection.getSession().getSessionTransactionList().addEnvelope(transactionList);
 
         ClientData data = new ClientData();
         boolean process = data.process(connection);
@@ -134,7 +134,7 @@ class ClientDataTest {
 
         EnvelopeTransactionList transactionList = new EnvelopeTransactionList();
         transactionList.addTransaction("MAIL", "MAIL FROM:<tony@example.com>", "250 OK", false);
-        connection.getSessionTransactionList().addEnvelope(transactionList);
+        connection.getSession().getSessionTransactionList().addEnvelope(transactionList);
 
         ClientData data = new ClientData();
         boolean process = data.process(connection);
@@ -160,7 +160,7 @@ class ClientDataTest {
 
         EnvelopeTransactionList transactionList = new EnvelopeTransactionList();
         transactionList.addTransaction("MAIL", "MAIL FROM:<tony@example.com>", "250 OK", false);
-        connection.getSessionTransactionList().addEnvelope(transactionList);
+        connection.getSession().getSessionTransactionList().addEnvelope(transactionList);
 
         ClientData data = new ClientData();
         boolean process = data.process(connection);
@@ -220,7 +220,7 @@ class ClientDataTest {
 
         EnvelopeTransactionList transactionList = new EnvelopeTransactionList();
         transactionList.addTransaction("MAIL", "MAIL FROM:<tony@example.com>", "250 OK", false);
-        connection.getSessionTransactionList().addEnvelope(transactionList);
+        connection.getSession().getSessionTransactionList().addEnvelope(transactionList);
 
         ClientData data = new ClientData();
         boolean process = data.process(connection);

@@ -29,7 +29,7 @@ class ClientEhloTest {
         boolean process = ehlo.process(connection);
 
         assertTrue(process);
-        assertTrue(connection.getSessionTransactionList().getLast("EHLO").getPayload().startsWith("EHLO "));
+        assertTrue(connection.getSession().getSessionTransactionList().getLast("EHLO").getPayload().startsWith("EHLO "));
 
     }
 
@@ -54,7 +54,7 @@ class ClientEhloTest {
 
         assertTrue(process);
         assertEquals(35882577, connection.getSession().getEhloSize());
-        assertEquals("EHLO example.com", connection.getSessionTransactionList().getLast("EHLO").getPayload());
+        assertEquals("EHLO example.com", connection.getSession().getSessionTransactionList().getLast("EHLO").getPayload());
         assertTrue(connection.getSession().getEhloAuth().contains("login"));
         assertTrue(connection.getSession().getEhloAuth().contains("plain"));
         assertTrue(connection.getSession().getEhloAuth().contains("ntlm"));

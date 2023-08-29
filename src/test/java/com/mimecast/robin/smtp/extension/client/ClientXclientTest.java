@@ -37,7 +37,7 @@ class ClientXclientTest {
         boolean process = xclient.process(connection);
 
         assertTrue(process);
-        assertEquals("220 Go", connection.getSessionTransactionList().getLast("XCLIENT").getResponse());
+        assertEquals("220 Go", connection.getSession().getSessionTransactionList().getLast("XCLIENT").getResponse());
 
         connection.parseLines();
         assertEquals("XCLIENT helo=example.com name=example.com addr=127.0.0.1\r\n", connection.getLine(1));

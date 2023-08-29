@@ -58,14 +58,14 @@ class ClientStartTlsTest {
         connection.connect();
 
         // Read welcome message.
-        assertEquals("220", connection.getSessionTransactionList().getLast("SMTP").getResponseCode());
+        assertEquals("220", connection.getSession().getSessionTransactionList().getLast("SMTP").getResponseCode());
 
         ClientStartTls startTls = new ClientStartTls();
         boolean process = startTls.process(connection);
 
         // Read STARTTLS response.
         assertTrue(process);
-        assertFalse(connection.getSessionTransactionList().getLast("STARTTLS").isError());
-        assertFalse(connection.getSessionTransactionList().getLast("TLS").isError());
+        assertFalse(connection.getSession().getSessionTransactionList().getLast("STARTTLS").isError());
+        assertFalse(connection.getSession().getSessionTransactionList().getLast("TLS").isError());
     }
 }

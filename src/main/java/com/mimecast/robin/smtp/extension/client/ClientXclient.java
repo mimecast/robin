@@ -36,7 +36,7 @@ public class ClientXclient extends ClientProcessor {
 
         String read = connection.read("220");
 
-        connection.getSessionTransactionList().addTransaction(client, client + params, read, !read.startsWith("220"));
+        connection.getSession().getSessionTransactionList().addTransaction(client, client + params, read, !read.startsWith("220"));
         connection.getSession().setEhloLog("XHLO");
 
         return read.startsWith("220");

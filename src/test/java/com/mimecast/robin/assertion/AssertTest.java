@@ -8,7 +8,6 @@ import com.mimecast.robin.smtp.MessageEnvelope;
 import com.mimecast.robin.smtp.connection.Connection;
 import com.mimecast.robin.smtp.session.Session;
 import com.mimecast.robin.smtp.transaction.EnvelopeTransactionList;
-import com.mimecast.robin.smtp.transaction.SessionTransactionList;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -52,33 +51,30 @@ class AssertTest {
     @Test
     @SuppressWarnings("java:S2699")
     void session() throws AssertException {
-        SessionTransactionList sessionTransactionList = new SessionTransactionList();
-        sessionTransactionList.addTransaction("SMTP", "220 example.com ESMTP", false);
 
         Session session = new Session();
         session.addAssertions(assertConfig);
+        session.getSessionTransactionList().addTransaction("SMTP", "220 example.com ESMTP", false);
 
-        new Assert(new Connection(session, sessionTransactionList)).run();
+        new Assert(new Connection(session)).run();
     }
 
     @Test
     @SuppressWarnings({"rawtypes", "java:S2699"})
     void message() throws AssertException {
-        SessionTransactionList sessionTransactionList = new SessionTransactionList();
-
         EnvelopeTransactionList envelopeTransactionList = new EnvelopeTransactionList();
         envelopeTransactionList.addTransaction("MAIL", "250 Sender OK [7qGJZ4oRNkWJPsu_7ug1nw.localhost]", false);
         envelopeTransactionList.addTransaction("RCPT", "250 Recipient OK", false);
         envelopeTransactionList.addTransaction("DATA", "250 Received OK", false);
-        sessionTransactionList.addEnvelope(envelopeTransactionList);
 
         MessageEnvelope envelope = new MessageEnvelope();
         envelope.setAssertions(new AssertConfig((Map) ((Map) ((List) assertConfig.getMap().get("envelopes")).get(0)).get("assertions")));
 
         Session session = new Session();
         session.addEnvelope(envelope);
+        session.getSessionTransactionList().addEnvelope(envelopeTransactionList);
 
-        new Assert(new Connection(session, sessionTransactionList)).run();
+        new Assert(new Connection(session)).run();
     }
 
     @Test
@@ -93,6 +89,6 @@ class AssertTest {
         Session session = new Session();
         session.addAssertions(assertConfig);
 
-        new Assert(new Connection(session, new SessionTransactionList())).run();
+        new Assert(new Connection(session)).run();
     }
 }

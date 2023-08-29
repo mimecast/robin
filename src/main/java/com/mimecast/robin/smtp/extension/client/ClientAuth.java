@@ -106,19 +106,19 @@ public class ClientAuth extends ClientProcessor {
             String server = read.substring(4);
 
             if (!read.startsWith("334")) {
-                connection.getSessionTransactionList().addTransaction("AUTH", challenge + "/" + response, read, true);
+                connection.getSession().getSessionTransactionList().addTransaction("AUTH", challenge + "/" + response, read, true);
                 return false;
             }
 
             if (!digestMd5.authenticateServer(server)) {
-                connection.getSessionTransactionList().addTransaction("AUTH", challenge + "/" + response, read);
+                connection.getSession().getSessionTransactionList().addTransaction("AUTH", challenge + "/" + response, read);
                 return false;
             }
             connection.write("");
             read = connection.read("235");
         }
 
-        connection.getSessionTransactionList().addTransaction("AUTH", challenge + "/" + response, read, !read.startsWith("235"));
+        connection.getSession().getSessionTransactionList().addTransaction("AUTH", challenge + "/" + response, read, !read.startsWith("235"));
         return read.startsWith("235");
     }
 
@@ -148,7 +148,7 @@ public class ClientAuth extends ClientProcessor {
                 authLoginRetry = authLoginCombined = false;
                 return authLogin();
             }
-            connection.getSessionTransactionList().addTransaction("AUTH", write, read, true);
+            connection.getSession().getSessionTransactionList().addTransaction("AUTH", write, read, true);
             return false;
         }
 
@@ -159,7 +159,7 @@ public class ClientAuth extends ClientProcessor {
 
         }
 
-        connection.getSessionTransactionList().addTransaction("AUTH", write + " " + login.getPassword(), read, !read.startsWith("235"));
+        connection.getSession().getSessionTransactionList().addTransaction("AUTH", write + " " + login.getPassword(), read, !read.startsWith("235"));
         return read.startsWith("235");
     }
 
@@ -175,7 +175,7 @@ public class ClientAuth extends ClientProcessor {
 
         connection.write(write);
         String read = connection.read("235");
-        connection.getSessionTransactionList().addTransaction("AUTH", write, read, !read.startsWith("235"));
+        connection.getSession().getSessionTransactionList().addTransaction("AUTH", write, read, !read.startsWith("235"));
         return read.startsWith("235");
     }
 }

@@ -23,11 +23,11 @@ public class ClientRcpt extends ClientProcessor {
         super.process(connection);
 
         // Select message and envelope to send.
-        int messageID = connection.getSessionTransactionList().getEnvelopes().size() - 1; // Adjust as it's initially added in ClientMail.
+        int messageID = connection.getSession().getSessionTransactionList().getEnvelopes().size() - 1; // Adjust as it's initially added in ClientMail.
         MessageEnvelope envelope = connection.getSession().getEnvelopes().get(messageID);
 
         // Get delivery envelope.
-        EnvelopeTransactionList envelopeTransactions = connection.getSessionTransactionList().getEnvelopes().get(messageID);
+        EnvelopeTransactionList envelopeTransactions = connection.getSession().getSessionTransactionList().getEnvelopes().get(messageID);
 
         // Loop recipients.
         String write;

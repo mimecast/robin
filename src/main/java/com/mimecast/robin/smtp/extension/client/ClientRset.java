@@ -27,7 +27,7 @@ public class ClientRset extends ClientProcessor {
             connection.write(verb);
 
             String read = connection.read(code);
-            connection.getSessionTransactionList().addTransaction(verb, verb, read);
+            connection.getSession().getSessionTransactionList().addTransaction(verb, verb, read);
         } catch (IOException e) {
             log.info("Error reading/writing for {}: {}", verb, e.getMessage());
         }

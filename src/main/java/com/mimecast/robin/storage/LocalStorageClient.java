@@ -61,7 +61,7 @@ public class LocalStorageClient implements StorageClient {
     /**
      * Save file output stream.
      */
-    protected OutputStream stream = NullOutputStream.NULL_OUTPUT_STREAM;
+    protected OutputStream stream = NullOutputStream.INSTANCE;
 
     /**
      * Sets file extension.
@@ -123,7 +123,7 @@ public class LocalStorageClient implements StorageClient {
                 log.error("Storage path could not be created");
             }
         } else {
-            stream = NullOutputStream.NULL_OUTPUT_STREAM;
+            stream = NullOutputStream.INSTANCE;
         }
 
         return stream;

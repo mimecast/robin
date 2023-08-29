@@ -24,7 +24,7 @@ public class ClientHelp extends ClientProcessor {
         connection.write(write);
 
         String read = connection.read("214");
-        connection.getSessionTransactionList().addTransaction(write, write, read, !read.startsWith("250"));
+        connection.getSession().getSessionTransactionList().addTransaction(write, write, read, !read.startsWith("250"));
 
         return read.startsWith("214");
     }

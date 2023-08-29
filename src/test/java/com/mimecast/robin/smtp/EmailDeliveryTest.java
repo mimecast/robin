@@ -66,17 +66,17 @@ class EmailDeliveryTest {
         assertEquals(".\r\n", connection.getLine(15));
         assertEquals("QUIT\r\n", connection.getLine(16));
 
-        assertEquals("220 example.com ESMTP", connection.getSessionTransactionList().getLast("SMTP").getResponse());
+        assertEquals("220 example.com ESMTP", connection.getSession().getSessionTransactionList().getLast("SMTP").getResponse());
         assertEquals("250-smtp.example.com at your service, [127.0.0.1]\r\n" +
-                "250 HELP", connection.getSessionTransactionList().getLast("EHLO").getResponse());
+                "250 HELP", connection.getSession().getSessionTransactionList().getLast("EHLO").getResponse());
 
-        assertEquals("250 2.1.0 Sender OK", connection.getSessionTransactionList().getEnvelopes().get(0).getMail().getResponse());
-        assertEquals(1, connection.getSessionTransactionList().getEnvelopes().get(0).getRcpt().size());
-        assertEquals("250 2.1.5 Recipient OK", connection.getSessionTransactionList().getEnvelopes().get(0).getRcpt().get(0).getResponse());
-        assertEquals("250 2.0.0 Received OK", connection.getSessionTransactionList().getEnvelopes().get(0).getData().getResponse());
-        assertTrue(connection.getSessionTransactionList().getEnvelopes().get(0).getBdat().isEmpty());
+        assertEquals("250 2.1.0 Sender OK", connection.getSession().getSessionTransactionList().getEnvelopes().get(0).getMail().getResponse());
+        assertEquals(1, connection.getSession().getSessionTransactionList().getEnvelopes().get(0).getRcpt().size());
+        assertEquals("250 2.1.5 Recipient OK", connection.getSession().getSessionTransactionList().getEnvelopes().get(0).getRcpt().get(0).getResponse());
+        assertEquals("250 2.0.0 Received OK", connection.getSession().getSessionTransactionList().getEnvelopes().get(0).getData().getResponse());
+        assertTrue(connection.getSession().getSessionTransactionList().getEnvelopes().get(0).getBdat().isEmpty());
 
-        assertEquals("221 2.0.0 Closing connection", connection.getSessionTransactionList().getLast("QUIT").getResponse());
+        assertEquals("221 2.0.0 Closing connection", connection.getSession().getSessionTransactionList().getLast("QUIT").getResponse());
     }
 
     @Test
@@ -92,10 +92,10 @@ class EmailDeliveryTest {
         connection.parseLines();
         assertEquals("EHLO example.com\r\n", connection.getLine(1));
 
-        assertEquals("220 example.com ESMTP", connection.getSessionTransactionList().getLast("SMTP").getResponse());
-        assertEquals("500 5.3.3 Unrecognized command", connection.getSessionTransactionList().getLast("EHLO").getResponse());
+        assertEquals("220 example.com ESMTP", connection.getSession().getSessionTransactionList().getLast("SMTP").getResponse());
+        assertEquals("500 5.3.3 Unrecognized command", connection.getSession().getSessionTransactionList().getLast("EHLO").getResponse());
 
-        assertTrue(connection.getSessionTransactionList().getEnvelopes().isEmpty());
+        assertTrue(connection.getSession().getSessionTransactionList().getEnvelopes().isEmpty());
     }
 
     @Test
@@ -117,17 +117,17 @@ class EmailDeliveryTest {
         assertEquals("RCPT TO:<pepper@example.com>\r\n", connection.getLine(3));
         assertEquals("QUIT\r\n", connection.getLine(4));
 
-        assertEquals("220 example.com ESMTP", connection.getSessionTransactionList().getLast("SMTP").getResponse());
+        assertEquals("220 example.com ESMTP", connection.getSession().getSessionTransactionList().getLast("SMTP").getResponse());
         assertEquals("250-smtp.example.com at your service, [127.0.0.1]\r\n" +
-                "250 HELP", connection.getSessionTransactionList().getLast("EHLO").getResponse());
+                "250 HELP", connection.getSession().getSessionTransactionList().getLast("EHLO").getResponse());
 
-        assertEquals("250 2.1.0 Sender OK", connection.getSessionTransactionList().getEnvelopes().get(0).getMail().getResponse());
-        assertEquals(1, connection.getSessionTransactionList().getEnvelopes().get(0).getRcpt().size());
-        assertEquals("550 5.1.1 Recipient unknown", connection.getSessionTransactionList().getEnvelopes().get(0).getRcpt().get(0).getResponse());
-        assertNull(connection.getSessionTransactionList().getEnvelopes().get(0).getData());
-        assertTrue(connection.getSessionTransactionList().getEnvelopes().get(0).getBdat().isEmpty());
+        assertEquals("250 2.1.0 Sender OK", connection.getSession().getSessionTransactionList().getEnvelopes().get(0).getMail().getResponse());
+        assertEquals(1, connection.getSession().getSessionTransactionList().getEnvelopes().get(0).getRcpt().size());
+        assertEquals("550 5.1.1 Recipient unknown", connection.getSession().getSessionTransactionList().getEnvelopes().get(0).getRcpt().get(0).getResponse());
+        assertNull(connection.getSession().getSessionTransactionList().getEnvelopes().get(0).getData());
+        assertTrue(connection.getSession().getSessionTransactionList().getEnvelopes().get(0).getBdat().isEmpty());
 
-        assertEquals("221 2.0.0 Closing connection", connection.getSessionTransactionList().getLast("QUIT").getResponse());
+        assertEquals("221 2.0.0 Closing connection", connection.getSession().getSessionTransactionList().getLast("QUIT").getResponse());
     }
 
     @Test
@@ -164,17 +164,17 @@ class EmailDeliveryTest {
         assertEquals("Rescue me!\r\n", connection.getLine(15));
         assertEquals("QUIT\r\n", connection.getLine(16));
 
-        assertEquals("220 example.com ESMTP", connection.getSessionTransactionList().getLast("SMTP").getResponse());
+        assertEquals("220 example.com ESMTP", connection.getSession().getSessionTransactionList().getLast("SMTP").getResponse());
         assertEquals("250-smtp.example.com at your service, [127.0.0.1]\r\n" +
-                "250 HELP", connection.getSessionTransactionList().getLast("EHLO").getResponse());
+                "250 HELP", connection.getSession().getSessionTransactionList().getLast("EHLO").getResponse());
 
-        assertEquals("250 2.1.0 Sender OK", connection.getSessionTransactionList().getEnvelopes().get(0).getMail().getResponse());
-        assertEquals(1, connection.getSessionTransactionList().getEnvelopes().get(0).getRcpt().size());
-        assertEquals("250 2.1.5 Recipient OK", connection.getSessionTransactionList().getEnvelopes().get(0).getRcpt().get(0).getResponse());
-        assertNull(connection.getSessionTransactionList().getEnvelopes().get(0).getData());
-        assertEquals("250 2.0.0 Chunk OK", connection.getSessionTransactionList().getEnvelopes().get(0).getBdat().get(0).getResponse());
+        assertEquals("250 2.1.0 Sender OK", connection.getSession().getSessionTransactionList().getEnvelopes().get(0).getMail().getResponse());
+        assertEquals(1, connection.getSession().getSessionTransactionList().getEnvelopes().get(0).getRcpt().size());
+        assertEquals("250 2.1.5 Recipient OK", connection.getSession().getSessionTransactionList().getEnvelopes().get(0).getRcpt().get(0).getResponse());
+        assertNull(connection.getSession().getSessionTransactionList().getEnvelopes().get(0).getData());
+        assertEquals("250 2.0.0 Chunk OK", connection.getSession().getSessionTransactionList().getEnvelopes().get(0).getBdat().get(0).getResponse());
 
-        assertEquals("221 2.0.0 Closing connection", connection.getSessionTransactionList().getLast("QUIT").getResponse());
+        assertEquals("221 2.0.0 Closing connection", connection.getSession().getSessionTransactionList().getLast("QUIT").getResponse());
     }
 
     @Test
@@ -217,16 +217,16 @@ class EmailDeliveryTest {
         assertEquals("Part of the journey is the end.\r\n", connection.getLine(214));
         assertEquals("QUIT\r\n", connection.getLine(216));
 
-        assertEquals("220 example.com ESMTP", connection.getSessionTransactionList().getLast("SMTP").getResponse());
+        assertEquals("220 example.com ESMTP", connection.getSession().getSessionTransactionList().getLast("SMTP").getResponse());
         assertEquals("250-smtp.example.com at your service, [127.0.0.1]\r\n" +
-                "250 HELP", connection.getSessionTransactionList().getLast("EHLO").getResponse());
+                "250 HELP", connection.getSession().getSessionTransactionList().getLast("EHLO").getResponse());
 
-        assertEquals("250 2.1.0 Sender OK", connection.getSessionTransactionList().getEnvelopes().get(0).getMail().getResponse());
-        assertEquals(1, connection.getSessionTransactionList().getEnvelopes().get(0).getRcpt().size());
-        assertEquals("250 2.1.5 Recipient OK", connection.getSessionTransactionList().getEnvelopes().get(0).getRcpt().get(0).getResponse());
-        assertNull(connection.getSessionTransactionList().getEnvelopes().get(0).getData());
-        assertEquals("250 2.0.0 Chunk OK", connection.getSessionTransactionList().getEnvelopes().get(0).getBdat().get(0).getResponse());
+        assertEquals("250 2.1.0 Sender OK", connection.getSession().getSessionTransactionList().getEnvelopes().get(0).getMail().getResponse());
+        assertEquals(1, connection.getSession().getSessionTransactionList().getEnvelopes().get(0).getRcpt().size());
+        assertEquals("250 2.1.5 Recipient OK", connection.getSession().getSessionTransactionList().getEnvelopes().get(0).getRcpt().get(0).getResponse());
+        assertNull(connection.getSession().getSessionTransactionList().getEnvelopes().get(0).getData());
+        assertEquals("250 2.0.0 Chunk OK", connection.getSession().getSessionTransactionList().getEnvelopes().get(0).getBdat().get(0).getResponse());
 
-        assertEquals("221 2.0.0 Closing connection", connection.getSessionTransactionList().getLast("QUIT").getResponse());
+        assertEquals("221 2.0.0 Closing connection", connection.getSession().getSessionTransactionList().getLast("QUIT").getResponse());
     }
 }

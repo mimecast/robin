@@ -73,7 +73,7 @@ public class EmailDelivery {
 
         } catch (IOException e) {
             log.info("Error reading/writing: {}", e.getMessage());
-            connection.getSessionTransactionList().addTransaction("SMTP", "101 " + e.getMessage(), true);
+            connection.getSession().getSessionTransactionList().addTransaction("SMTP", "101 " + e.getMessage(), true);
 
         } finally {
             connection.close();
@@ -87,10 +87,10 @@ public class EmailDelivery {
      */
     private void terminate() {
         // Session.
-        logErrors(connection.getSessionTransactionList().getErrors());
+        logErrors(connection.getSession().getSessionTransactionList().getErrors());
 
         // Envelope.
-        for (EnvelopeTransactionList envelope : connection.getSessionTransactionList().getEnvelopes()) {
+        for (EnvelopeTransactionList envelope : connection.getSession().getSessionTransactionList().getEnvelopes()) {
             logErrors(envelope.getErrors());
         }
 

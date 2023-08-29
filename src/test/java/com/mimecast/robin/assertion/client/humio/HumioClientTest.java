@@ -51,7 +51,7 @@ class HumioClientTest {
 
         Connection connection = ConnectionMock.getConnection(stringBuilder)
                 .setServer("example.com");
-        connection.getSessionTransactionList().getEnvelopes().add(envelopeTransactionList);
+        connection.getSession().getSessionTransactionList().getEnvelopes().add(envelopeTransactionList);
 
         new HumioExternalClientMock()
                 .setConnection(connection)

@@ -24,7 +24,7 @@ class LoginTest {
         session.setPassword("giveHerTheRing");
 
         authPlain = new Login(new Connection(session));
-        authPlainNoSession = new Login(new Connection(null, null));
+        authPlainNoSession = new Login(new Connection(new Session()));
     }
 
     @Test

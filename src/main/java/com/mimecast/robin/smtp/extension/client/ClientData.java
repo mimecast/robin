@@ -45,11 +45,11 @@ public class ClientData extends ClientProcessor {
         super.process(connection);
 
         // Select message to send.
-        messageID = connection.getSessionTransactionList().getEnvelopes().size() - 1; // Adjust as it's initially added in ClientMail.
+        messageID = connection.getSession().getSessionTransactionList().getEnvelopes().size() - 1; // Adjust as it's initially added in ClientMail.
 
         // Select message envelope and transactions.
         envelope = connection.getSession().getEnvelopes().get(messageID);
-        envelopeTransactions = connection.getSessionTransactionList().getEnvelopes().get(messageID);
+        envelopeTransactions = connection.getSession().getSessionTransactionList().getEnvelopes().get(messageID);
 
         // Evaluate is BDAT enabled.
         boolean bdat = connection.getSession().isEhloBdat() && envelope.getChunkSize() >= 128;

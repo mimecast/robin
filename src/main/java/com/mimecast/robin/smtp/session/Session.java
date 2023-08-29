@@ -7,6 +7,7 @@ import com.mimecast.robin.main.Config;
 import com.mimecast.robin.smtp.MessageEnvelope;
 import com.mimecast.robin.smtp.connection.Connection;
 import com.mimecast.robin.smtp.connection.SmtpFoundation;
+import com.mimecast.robin.smtp.transaction.SessionTransactionList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.ThreadContext;
@@ -213,6 +214,11 @@ public class Session {
      * List of envelopes.
      */
     private final List<MessageEnvelope> envelopes = new ArrayList<>();
+
+    /**
+     * SessionTransactionList instance.
+     */
+    private SessionTransactionList sessionTransactionList = new SessionTransactionList();
 
     /**
      * AssertConfig.
@@ -1032,6 +1038,15 @@ public class Session {
     public Session addEnvelope(MessageEnvelope envelope) {
         envelopes.add(envelope);
         return this;
+    }
+
+    /**
+     * Gets SessionTransactionList instance.
+     *
+     * @return SessionTransactionList instance.
+     */
+    public SessionTransactionList getSessionTransactionList() {
+        return sessionTransactionList;
     }
 
     /**
