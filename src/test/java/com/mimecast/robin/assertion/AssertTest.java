@@ -51,7 +51,6 @@ class AssertTest {
     @Test
     @SuppressWarnings("java:S2699")
     void session() throws AssertException {
-
         Session session = new Session();
         session.addAssertions(assertConfig);
         session.getSessionTransactionList().addTransaction("SMTP", "220 example.com ESMTP", false);
@@ -62,15 +61,16 @@ class AssertTest {
     @Test
     @SuppressWarnings({"rawtypes", "java:S2699"})
     void message() throws AssertException {
+        Session session = new Session();
+
         EnvelopeTransactionList envelopeTransactionList = new EnvelopeTransactionList();
-        envelopeTransactionList.addTransaction("MAIL", "250 Sender OK [7qGJZ4oRNkWJPsu_7ug1nw.localhost]", false);
-        envelopeTransactionList.addTransaction("RCPT", "250 Recipient OK", false);
-        envelopeTransactionList.addTransaction("DATA", "250 Received OK", false);
+        session.getSessionTransactionList().addTransaction("MAIL", "250 Sender OK [7qGJZ4oRNkWJPsu_7ug1nw.localhost]", false);
+        session.getSessionTransactionList().addTransaction("RCPT", "250 Recipient OK", false);
+        session.getSessionTransactionList().addTransaction("DATA", "250 Received OK", false);
+        session.getSessionTransactionList().addEnvelope(envelopeTransactionList);
 
         MessageEnvelope envelope = new MessageEnvelope();
         envelope.setAssertions(new AssertConfig((Map) ((Map) ((List) assertConfig.getMap().get("envelopes")).get(0)).get("assertions")));
-
-        Session session = new Session();
         session.addEnvelope(envelope);
         session.getSessionTransactionList().addEnvelope(envelopeTransactionList);
 

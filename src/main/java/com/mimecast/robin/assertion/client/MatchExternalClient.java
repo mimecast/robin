@@ -58,7 +58,7 @@ public abstract class MatchExternalClient extends ExternalClient {
      * @throws AssertException Assertion exception.
      */
     public void runMatches(List<String> list) throws AssertException {
-        compilePatterns(config.getMatch(connection, transactionId), matchGroups); // Precompile match patterns for performance.
+        compilePatterns(config.getMatch(connection.getSession(), transactionId), matchGroups); // Precompile match patterns for performance.
         compilePatterns(config.getRefuse(), refuseGroups); // Precompile refuse patterns for performance.
 
         checkPatterns(list, true); // Match patters to log lines.

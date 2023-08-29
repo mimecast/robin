@@ -221,7 +221,7 @@ public class LocalStorageClient implements StorageClient {
                             .collect(Collectors.toList()))
                     .setFile(getToken());
 
-            Session session = Factories.getSession() // TODO Add session cloning.
+            Session session = Factories.getSession()
                     .setMx(Collections.singletonList(mx))
                     .setPort(port)
                     .addEnvelope(envelope);

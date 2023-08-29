@@ -6,6 +6,7 @@ import com.mimecast.robin.smtp.connection.Connection;
 import com.mimecast.robin.smtp.io.ChunkedInputStream;
 import com.mimecast.robin.smtp.io.MagicInputStream;
 import com.mimecast.robin.smtp.transaction.EnvelopeTransactionList;
+import com.mimecast.robin.util.Magic;
 import com.mimecast.robin.util.StreamUtils;
 import org.apache.commons.io.input.BoundedInputStream;
 
@@ -62,7 +63,7 @@ public class ClientData extends ClientProcessor {
 
             Path path = Files.createTempFile("robin-", ".eml");
             try (Closeable ignored = () -> Files.delete(path)) {
-                connection.putTransactionMagic(messageID); // Put magic early for EmailBuilder use.
+                Magic.putTransactionMagic(messageID, connection.getSession()); // Put magic early for EmailBuilder use.
                 new EmailBuilder(connection.getSession(), envelope)
                         .buildMime()
                         .writeTo(new FileOutputStream(path.toFile()));

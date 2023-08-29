@@ -5,6 +5,7 @@ import com.mimecast.robin.assertion.client.MatchExternalClient;
 import com.mimecast.robin.config.BasicConfig;
 import com.mimecast.robin.config.assertion.external.logs.LogsExternalClientConfig;
 import com.mimecast.robin.main.Config;
+import com.mimecast.robin.util.Magic;
 import com.mimecast.robin.util.Sleep;
 import com.mimecast.robin.util.UIDExtractor;
 
@@ -165,7 +166,7 @@ public class LogsExternalClient extends MatchExternalClient {
         List<String> greps = ((List<Map<String, String>>) config.getListProperty("grep")).stream()
                 .filter(map -> !map.containsKey("parameter") || !map.get("parameter").contains("v")) // `grep -v` skip patterns.
                 .map(map -> {
-                    String pattern = connection.getSession().transactionMagicReplace(map.get("pattern"), connection, transactionId);
+                    String pattern = Magic.transactionMagicReplace(map.get("pattern"), connection.getSession(), transactionId);
                     return map.containsKey("parameter") && map.get("parameter").contains("E") ? pattern : Pattern.quote(pattern); // `grep -E` compile as is or escape.
                 })
                 .collect(Collectors.toList());

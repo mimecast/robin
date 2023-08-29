@@ -6,6 +6,7 @@ import com.mimecast.robin.config.BasicConfig;
 import com.mimecast.robin.main.Config;
 import com.mimecast.robin.main.Factories;
 import com.mimecast.robin.smtp.connection.Connection;
+import com.mimecast.robin.util.Magic;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -99,7 +100,7 @@ public abstract class ExternalClient {
     protected void magicReplace(Map<String, Object> map) {
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             if (entry.getValue() instanceof String) {
-                map.put(entry.getKey(), connection.getSession().magicReplace((String) entry.getValue()));
+                map.put(entry.getKey(), Magic.magicReplace((String) entry.getValue(), connection.getSession()));
 
             } else if (entry.getValue() instanceof List) {
                 List<Object> list = new ArrayList<>();
@@ -107,7 +108,7 @@ public abstract class ExternalClient {
                 List<Object> value = (List<Object>) entry.getValue();
                 for (Object object : value) {
                     if (object instanceof String) {
-                        object = connection.getSession().magicReplace((String) object);
+                        object = Magic.magicReplace((String) object, connection.getSession());
 
                     } else if (object instanceof Map) {
                         magicReplace((Map<String, Object>) object);

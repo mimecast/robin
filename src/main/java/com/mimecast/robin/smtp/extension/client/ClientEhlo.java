@@ -2,6 +2,7 @@ package com.mimecast.robin.smtp.extension.client;
 
 import com.mimecast.robin.smtp.connection.Connection;
 import com.mimecast.robin.smtp.connection.SmtpException;
+import com.mimecast.robin.util.Magic;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -57,7 +58,7 @@ public class ClientEhlo extends ClientProcessor {
         String write = "EHLO ";
 
         if (StringUtils.isNotBlank(connection.getSession().getEhlo())) {
-            write += connection.getSession().magicReplace(connection.getSession().getEhlo());
+            write += Magic.magicReplace(connection.getSession().getEhlo(), connection.getSession());
         } else {
             try {
                 write += InetAddress.getLocalHost().getHostName();

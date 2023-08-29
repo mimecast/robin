@@ -5,6 +5,7 @@ import com.mimecast.robin.config.client.EnvelopeConfig;
 import com.mimecast.robin.main.Config;
 import com.mimecast.robin.smtp.MessageEnvelope;
 import com.mimecast.robin.smtp.session.Session;
+import com.mimecast.robin.util.Magic;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -86,26 +87,26 @@ public class ConfigMapper {
     @SuppressWarnings("unchecked")
     private void addMagic(Session session) {
         if (config.hasProperty("route")) {
-            config.getMap().put("route", session.magicReplace(config.getStringProperty("route")));
+            config.getMap().put("route", Magic.magicReplace(config.getStringProperty("route"), session));
         }
         if (config.hasProperty("envelopes")) {
             for (Object envelope : config.getListProperty("envelopes")) {
                 if (envelope instanceof Map) {
                     Map<String, Object> envelopeMap = (Map<String, Object>) envelope;
                     if (envelopeMap.containsKey("mail")) {
-                        envelopeMap.put("mail", session.magicReplace((String) envelopeMap.get("mail")));
+                        envelopeMap.put("mail", Magic.magicReplace((String) envelopeMap.get("mail"), session));
                     }
                     if (envelopeMap.containsKey("rcpt")) {
                         List<String> rcptList = new ArrayList<>();
                         for (String address : (List<String>) envelopeMap.get("rcpt")) {
-                            rcptList.add(session.magicReplace(address));
+                            rcptList.add(Magic.magicReplace(address, session));
                         }
                         envelopeMap.put("rcpt", rcptList);
                     }
                     if (envelopeMap.containsKey("params")) {
                         Map<String, List<String>> params = new HashMap<>();
                         for (Map.Entry<String, List<String>> param : ((Map<String, List<String>>) envelopeMap.get("params")).entrySet()) {
-                            params.put(param.getKey(), param.getValue().stream().map(e -> e = session.magicReplace(e)).collect(Collectors.toList()));
+                            params.put(param.getKey(), param.getValue().stream().map(e -> e = Magic.magicReplace(e, session)).collect(Collectors.toList()));
                         }
                         envelopeMap.put("params", params);
                     }

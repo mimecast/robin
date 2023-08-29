@@ -5,21 +5,16 @@ import com.mimecast.robin.config.assertion.AssertConfig;
 import com.mimecast.robin.config.client.CaseConfig;
 import com.mimecast.robin.main.Config;
 import com.mimecast.robin.smtp.MessageEnvelope;
-import com.mimecast.robin.smtp.connection.Connection;
 import com.mimecast.robin.smtp.connection.SmtpFoundation;
 import com.mimecast.robin.smtp.transaction.SessionTransactionList;
+import com.mimecast.robin.util.Magic;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.ThreadContext;
 
 import javax.mail.internet.InternetAddress;
-import java.lang.management.ManagementFactory;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  * Session.
@@ -218,7 +213,7 @@ public class Session {
     /**
      * SessionTransactionList instance.
      */
-    private SessionTransactionList sessionTransactionList = new SessionTransactionList();
+    private final SessionTransactionList sessionTransactionList = new SessionTransactionList();
 
     /**
      * AssertConfig.
@@ -237,17 +232,12 @@ public class Session {
     private final Map<String, List> savedResults = new HashMap<>();
 
     /**
-     * Magic variable pattern.
-     */
-    protected final static Pattern magicVariablePattern = Pattern.compile("\\{([a-z]+)?\\$([a-z0-9]+)(\\[([0-9]+)]\\[([a-z0-9]+)])?}", Pattern.CASE_INSENSITIVE);
-
-    /**
      * Constructs a new Session instance.
      */
     public Session() {
         ThreadContext.put("aCode", uid);
 
-        setMagic();
+        Magic.putMagic(this);
         setDate();
     }
 
@@ -258,51 +248,6 @@ public class Session {
      */
     public void map(CaseConfig caseConfig) {
         new ConfigMapper(caseConfig).mapTo(this);
-    }
-
-    /**
-     * Sets the magic.
-     */
-    private void setMagic() {
-        putMagic("robinUid", uid);
-        putMagic("yymd", new SimpleDateFormat("yyyyMMdd").format(new Date()));
-
-        // Add magic properties.
-        for (Map.Entry<String, Object> entry : Config.getProperties().getMap().entrySet()) {
-            if (entry.getValue() instanceof String) {
-                putMagic(entry.getKey(), entry.getValue());
-            }
-        }
-
-        // Add magic arguments.
-        List<String> args = ManagementFactory.getRuntimeMXBean().getInputArguments()
-                .stream()
-                .filter(s -> s.startsWith("-D"))
-                .map(s -> s.replace("-D", "").replaceAll("=.*", ""))
-                .collect(Collectors.toList());
-
-        for (String key : args) {
-            putMagic(key, Config.getProperties().getStringProperty(key));
-        }
-    }
-
-    /**
-     * Gets saved results.
-     *
-     * @return Map of String, List.
-     */
-    public Map<String, List> getSavedResults() {
-        return savedResults;
-    }
-
-    /**
-     * Saves results.
-     *
-     * @param key     Save name.
-     * @param results Results.
-     */
-    public void saveResults(String key, List results) {
-        savedResults.put(key, results);
     }
 
     /**
@@ -1070,10 +1015,29 @@ public class Session {
     }
 
     /**
+     * Has magic key.
+     *
+     * @param key   Magic key.
+     * @return Self.
+     */
+    public boolean hasMagic(String key) {
+        return magic.containsKey(key);
+    }
+
+    /**
+     * Gets magic.
+     *
+     * @return Map of String, Object.
+     */
+    public Map<String, Object> getMagic() {
+        return magic;
+    }
+
+    /**
      * Gets magic by key.
      *
      * @param key Magic key.
-     * @return Map of String, Object.
+     * @return Object.
      */
     public Object getMagic(String key) {
         return magic.get(key);
@@ -1092,109 +1056,21 @@ public class Session {
     }
 
     /**
-     * Session magic replace.
+     * Saves results.
      *
-     * @param magicString Magic string.
-     * @return Map of String, Object.
+     * @param key     Save name.
+     * @param results Results.
      */
-    public String magicReplace(String magicString) {
-        if (magicString != null) {
-            for (String key : magic.keySet()) {
-                if (magicString.contains("{$" + key + "}")) {
-                    Object val = magic.get(key);
-                    if (val instanceof String) {
-                        magicString = magicString.replaceAll("\\{\\$" + key + "}", Matcher.quoteReplacement((String) magic.get(key)));
-                    }
-                }
-            }
-        }
-
-        return magicString;
+    public void saveResults(String key, List results) {
+        savedResults.put(key, results);
     }
 
     /**
-     * Transaction magic replace.
+     * Gets saved results.
      *
-     * @param magicString   Magic string.
-     * @param connection    Connection instance.
-     * @param transactionId Transaction ID.
+     * @return Map of String, List.
      */
-    @SuppressWarnings("unchecked")
-    public String transactionMagicReplace(String magicString, Connection connection, int transactionId) {
-        Matcher matcher = magicVariablePattern.matcher(magicString);
-
-        while (matcher.find()) {
-            String magicVariable = matcher.group();
-
-            String magicfunction = matcher.group(1);
-            String magicName = matcher.group(2);
-            String resultColumn = matcher.group(5);
-            String value = null;
-
-            // Magic variables.
-            if (magic.containsKey(magicName)) {
-                value = (String) getMagic(magicName);
-            }
-
-            // Saved results.
-            if (resultColumn != null && getSavedResults().containsKey(magicName)) {
-                int resultRow = Integer.parseInt(matcher.group(4));
-
-                if (getSavedResults().get(magicName) != null &&
-                        getSavedResults().get(magicName).get(resultRow) != null) {
-
-                    value = String.valueOf(((Map<String, String>) getSavedResults().get(magicName).get(resultRow)).get(resultColumn));
-                }
-            }
-
-            // Magic functions.
-            if (value != null) {
-                if ("dateToMillis".equals(magicfunction)) {
-                    value = dateToMillis(value);
-                }
-                if ("millisToDate".equals(magicfunction)) {
-                    value = millisToDate(value);
-                }
-                if ("toLowerCase".equals(magicfunction)) {
-                    value = value.toLowerCase();
-                }
-                if ("toUpperCase".equals(magicfunction)) {
-                    value = value.toUpperCase();
-                }
-            }
-
-            magicString = magicString.replace(magicVariable, value == null ? "null" : value);
-        }
-
-        return magicString;
-    }
-
-    /**
-     * Simple date format instance.
-     */
-    protected final static SimpleDateFormat millisDateFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-
-    /**
-     * Converts readable date to epoch millis.
-     *
-     * @param dateString String of date in format: yyyyMMddHHmmssSSS
-     */
-    public String dateToMillis(String dateString) {
-        try {
-            return String.valueOf(millisDateFormat.parse(dateString).getTime());
-        } catch (ParseException e) {
-            log.error("Unable to convert date string to millis: {}", e.getMessage());
-        }
-
-        return dateString;
-    }
-
-    /**
-     * Converts epoch millis to readable date.
-     *
-     * @param millisString String of epoch millis.
-     */
-    protected String millisToDate(String millisString) {
-        return millisDateFormat.format(new Date(Long.parseLong(millisString)));
+    public Map<String, List> getSavedResults() {
+        return savedResults;
     }
 }

@@ -3,6 +3,7 @@ package com.mimecast.robin.mime.parts;
 import com.mimecast.robin.config.assertion.MimeConfig;
 import com.mimecast.robin.mime.headers.MimeHeader;
 import com.mimecast.robin.smtp.MessageEnvelope;
+import com.mimecast.robin.util.Magic;
 import com.mimecast.robin.util.PathUtils;
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 import com.openhtmltopdf.util.XRLog;
@@ -101,7 +102,7 @@ public class PdfMimePart extends MimePart {
         html.append("</body>")
                 .append("</html>");
 
-        return html.toString();
+        return new String(Magic.envelopeMagicReplace(html.toString().getBytes(), envelope));
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.mimecast.robin.config.assertion.external;
 
-import com.mimecast.robin.smtp.connection.Connection;
+import com.mimecast.robin.smtp.session.Session;
+import com.mimecast.robin.util.Magic;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,19 +65,19 @@ public class MatchExternalClientConfig extends ExternalConfig {
     /**
      * Gets regex rules to match against.
      *
-     * @param connection    Connection instance.
+     * @param session       Session instance.
      * @param transactionId Transaction ID.
      * @return List in list.
      */
     @SuppressWarnings("unchecked")
-    public List<List<String>> getMatch(Connection connection, int transactionId) {
+    public List<List<String>> getMatch(Session session, int transactionId) {
         List<List<String>> results = new ArrayList<>();
 
         List<List<String>> match = getListProperty("match");
         for (List<String> list : match) {
             results.add(
                     list.stream()
-                            .map(s -> connection.getSession().transactionMagicReplace(s, connection, transactionId))
+                            .map(s -> Magic.transactionMagicReplace(s, session, transactionId))
                             .collect(Collectors.toList())
             );
         }

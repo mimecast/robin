@@ -3,12 +3,9 @@ package com.mimecast.robin.smtp;
 import com.mimecast.robin.config.assertion.AssertConfig;
 import com.mimecast.robin.config.assertion.MimeConfig;
 import com.mimecast.robin.main.Config;
-import com.mimecast.robin.smtp.io.MagicInputStream;
 import com.mimecast.robin.util.PathUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -616,27 +613,5 @@ public class MessageEnvelope {
     public MessageEnvelope setAssertions(AssertConfig assertConfig) {
         this.assertConfig = assertConfig;
         return this;
-    }
-
-    /**
-     * Put magic variables for envelope in session.
-     *
-     * @param bytes Byte array.
-     * @return Byte array.
-     */
-    public byte[] envelopeMagicReplace(byte[] bytes) {
-        StringBuilder magicHtml = new StringBuilder();
-        try {
-            MagicInputStream magicInputStream = new MagicInputStream(new ByteArrayInputStream(bytes), this);
-
-            byte[] line;
-            while ((line = magicInputStream.readLine()) != null) {
-                magicHtml.append(new String(line));
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        return magicHtml.toString().getBytes();
     }
 }

@@ -8,6 +8,7 @@ import com.mimecast.robin.smtp.connection.Connection;
 import com.mimecast.robin.smtp.io.LineInputStream;
 import com.mimecast.robin.smtp.io.MagicInputStream;
 import com.mimecast.robin.smtp.session.Session;
+import com.mimecast.robin.util.Magic;
 import com.mimecast.robin.util.PathUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -119,10 +120,7 @@ public class RequestConfig extends ConfigFoundation {
                 if (object instanceof Map) {
                     Map<String, String> header = (Map<String, String>) object;
                     if (header.size() > 1) {
-                        internetHeaders.addHeader(
-                                header.get("name"),
-                                connection.getSession().transactionMagicReplace(connection.getSession().magicReplace(header.get("value")), connection, 0)
-                        );
+                        internetHeaders.addHeader(header.get("name"), header.get("value"));
                     }
                 }
             }
@@ -235,7 +233,7 @@ public class RequestConfig extends ConfigFoundation {
 
             byte[] bytes;
             while ((bytes = stream.readLine()) != null) {
-                stringBuilder.append(connection.getSession().transactionMagicReplace(connection.getSession().magicReplace(new String(bytes)), connection, 0));
+                stringBuilder.append(Magic.transactionMagicReplace(Magic.magicReplace(new String(bytes), connection.getSession()), connection.getSession(), 0));
             }
         } catch (IOException e) {
             log.error("Unable to read file {} due to {}", path, e.getMessage());

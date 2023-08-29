@@ -11,6 +11,7 @@ import com.mimecast.robin.mime.parts.PdfMimePart;
 import com.mimecast.robin.mime.parts.TextMimePart;
 import com.mimecast.robin.smtp.MessageEnvelope;
 import com.mimecast.robin.smtp.session.Session;
+import com.mimecast.robin.util.Magic;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -116,7 +117,7 @@ public class MimeConfig extends ConfigFoundation {
 
                         // Magic.
                         if (session != null && pdfConfig.hasProperty("text")) {
-                            pdfConfig.getMap().put("text", session.magicReplace(pdfConfig.getStringProperty("text")));
+                            pdfConfig.getMap().put("text", Magic.magicReplace(pdfConfig.getStringProperty("text"), session));
                         }
 
                         try {
@@ -138,10 +139,10 @@ public class MimeConfig extends ConfigFoundation {
                     // Fallback to message or dummy else if file errors.
                     if (mimePart == null && message != null) {
                         if (session != null) {
-                            message = session.magicReplace(message);
+                            message = Magic.magicReplace(message, session);
                         }
                         if (envelope != null) {
-                            message = new String(envelope.envelopeMagicReplace(message.getBytes()));
+                            message = Magic.magicReplace(message, session);
                         }
                         mimePart = new TextMimePart(message.getBytes());
                     }

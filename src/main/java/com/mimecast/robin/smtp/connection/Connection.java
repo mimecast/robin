@@ -8,12 +8,9 @@ import com.mimecast.robin.main.Config;
 import com.mimecast.robin.main.Factories;
 import com.mimecast.robin.smtp.EmailDelivery;
 import com.mimecast.robin.smtp.EmailReceipt;
-import com.mimecast.robin.smtp.MessageEnvelope;
 import com.mimecast.robin.smtp.io.LineInputStream;
 import com.mimecast.robin.smtp.session.Session;
-import com.mimecast.robin.smtp.transaction.Transaction;
 import com.mimecast.robin.util.Sleep;
-import com.mimecast.robin.util.UIDExtractor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,8 +21,6 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Connection controller.
@@ -51,11 +46,6 @@ public class Connection extends SmtpFoundation {
      * ScenarioConfig instance.
      */
     private ScenarioConfig scenario = null;
-
-    /**
-     * Transaction response pattern.
-     */
-    private static final Pattern transactionPattern = Pattern.compile("(250.*)\\s\\[[a-z0-9\\-_]+\\.[a-z]+([0-9]+)?]", Pattern.CASE_INSENSITIVE);
 
     /**
      * [Client] Constructs a new Connection instance with given Session.
@@ -233,48 +223,5 @@ public class Connection extends SmtpFoundation {
     @SuppressWarnings("EmptyMethod")
     public void reset() {
         // TODO Implement reset.
-    }
-
-    /**
-     * Put magic variables for envelope in session.
-     *
-     * @param transactionId Transaction id.
-     */
-    public void putEnvelopeMagic(int transactionId) {
-        MessageEnvelope envelope = session.getEnvelopes().get(transactionId);
-
-        session.putMagic("msgid", envelope.getMessageId());
-        session.putMagic("date", envelope.getDate());
-        session.putMagic("mailfrom", envelope.getMail());
-        session.putMagic("rcptto", envelope.getRcpt());
-
-        envelope.getHeaders().forEach((key, value) -> session.putMagic("headers[" + key + "]", value));
-    }
-
-    /**
-     * Put magic variables for transaction in session.
-     *
-     * @param transactionId Transaction id.
-     */
-    public void putTransactionMagic(int transactionId) {
-        session.putMagic("transactionId", String.valueOf(transactionId));
-
-        if (!session.getSessionTransactionList().getEnvelopes().isEmpty() && transactionId >= 0) {
-
-            // Put transaction (SMTP DATA/BDAT response).
-            Transaction transaction = session.getSessionTransactionList().getEnvelopes().get(transactionId).getData();
-            if (transaction != null && transaction.getResponse().startsWith("250 ")) {
-                Matcher m = transactionPattern.matcher(transaction.getResponse());
-                if (m.find()) {
-                    String group = m.group(1);
-                    session.putMagic("transactionResponse", group);
-                    session.putMagic("transactionid", group); // TODO Deprecate.
-                }
-            }
-
-            // Put UID.
-            session.putMagic("transactionUid", UIDExtractor.getUID(this, transactionId));
-            session.putMagic("uid", UIDExtractor.getUID(this, transactionId)); // TODO Deprecate.
-        }
     }
 }

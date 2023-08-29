@@ -9,6 +9,7 @@ import com.mimecast.robin.smtp.connection.Connection;
 import com.mimecast.robin.smtp.transaction.EnvelopeTransactionList;
 import com.mimecast.robin.smtp.transaction.Transaction;
 import com.mimecast.robin.smtp.transaction.TransactionList;
+import com.mimecast.robin.util.Magic;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -160,8 +161,8 @@ public class Assert {
                         // External.
                         if (!envelope.getAssertions().getExternal().isEmpty()) {
                             // Add envelope and transaction magic for assertions to use.
-                            connection.putEnvelopeMagic(i);
-                            connection.putTransactionMagic(i);
+                            Magic.putEnvelopeMagic(i, connection.getSession());
+                            Magic.putTransactionMagic(i, connection.getSession());
 
                             assertExternal(envelope.getAssertions().getExternal(), i);
                         }
