@@ -34,13 +34,13 @@ class AssertConfigTest {
         Map<String, Object> map = new Gson().fromJson(json, new TypeToken<HashMap<String, Object>>() {}.getType());
         AssertConfig assertConfig = new AssertConfig(map);
 
-        assertEquals("MAIL", assertConfig.getSmtp().get(0).get(0));
-        assertEquals("250 Sender OK", assertConfig.getSmtp().get(0).get(1));
-        assertEquals("RCPT", assertConfig.getSmtp().get(1).get(0));
-        assertEquals("250 Recipient OK", assertConfig.getSmtp().get(1).get(1));
-        assertEquals("DATA", assertConfig.getSmtp().get(2).get(0));
-        assertEquals("^250", assertConfig.getSmtp().get(2).get(1));
-        assertEquals("DATA", assertConfig.getSmtp().get(3).get(0));
-        assertEquals("Received OK$", assertConfig.getSmtp().get(3).get(1));
+        assertEquals("MAIL", assertConfig.getProtocol().get(0).get(0));
+        assertEquals("250 Sender OK", assertConfig.getProtocol().get(0).get(1));
+        assertEquals("RCPT", assertConfig.getProtocol().get(1).get(0));
+        assertEquals("250 Recipient OK", assertConfig.getProtocol().get(1).get(1));
+        assertEquals("DATA", assertConfig.getProtocol().get(2).get(0));
+        assertEquals("^250", assertConfig.getProtocol().get(2).get(1));
+        assertEquals("DATA", assertConfig.getProtocol().get(3).get(0));
+        assertEquals("Received OK$", assertConfig.getProtocol().get(3).get(1));
     }
 }

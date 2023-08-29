@@ -125,7 +125,7 @@ Configuration
 
         // Default asserting configuration.
         assertions: {
-            smtpFails: true, // If SMTP assertion fails, fail test/exit gracefully.
+            protocolFails: true, // If SMTP assertion fails, fail test/exit gracefully.
             verifyFails: true // If external verify checks fail, fail test/exit gracefully.
         },
 

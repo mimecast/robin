@@ -22,7 +22,7 @@
 
         // Protocol assertions.
         // Check SMTP responses match regular expressions.
-        smtp: [
+        protocol: [
           ["MAIL", "250 Sender OK"],
           ["RCPT", "250 Recipient OK"],
           ["DATA", "^250"],
@@ -79,12 +79,12 @@
   // Assertions to run against the connection.
   assertions: {
     // Disable pre assertion checks from failing the test, exit gracefully.
-    smtpFails: false, // If SMTP asertion fails skip.
+    protocolFails: false, // If SMTP asertion fails skip.
     verifyFails: false,
 
     // Protocol assertions.
     // Check SMTP responses match regular expressions.
-    smtp: [
+    protocol: [
       [ "SMTP", "^220" ],
       [ "EHLO", "STARTTLS" ],
       [ "SHLO", "250 HELP" ],

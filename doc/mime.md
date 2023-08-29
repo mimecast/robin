@@ -98,7 +98,7 @@ The below example uses JSON5 multiline string. Don;t fetget the backslash.
           },
 
           assertions: {
-            smtp: [
+            protocol: [
               ["MAIL", "250 Sender OK"],
               ["RCPT", "250 Recipient OK"],
               ["DATA", "^250"],
@@ -109,7 +109,7 @@ The below example uses JSON5 multiline string. Don;t fetget the backslash.
       ],
 
       assertions: {
-        smtp: [
+        protocol: [
           [ "SMTP", "^220" ],
           [ "EHLO", "STARTTLS" ],
           [ "SHLO", "250 HELP" ],

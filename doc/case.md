@@ -1,6 +1,6 @@
 E/SMTP Cases
 ============
-Cases represent speciffic scenarios that can be configured in JSON and executed as a test for end-to-end testing of MTA servers.
+Cases represent speciffic scenarios that can be configured in JSON and executed as a test for end-to-end testing of MTA & WEB servers.
 
 
 Glossary
@@ -115,7 +115,7 @@ Shile message is mandatory subject may be left blank.
 - `message` - _(String)_ Email text/plain message.
 
 
-SMTP Assertions
+Protocol Assertions
 ---------------
 Regex assertions to be run against SMTP transactions.
 There are session level and envelope level assertions.
@@ -301,7 +301,7 @@ Case
           
                     // Protocol assertions.
                     // Check SMTP responses match regular expressions.
-                    smtp: [
+                    protocol: [
                         [ "MAIL", "^250" ],
                         [ "RCPT", "^250" ],
                         [ "BDAT", "^250" ]
@@ -363,12 +363,12 @@ Case
         // Assertions to run against the connection.
         assertions: {
             // Asserting configuration.
-            smtpFails: false, // If SMTP assertion fails, fail test/exit gracefully.
+            protocolFails: false, // If SMTP assertion fails, fail test/exit gracefully.
             verifyFails: false, // If external verify checks fail, fail test/exit gracefully.
         
             // Protocol assertions.
             // Check SMTP responses match regular expressions.
-            smtp: [
+            protocol: [
                 [ "SMTP", "^220" ],
                 [ "EHLO", "STARTTLS" ],
                 [ "SHLO", "250 HELP" ]

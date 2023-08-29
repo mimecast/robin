@@ -43,7 +43,7 @@ public class Factories {
     private static Callable<Behaviour> behaviour;
 
     /**
-     * SMTP Session.
+     * Session.
      * <p>Used by both client and server.
      */
     private static Callable<Session> session;

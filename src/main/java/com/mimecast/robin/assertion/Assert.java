@@ -35,9 +35,9 @@ public class Assert {
     protected final Connection connection;
 
     /**
-     * Fail test for SMTP assertion failure.
+     * Fail test for protocol assertion failure.
      */
-    protected Boolean assertSmtpFails;
+    protected Boolean assertProtocolFails;
 
     /**
      * Skip asserting and exit gracefully.
@@ -51,7 +51,7 @@ public class Assert {
      */
     public Assert(Connection connection) {
         this.connection = connection;
-        this.assertSmtpFails = connection.getSession().getAssertions().getSmtpFails(Config.getClient().getAssertions().getSmtpFails());
+        this.assertProtocolFails = connection.getSession().getAssertions().getProtocolFails(Config.getClient().getAssertions().getProtocolFails());
     }
 
     /**
@@ -71,7 +71,7 @@ public class Assert {
      */
     public Assert run() throws AssertException {
         if (!connection.getSession().getAssertions().isEmpty()) {
-            assertSmtp(connection.getSession().getAssertions().getSmtp(), connection.getSessionTransactionList());
+            assertProtocol(connection.getSession().getAssertions().getProtocol(), connection.getSessionTransactionList());
         }
 
         assertEnvelopes();
@@ -83,17 +83,17 @@ public class Assert {
     /**
      * Assert against transactions.
      *
-     * @param list            SMTP assertions as a list in list.
+     * @param list            Protocol assertions as a list in list.
      * @param transactionList TransactionList instance.
      * @throws AssertException Assertion exception.
      */
-    private void assertSmtp(List<List<String>> list, TransactionList transactionList) throws AssertException {
+    private void assertProtocol(List<List<String>> list, TransactionList transactionList) throws AssertException {
         if (list != null && !list.isEmpty()) {
             for (List<String> assertion : list) {
                 if (assertion.size() == 2 && !skip) {
                     List<Transaction> transactions = transactionList.getTransactions(assertion.get(0));
                     if (transactions.isEmpty()) {
-                        if (assertSmtpFails) {
+                        if (assertProtocolFails) {
                             throw new AssertException("Assert unable to find transaction for [" + assertion.get(0) + "]");
                         } else {
                             log.error("Assert unable to find transaction for [{}], skipping", assertion.get(0));
@@ -128,7 +128,7 @@ public class Assert {
         }
 
         if (!matched) {
-            if (assertSmtpFails) {
+            if (assertProtocolFails) {
                 throw new AssertException("Assert unable to match [" + regex + "]");
             } else {
                 log.warn("Assert unable to match [{}], skipping", regex);
@@ -153,8 +153,8 @@ public class Assert {
                     EnvelopeTransactionList envelopeTransactionList = envelopeTransactions.get(i);
 
                     if (envelope.getAssertions() != null) {
-                        if (!envelope.getAssertions().getSmtp().isEmpty()) {
-                            assertSmtp(envelope.getAssertions().getSmtp(), envelopeTransactionList);
+                        if (!envelope.getAssertions().getProtocol().isEmpty()) {
+                            assertProtocol(envelope.getAssertions().getProtocol(), envelopeTransactionList);
                         }
 
                         // External.

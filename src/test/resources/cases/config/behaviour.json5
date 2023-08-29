@@ -36,7 +36,7 @@
 
         // Protocol assertions.
         // Check SMTP responses match regular expressions.
-        smtp: [
+        protocol: [
           ["MAIL", "250 Sender OK"],
           ["RCPT", "250 Recipient OK"],
           ["DATA", "^250"],
@@ -51,7 +51,7 @@
 
     // Protocol assertions.
     // Check SMTP responses match regular expressions.
-    smtp: [
+    protocol: [
       [ "SMTP", "^220" ],
       [ "EHLO", "STARTTLS" ],
       [ "QUIT" ]

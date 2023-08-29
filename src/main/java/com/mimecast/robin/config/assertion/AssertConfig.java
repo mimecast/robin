@@ -42,22 +42,22 @@ public class AssertConfig extends ConfigFoundation {
     }
 
     /**
-     * Gets assert SMTP fails.
+     * Gets assert protocol fails.
      *
      * @return Boolean.
      */
-    public Boolean getSmtpFails() {
-        return getBooleanProperty("smtpFails");
+    public Boolean getProtocolFails() {
+        return getBooleanProperty("protocolFails", getBooleanProperty("smtpFails"));
     }
 
     /**
-     * Gets assert SMTP fails or default.
+     * Gets assert protocol fails or default.
      *
      * @param def Default value.
      * @return Boolean.
      */
-    public Boolean getSmtpFails(boolean def) {
-        return getBooleanProperty("smtpFails", def);
+    public Boolean getProtocolFails(boolean def) {
+        return getBooleanProperty("protocolFails", getBooleanProperty("smtpFails", def));
     }
 
     /**
@@ -80,12 +80,12 @@ public class AssertConfig extends ConfigFoundation {
     }
 
     /**
-     * Gets SMTP assertion list.
+     * Gets protocol assertion list.
      *
      * @return List in list.
      */
-    public List<List<String>> getSmtp() {
-        return getListProperty("smtp");
+    public List<List<String>> getProtocol() {
+        return getListProperty("protocol", getListProperty("smtp"));
     }
 
     /**
