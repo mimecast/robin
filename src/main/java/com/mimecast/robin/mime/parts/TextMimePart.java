@@ -48,8 +48,7 @@ public class TextMimePart extends MimePart {
      * @throws IOException Unable to read stream.
      */
     public String getContent() throws IOException {
-        body.reset();
-        byte[] bytes = IOUtils.toByteArray(body);
+        byte[] bytes = getBytes();
 
         if (content == null) {
             content = IOUtils.toString(bytes, CharsetDetector.getCharset(bytes));

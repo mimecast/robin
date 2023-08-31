@@ -30,7 +30,7 @@ public class Magic {
     /**
      * Magic variable pattern.
      */
-    protected final static Pattern magicVariablePattern = Pattern.compile("\\{([a-z]+)?\\$([a-z0-9]+)(\\[([0-9]+)]\\[([a-z0-9]+)])?}", Pattern.CASE_INSENSITIVE);
+    protected final static Pattern magicVariablePattern = Pattern.compile("\\{([a-z]+)?\\$([a-z0-9-.]+)(\\[([0-9?]+)](\\[([a-z0-9]+)])?)?}", Pattern.CASE_INSENSITIVE);
 
     /**
      * Transaction response pattern.
@@ -42,14 +42,20 @@ public class Magic {
      *
      * @param session Session instance.
      */
+    @SuppressWarnings("unchecked")
     public static void putMagic(Session session) {
-        session.putMagic("uid", session.getUID());
+        session.putMagic("robinUid", session.getUID());
         session.putMagic("yymd", new SimpleDateFormat("yyyyMMdd").format(new Date()));
 
         // Add magic properties.
         for (Map.Entry<String, Object> entry : Config.getProperties().getMap().entrySet()) {
             if (entry.getValue() instanceof String) {
                 session.putMagic(entry.getKey(), entry.getValue());
+
+            } else if (entry.getValue() instanceof List) {
+                session.putMagic(entry.getKey(), ((List) entry.getValue()).stream()
+                        .filter(o -> o instanceof String)
+                        .collect(Collectors.toList()));
             }
         }
 
@@ -73,14 +79,76 @@ public class Magic {
      * @return Map of String, Object.
      */
     public static String magicReplace(String magicString, Session session) {
-        if (magicString != null) {
-            for (String key : session.getMagic().keySet()) {
-                if (magicString.contains("{$" + key + "}")) {
-                    Object val = session.getMagic(key);
-                    if (val instanceof String) {
-                        magicString = magicString.replaceAll("\\{\\$" + key + "}", Matcher.quoteReplacement((String) val));
-                    }
+        return magicReplace(magicString, session, false);
+    }
+
+    /**
+     * Session magic replace with optional null string.
+     *
+     * @param magicString Magic string.
+     * @param session     Session instance.
+     * @param nullString  Force null string for null values.
+     * @return Map of String, Object.
+     */
+    @SuppressWarnings("unchecked")
+    public static String magicReplace(String magicString, Session session, boolean nullString) {
+
+        Matcher matcher = magicVariablePattern.matcher(magicString);
+
+        while (matcher.find()) {
+            String magicVariable = matcher.group();
+
+            String magicfunction = matcher.group(1);
+            String magicName = matcher.group(2);
+            String resultColumn = matcher.group(6);
+            String value = null;
+
+            // Magic variables.
+            if (session.hasMagic(magicName)) {
+                if (session.getMagic(magicName) instanceof String) {
+                    value = (String) session.getMagic(magicName);
+
+                } else if (session.getMagic(magicName) instanceof List) {
+                    List<String> values = (List<String>) ((List) session.getMagic(magicName)).stream()
+                            .filter(v -> v instanceof String)
+                            .collect(Collectors.toList());
+
+                    int key = "?".equals(matcher.group(4)) ?
+                            Random.no(values.size()) - 1 :
+                            Integer.parseInt(matcher.group(4));
+
+                    value = values.get(key);
                 }
+            }
+
+            // Saved results.
+            if (resultColumn != null && session.getSavedResults().containsKey(magicName)) {
+                int resultRow = Integer.parseInt(matcher.group(4));
+
+                if (session.getSavedResults().get(magicName) != null &&
+                        session.getSavedResults().get(magicName).get(resultRow) != null) {
+
+                    value = String.valueOf(((Map<String, String>) session.getSavedResults().get(magicName).get(resultRow)).get(resultColumn));
+                }
+            }
+
+            // Magic functions.
+            if (magicfunction != null && value != null) {
+                if ("dateToMillis".equals(magicfunction)) {
+                    value = dateToMillis(value);
+                } else if ("millisToDate".equals(magicfunction)) {
+                    value = millisToDate(value);
+                } else if ("toLowerCase".equals(magicfunction)) {
+                    value = value.toLowerCase();
+                } else if ("toUpperCase".equals(magicfunction)) {
+                    value = value.toUpperCase();
+                }
+            }
+
+            if (value != null) {
+                magicString = magicString.replace(magicVariable, value);
+            } else if (nullString) {
+                magicString = magicString.replace(magicVariable, "null");
             }
         }
 
@@ -94,6 +162,8 @@ public class Magic {
      * @param session       Session instance.
      */
     public static void putTransactionMagic(int transactionId, Session session) {
+        session.putMagic("transactionId", String.valueOf(transactionId));
+
         if (!session.getSessionTransactionList().getEnvelopes().isEmpty() && transactionId >= 0) {
 
             // Put transaction (SMTP DATA/BDAT response).
@@ -101,70 +171,16 @@ public class Magic {
             if (transaction != null && transaction.getResponse().startsWith("250 ")) {
                 Matcher m = transactionPattern.matcher(transaction.getResponse());
                 if (m.find()) {
-                    session.putMagic("transactionid", m.group(1));
+                    String group = m.group(1);
+                    session.putMagic("transactionResponse", group);
+                    session.putMagic("transactionid", group); // TODO Deprecate.
                 }
             }
 
             // Put UID.
-            session.putMagic("uid", UIDExtractor.getUID(new Connection(session), transactionId));
+            session.putMagic("transactionUid", UIDExtractor.getUID(new Connection(session), transactionId));
+            session.putMagic("uid", UIDExtractor.getUID(new Connection(session), transactionId)); // TODO Deprecate.
         }
-    }
-
-    /**
-     * Transaction magic replace.
-     *
-     * @param magicString   Magic string.
-     * @param session       Session instance.
-     * @param transactionId Transaction ID.
-     */
-    @SuppressWarnings("unchecked")
-    public static String transactionMagicReplace(String magicString, Session session, int transactionId) {
-        Matcher matcher = magicVariablePattern.matcher(magicString);
-
-        while (matcher.find()) {
-            String magicVariable = matcher.group();
-
-            String magicfunction = matcher.group(1);
-            String magicName = matcher.group(2);
-            String resultColumn = matcher.group(5);
-            String value = null;
-
-            // Magic variables.
-            if (session.hasMagic(magicName)) {
-                value = (String) session.getMagic(magicName);
-            }
-
-            // Saved results
-            if (resultColumn != null && session.getSavedResults().containsKey(magicName)) {
-                int resultRow = Integer.parseInt(matcher.group(4));
-
-                if (session.getSavedResults().get(magicName) != null &&
-                        session.getSavedResults().get(magicName).get(resultRow) != null) {
-
-                    value = String.valueOf(((Map<String, String>) session.getSavedResults().get(magicName).get(resultRow)).get(resultColumn));
-                }
-            }
-
-            // Magic functions.
-            if (value != null) {
-                if ("dateToMillis".equals(magicfunction)) {
-                    value = dateToMillis(value);
-                }
-                if ("millisToDate".equals(magicfunction)) {
-                    value = millisToDate(value);
-                }
-                if ("toLowerCase".equals(magicfunction)) {
-                    value = value.toLowerCase();
-                }
-                if ("toUpperCase".equals(magicfunction)) {
-                    value = value.toUpperCase();
-                }
-            }
-
-            magicString = magicString.replace(magicVariable, value == null ? "null" : value);
-        }
-
-        return magicString;
     }
 
     /**
@@ -217,23 +233,23 @@ public class Magic {
     /**
      * Envelope magic replace.
      *
-     * @param magicBytes Byte array.
-     * @param envelope   MessageEnvelope instance.
+     * @param string   String.
+     * @param envelope MessageEnvelope instance.
      * @return Byte array.
      */
-    public static byte[] envelopeMagicReplace(byte[] magicBytes, MessageEnvelope envelope) {
-        StringBuilder magicHtml = new StringBuilder();
+    public static String envelopeMagicReplace(String string, MessageEnvelope envelope) {
+        StringBuilder stringBuilder = new StringBuilder();
         try {
-            MagicInputStream magicInputStream = new MagicInputStream(new ByteArrayInputStream(magicBytes), envelope);
+            MagicInputStream magicInputStream = new MagicInputStream(new ByteArrayInputStream(string.getBytes()), envelope);
 
             byte[] line;
             while ((line = magicInputStream.readLine()) != null) {
-                magicHtml.append(new String(line));
+                stringBuilder.append(new String(line));
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        return magicHtml.toString().getBytes();
+        return stringBuilder.toString();
     }
 }

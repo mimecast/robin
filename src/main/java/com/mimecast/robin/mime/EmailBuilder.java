@@ -75,14 +75,22 @@ public class EmailBuilder {
             envelope.getMime().getHeaders().forEach(h -> addHeader(h.getName(), Magic.magicReplace(h.getValue(), session)));
 
             for (MimePart part : envelope.getMime().getParts(session, envelope)) {
+                // Related parts.
                 if (part.getHeader("Content-ID") != null) {
                     related.add(part);
 
-                } else if (part.getHeader("Content-Type").getCleanValue().startsWith("text/")) {
-                    if (new LoggingConfig(Config.getProperties().getMapProperty("logging")).getBooleanProperty("textPartBody", false)) {
+                }
+
+                // Text parts.
+                else if (part.getHeader("Content-Type").getCleanValue().startsWith("text/")) {
+
+                    // If logging enabled.
+                    if (new LoggingConfig(Config.getProperties().getMapProperty("logging"))
+                            .getBooleanProperty("textPartBody", false)) {
+
                         try {
-                            log.info("Text Part Body: {}",
-                                    new String(Magic.envelopeMagicReplace(part.getBytes(), envelope)).replaceAll("\r\n|\r|\n", "\\\\")
+                            log.info("Text Part Body: {}", new String(part.getBytes())
+                                            .replaceAll("\r\n|\r|\n", "\\\\")
                             );
                         } catch (IOException e) {
                             log.error("Text Part Body read error: {}", e.getMessage());
@@ -91,7 +99,10 @@ public class EmailBuilder {
 
                     alternative.add(part);
 
-                } else {
+                }
+
+                // Mixed parts.
+                else {
                     mixed.add(part);
                 }
             }

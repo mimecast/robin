@@ -120,7 +120,7 @@ public class RequestConfig extends ConfigFoundation {
                 if (object instanceof Map) {
                     Map<String, String> header = (Map<String, String>) object;
                     if (header.size() > 1) {
-                        internetHeaders.addHeader(header.get("name"), header.get("value"));
+                        internetHeaders.addHeader(header.get("name"), Magic.magicReplace(header.get("value"), connection.getSession()));
                     }
                 }
             }
@@ -233,7 +233,7 @@ public class RequestConfig extends ConfigFoundation {
 
             byte[] bytes;
             while ((bytes = stream.readLine()) != null) {
-                stringBuilder.append(Magic.transactionMagicReplace(Magic.magicReplace(new String(bytes), connection.getSession()), connection.getSession(), 0));
+                stringBuilder.append(Magic.magicReplace(new String(bytes), connection.getSession()));
             }
         } catch (IOException e) {
             log.error("Unable to read file {} due to {}", path, e.getMessage());

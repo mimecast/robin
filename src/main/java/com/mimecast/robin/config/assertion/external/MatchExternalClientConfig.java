@@ -66,18 +66,17 @@ public class MatchExternalClientConfig extends ExternalConfig {
      * Gets regex rules to match against.
      *
      * @param session       Session instance.
-     * @param transactionId Transaction ID.
      * @return List in list.
      */
     @SuppressWarnings("unchecked")
-    public List<List<String>> getMatch(Session session, int transactionId) {
+    public List<List<String>> getMatch(Session session) {
         List<List<String>> results = new ArrayList<>();
 
         List<List<String>> match = getListProperty("match");
         for (List<String> list : match) {
             results.add(
                     list.stream()
-                            .map(s -> Magic.transactionMagicReplace(s, session, transactionId))
+                            .map(s -> Magic.magicReplace(s, session))
                             .collect(Collectors.toList())
             );
         }

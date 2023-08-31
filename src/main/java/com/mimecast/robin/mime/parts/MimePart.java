@@ -136,9 +136,9 @@ public abstract class MimePart {
     }
 
     /**
-     * Gets content.
+     * Gets content as bytes.
      *
-     * @return Content String.
+     * @return String.
      * @throws IOException Unable to read stream.
      */
     public byte[] getBytes() throws IOException {

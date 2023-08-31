@@ -8,10 +8,7 @@ import com.mimecast.robin.smtp.session.Session;
 import com.mimecast.robin.util.Magic;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -39,6 +36,18 @@ public class ConfigMapper {
      * @param session Session instance.
      */
     public void mapTo(Session session) {
+        // Repeat
+        List<Map<String, Object>> envelopes = new LinkedList<>();
+        for (EnvelopeConfig envelopeConfig : config.getEnvelopes()) {
+            envelopes.add(envelopeConfig.getMap()); // Add original envelope.
+
+            // Add repeat envelope copies.
+            for (int i = 0; i < envelopeConfig.getRepeat(); i++) {
+                envelopes.add(envelopeConfig.copy().getMap());
+            }
+        }
+        config.getMap().put("envelopes", envelopes);
+
         addMagic(session);
 
         // Set MTA and PORT.
@@ -73,9 +82,7 @@ public class ConfigMapper {
         session.addAssertions(config.getAssertions());
 
         for (EnvelopeConfig envelope : config.getEnvelopes()) {
-            for (int i = 0; i < envelope.getRepeat() + 1; i++) {
-                addEnvelope(session, i == 0 ? envelope : envelope.copy(), config);
-            }
+            addEnvelope(session, envelope, config);
         }
     }
 

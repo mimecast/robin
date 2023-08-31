@@ -166,7 +166,7 @@ public class LogsExternalClient extends MatchExternalClient {
         List<String> greps = ((List<Map<String, String>>) config.getListProperty("grep")).stream()
                 .filter(map -> !map.containsKey("parameter") || !map.get("parameter").contains("v")) // `grep -v` skip patterns.
                 .map(map -> {
-                    String pattern = Magic.transactionMagicReplace(map.get("pattern"), connection.getSession(), transactionId);
+                    String pattern = Magic.magicReplace(map.get("pattern"), connection.getSession());
                     return map.containsKey("parameter") && map.get("parameter").contains("E") ? pattern : Pattern.quote(pattern); // `grep -E` compile as is or escape.
                 })
                 .collect(Collectors.toList());

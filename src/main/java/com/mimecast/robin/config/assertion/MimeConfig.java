@@ -142,7 +142,7 @@ public class MimeConfig extends ConfigFoundation {
                             message = Magic.magicReplace(message, session);
                         }
                         if (envelope != null) {
-                            message = Magic.magicReplace(message, session);
+                            message = Magic.envelopeMagicReplace(message, envelope);
                         }
                         mimePart = new TextMimePart(message.getBytes());
                     }

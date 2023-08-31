@@ -161,7 +161,7 @@ public class RequestExternalClient extends MatchExternalClient {
 
             try {
                 RequestConfig requestConfig = new RequestConfig(config.getMapProperty("request"), connection.getSession());
-                httpResponse = new RequestExternalClient.RequestClient(connection.getSession())
+                httpResponse = new RequestClient(connection.getSession())
                         .request(requestConfig);
 
                 // Retry delay if needed.
@@ -196,7 +196,7 @@ public class RequestExternalClient extends MatchExternalClient {
     /**
      * HTTP/S request client.
      */
-    class RequestClient extends RequestBase {
+    protected static class RequestClient extends RequestBase {
 
         /**
          * Constructs a new RequestClient instance with given Session instance.
