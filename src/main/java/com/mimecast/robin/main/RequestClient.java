@@ -87,7 +87,7 @@ public class RequestClient extends RequestBase {
         if (httpResponse != null && httpResponse.isSuccessfull()) {
             Connection connection = new Connection(session)
                     .setServer(getUrlHost(requestConfig.getUrl()));
-            connection.getSession().getSessionTransactionList().addTransaction("HTTP", new Gson().toJson(httpResponse.getHeaders()), httpResponse.isSuccessfull());
+            connection.getSession().getSessionTransactionList().addTransaction("HTTP", new Gson().toJson(httpResponse.getHeaders()), !httpResponse.isSuccessfull());
 
             new Assert(connection).run();
 
