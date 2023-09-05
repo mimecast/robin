@@ -204,9 +204,13 @@ public class HttpRequest {
      */
     @Override
     public String toString() {
+        Map<String, String> safeHeaders = headers.entrySet()
+                .stream().filter(entry -> !entry.getKey().equals("Authorization"))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
         return Collections.singletonList(Stream.of(
                 new AbstractMap.SimpleEntry<>("url", url),
-                new AbstractMap.SimpleEntry<>("headers", headers),
+                new AbstractMap.SimpleEntry<>("headers", safeHeaders),
                 new AbstractMap.SimpleEntry<>("params", params),
                 new AbstractMap.SimpleEntry<>("files", files)
         ).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))).toString();
