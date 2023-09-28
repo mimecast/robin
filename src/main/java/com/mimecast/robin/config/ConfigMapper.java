@@ -93,9 +93,21 @@ public class ConfigMapper {
      */
     @SuppressWarnings("unchecked")
     private void addMagic(Session session) {
+        if (config.hasProperty("$")) {
+            for (Map.Entry<String, Object> entry : ((Map<String, Object>) config.getMapProperty("$")).entrySet()) {
+                session.putMagic(
+                        entry.getKey(),
+                        entry.getValue() instanceof String ?
+                                Magic.magicReplace((String) entry.getValue(), session) :
+                                entry.getValue()
+                );
+            }
+        }
+
         if (config.hasProperty("route")) {
             config.getMap().put("route", Magic.magicReplace(config.getStringProperty("route"), session));
         }
+
         if (config.hasProperty("envelopes")) {
             for (Object envelope : config.getListProperty("envelopes")) {
                 if (envelope instanceof Map) {
@@ -136,23 +148,23 @@ public class ConfigMapper {
                 .setAssertions(envelopeConfig.getAssertions());
 
         // Set MAIL FROM and RCPT TO.
-        envelope.setMail(envelopeConfig.getMail() != null ? magicReplace(envelopeConfig.getMail()) : caseConfig.getMail());
+        envelope.setMail(envelopeConfig.getMail() != null ? magicReplace(envelopeConfig.getMail(), session) : caseConfig.getMail());
         List<String> rcpts = !envelopeConfig.getRcpt().isEmpty() ? envelopeConfig.getRcpt() : caseConfig.getRcpt();
         for (String rcpt : rcpts) {
-            envelope.getRcpts().add(magicReplace(rcpt));
+            envelope.getRcpts().add(magicReplace(rcpt, session));
         }
 
         // Magic params.
         for (Map.Entry<String, List<String>> param : envelopeConfig.getParams().entrySet()) {
-            param.getValue().forEach(e -> envelope.addParam(param.getKey().toLowerCase(), magicReplace(e)));
+            param.getValue().forEach(e -> envelope.addParam(param.getKey().toLowerCase(), magicReplace(e, session)));
         }
 
         // Magic headers.
         envelopeConfig.getHeaders().forEach((k, v) -> {
             if (v instanceof String) {
-                envelope.addHeader(k, magicReplace((String) v));
+                envelope.addHeader(k, magicReplace((String) v, session));
             } else if (v instanceof List) {
-                envelope.addHeader(k, ((List<String>) v).stream().map(this::magicReplace).collect(Collectors.joining("; ")));
+                envelope.addHeader(k, ((List<String>) v).stream().map(s -> magicReplace(s, session)).collect(Collectors.joining("; ")));
             }
         });
 
@@ -181,7 +193,7 @@ public class ConfigMapper {
 
         // Set EML file.
         else if (StringUtils.isNotBlank(envelopeConfig.getFile())) {
-            envelope.setFile(envelopeConfig.getFile());
+            envelope.setFile(magicReplace(envelopeConfig.getFile(), session));
 
             // Add message to delivery.
             session.addEnvelope(envelope);
@@ -189,7 +201,7 @@ public class ConfigMapper {
 
         // Set ramdom EML file from folder.
         else if (StringUtils.isNotBlank(envelopeConfig.getFolder())) {
-            envelope.setFolder(envelopeConfig.getFolder());
+            envelope.setFolder(magicReplace(envelopeConfig.getFolder(), session));
 
             // Add message to delivery.
             session.addEnvelope(envelope);
@@ -197,8 +209,8 @@ public class ConfigMapper {
 
         // If EML is null set subject and message.
         else if (StringUtils.isNotBlank(envelopeConfig.getSubject()) && StringUtils.isNotBlank(envelopeConfig.getMessage())) {
-            envelope.setSubject(envelopeConfig.getSubject())
-                    .setMessage(envelopeConfig.getMessage());
+            envelope.setSubject(magicReplace(envelopeConfig.getSubject(), session))
+                    .setMessage(magicReplace(envelopeConfig.getMessage(), session));
 
             // Add message to delivery.
             session.addEnvelope(envelope);
@@ -209,9 +221,10 @@ public class ConfigMapper {
      * Replace magic configuration variables.
      *
      * @param variable Variable string.
+     * @param session Session instance.
      * @return Original string or replaced.
      */
-    private String magicReplace(String variable) {
+    protected String magicReplace(String variable, Session session) {
         String ret = variable;
 
         if (StringUtils.isNotBlank(variable) && variable.startsWith("{$")) {
@@ -232,6 +245,6 @@ public class ConfigMapper {
             }
         }
 
-        return ret;
+        return Magic.magicReplace(ret, session);
     }
 }
