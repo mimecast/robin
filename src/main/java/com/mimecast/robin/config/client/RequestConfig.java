@@ -97,7 +97,7 @@ public class RequestConfig extends ConfigFoundation {
      * @return URL string..
      */
     public String getUrl() {
-        return getStringProperty("url");
+        return Magic.magicReplace(getStringProperty("url"), connection.getSession());
     }
 
     /**
@@ -140,7 +140,7 @@ public class RequestConfig extends ConfigFoundation {
                 if (object instanceof Map) {
                     Map<String, String> param = (Map<String, String>) object;
                     if (param.size() > 1) {
-                        params.put(param.get("name"), param.get("value"));
+                        params.put(param.get("name"), Magic.magicReplace(param.get("value"), connection.getSession()));
                     }
                 }
             }
@@ -163,7 +163,7 @@ public class RequestConfig extends ConfigFoundation {
                 String mimeType = map.containsKey("mimeType") ? (String) map.get("mimeType") : "application/json";
 
                 if (map.containsKey("path")) {
-                    content = new ImmutablePair<>(getFile((String) map.get("path")), mimeType);
+                    content = new ImmutablePair<>(getFile(Magic.magicReplace((String) map.get("path"), connection.getSession())), mimeType);
                 } else if (map.containsKey("payload")) {
                     content = new ImmutablePair<>((String) map.get("payload"), mimeType);
                 }
@@ -206,7 +206,7 @@ public class RequestConfig extends ConfigFoundation {
     protected Pair<Map, String> getObjectMap() {
         Map map = getMapProperty("object");
         if (map != null && map.containsKey("path")) {
-            String path = (String) map.get("path");
+            String path = Magic.magicReplace((String) map.get("path"), connection.getSession());
             if (PathUtils.isFile(path)) {
                 return new ImmutablePair<>(
                         new GsonBuilder()
