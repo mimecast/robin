@@ -86,7 +86,7 @@ public class LogsExternalClient extends MatchExternalClient {
                 if (verifyNone) {
                     log.info("AssertExternal logs verify none");
 
-                } else {
+                } else if (!skip) {
                     runMatches(data);
                 }
             } catch (Exception e) {
@@ -118,6 +118,7 @@ public class LogsExternalClient extends MatchExternalClient {
                     List<Pattern> patterns = getGreps();
 
                     String line;
+                    data.clear();
                     while ((line = br.readLine()) != null) {
                         String finalLine = line;
                         if ((patterns.isEmpty() && (uid == null || line.contains(uid))) || patterns.stream().allMatch(pattern -> pattern.matcher(finalLine).find())) {
