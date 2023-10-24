@@ -211,6 +211,7 @@ public class RequestExternalClient extends MatchExternalClient {
          * Make request with given RequestConfig instance.
          *
          * @param config RequestConfig instance.
+         * @return HttpResponse instance.
          * @throws AssertException Assertion exception.
          * @throws IOException     Unable to communicate.
          */

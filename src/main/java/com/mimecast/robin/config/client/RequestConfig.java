@@ -223,6 +223,7 @@ public class RequestConfig extends ConfigFoundation {
     /**
      * Gets file content with magic applied to each line.
      *
+     * @param path String.
      * @return String.
      */
     public String getFile(String path) {

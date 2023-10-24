@@ -86,8 +86,10 @@ public abstract class ExternalClient {
 
     /**
      * Runs assertions.
+     *
+     * @return Boolean.
      */
-    public Boolean skip() {
+    public boolean skip() {
         return skip;
     }
 

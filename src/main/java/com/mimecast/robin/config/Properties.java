@@ -89,9 +89,11 @@ public class Properties extends ConfigFoundation {
         String sys = System.getProperty(name);
         return StringUtils.isNotBlank(sys) ? Boolean.valueOf(sys) : super.getBooleanProperty(name);
     }
-    
+
     /**
      * Gets Locale property if set or default.
+     *
+     * @return Locale instance.
      */
     public Locale getLocale() {
         return LocaleUtils.toLocale(getStringProperty("locale", Locale.getDefault().toString()));

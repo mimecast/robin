@@ -192,6 +192,7 @@ public class Magic {
      * Converts readable date to epoch millis.
      *
      * @param dateString String of date in format: yyyyMMddHHmmssSSS
+     * @return String.
      */
     public static String dateToMillis(String dateString) {
         try {
@@ -207,6 +208,7 @@ public class Magic {
      * Converts epoch millis to readable date.
      *
      * @param millisString String of epoch millis.
+     * @return String.
      */
     public static String millisToDate(String millisString) {
         return millisDateFormat.format(new Date(Long.parseLong(millisString)));
