@@ -170,7 +170,7 @@ _See LogsClient.java interface for implementation of external clients._
 - `verify` - _(List, String, Regex)_ List of regex matches to verify bottom most needed logs received. Provides stability when MTA takes more time.
 - `match` - _(List of List, String, Regex)_ Regex assertions to run against log lines. Multiple expressions can run on the same line. All must match.
 - `refuse` - _(List of List, String, Regex)_ The opposite of match. Will stop and error on first match.
-- `magic` - _(List of Map, String, Regex)_ Collect matching group 1 or whole patters into magic variable.
+- `magic` - _(List of Map, String, Regex)_ Collect matching group 1 or whole patterns into magic variable.
 
 ### Basic example.
 

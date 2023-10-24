@@ -61,8 +61,8 @@ public abstract class MatchExternalClient extends ExternalClient {
         compilePatterns(config.getMatch(connection.getSession()), matchGroups); // Precompile match patterns for performance.
         compilePatterns(config.getRefuse(), refuseGroups); // Precompile refuse patterns for performance.
 
-        checkPatterns(list, true); // Match patters to log lines.
-        checkPatterns(list, false); // Refuse patters to log lines.
+        checkPatterns(list, true); // Match patterns to log lines.
+        checkPatterns(list, false); // Refuse patterns to log lines.
 
         verifyMatches(); // Evaluate unmatched assertion and except.
         magicMatches(list); // Evaluate magic matches and record findings in Session magic.

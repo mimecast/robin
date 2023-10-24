@@ -116,7 +116,7 @@ public class Assert {
      * @throws AssertException Assertion exception.
      */
     private void assertTransactions(List<Transaction> transactions, String regex) throws AssertException {
-        // No need to precompile patters as they are transaction specific.
+        // No need to precompile patterns as they are transaction specific.
         Pattern p = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
 
         boolean matched = false;
