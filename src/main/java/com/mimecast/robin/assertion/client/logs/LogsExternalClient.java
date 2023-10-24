@@ -14,10 +14,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -115,15 +112,25 @@ public class LogsExternalClient extends MatchExternalClient {
 
                 try (BufferedReader br = new BufferedReader(new FileReader(path))) {
                     String uid = UIDExtractor.getUID(connection, transactionId);
-                    List<Pattern> patterns = getGreps();
+                    Map<Pattern, String> patterns = getGreps();
 
                     String line;
                     data.clear();
                     while ((line = br.readLine()) != null) {
                         String finalLine = line;
-                        if ((patterns.isEmpty() && (uid == null || line.contains(uid))) || patterns.stream().allMatch(pattern -> pattern.matcher(finalLine).find())) {
+                        if ((patterns.isEmpty() && (uid == null || line.contains(uid))) || patterns.keySet().stream().allMatch(pattern -> pattern.matcher(finalLine).find())) {
                             data.add(line);
                         }
+                    }
+
+                    Optional<Map.Entry<Pattern, String>> counter =  patterns.entrySet().stream().filter(s -> s.getValue().contains("c")).findFirst();
+                    if (counter.isPresent()) {
+                        List<String> filteredData = data.stream()
+                                .filter(s -> !counter.get().getKey().matcher(s).matches())
+                                .collect(Collectors.toList());
+
+                        data.clear();
+                        data.add(String.valueOf(filteredData.size()));
                     }
 
                 } catch (IOException e) {
@@ -161,19 +168,29 @@ public class LogsExternalClient extends MatchExternalClient {
 
     /**
      * Prepare grep patterns.
+     *
+     * @return Map of Pattern, String.
      */
     @SuppressWarnings("unchecked")
-    protected List<Pattern> getGreps() {
-        List<String> greps = ((List<Map<String, String>>) config.getListProperty("grep")).stream()
-                .filter(map -> !map.containsKey("parameter") || !map.get("parameter").contains("v")) // `grep -v` skip patterns.
-                .map(map -> {
-                    String pattern = Magic.magicReplace(map.get("pattern"), connection.getSession());
-                    return map.containsKey("parameter") && map.get("parameter").contains("E") ? pattern : Pattern.quote(pattern); // `grep -E` compile as is or escape.
-                })
-                .collect(Collectors.toList());
+    protected Map<Pattern, String> getGreps() {
+        final Map<Pattern, String> patterns = new HashMap<>();
 
-        return greps.stream()
-                .map(string -> Pattern.compile(string, Pattern.CASE_INSENSITIVE))
-                .collect(Collectors.toList());
+        ((List<Map<String, String>>) config.getListProperty("grep"))
+                .forEach(map -> {
+                    String pattern = Magic.magicReplace(map.get("pattern"), connection.getSession());
+
+                    // `grep -E` compile as is or escape.
+                    pattern = map.containsKey("parameter") && map.get("parameter").contains("E") ? pattern : Pattern.quote(pattern);
+
+                    // `grep -v` negate regex.
+                    pattern = map.containsKey("parameter") && map.get("parameter").contains("v") ? "(?!" + pattern + ")" : pattern;
+
+                    patterns.put(
+                            Pattern.compile(pattern, Pattern.CASE_INSENSITIVE),
+                            map.getOrDefault("parameter", "")
+                    );
+                });
+
+        return patterns;
     }
 }
