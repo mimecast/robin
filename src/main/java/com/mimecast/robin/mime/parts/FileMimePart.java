@@ -1,16 +1,23 @@
 package com.mimecast.robin.mime.parts;
 
+import com.google.common.primitives.Bytes;
 import com.mimecast.robin.mime.headers.MimeHeader;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.security.SecureRandom;
 
 /**
  * MIME part container from file path.
  */
 public class FileMimePart extends MimePart {
+
+    /**
+     * Append random bytes to the end of the file.
+     */
+    protected int appendRandomBytes = 0;
 
     /**
      * Constructs a new FileMimePart instance.
@@ -44,6 +51,17 @@ public class FileMimePart extends MimePart {
     }
 
     /**
+     * Sets how many random bytes to append at the end of the file.
+     *
+     * @param size Number of random bytes to append.
+     * @return Self.
+     */
+    public FileMimePart setAppendRandomBytes(int size) {
+        appendRandomBytes = size;
+        return this;
+    }
+
+    /**
      * Writes email to given output stream.
      *
      * @param outputStream OutputStream instance.
@@ -61,5 +79,25 @@ public class FileMimePart extends MimePart {
         super.writeTo(outputStream);
 
         return this;
+    }
+
+    /**
+     * Gets content as bytes.
+     *
+     * @return String.
+     * @throws IOException Unable to read stream.
+     */
+    @Override
+    public byte[] getBytes() throws IOException {
+        byte[] bytes = super.getBytes();
+
+        if (appendRandomBytes > 0) {
+            byte[] randomBytes = new byte[appendRandomBytes];
+            new SecureRandom().nextBytes(randomBytes);
+
+            bytes = Bytes.concat(bytes, randomBytes);
+        }
+
+        return bytes;
     }
 }

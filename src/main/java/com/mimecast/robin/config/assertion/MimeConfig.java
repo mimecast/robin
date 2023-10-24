@@ -130,7 +130,8 @@ public class MimeConfig extends ConfigFoundation {
                     // Make a file part if defined.
                     if (file != null) {
                         try {
-                            mimePart = new FileMimePart(file);
+                            mimePart = new FileMimePart(file)
+                                    .setAppendRandomBytes(Math.toIntExact(config.getLongProperty("appendRandomBytes")));
                         } catch (IOException e) {
                             log.error("Unable to read part file: {}", file);
                         }

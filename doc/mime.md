@@ -45,6 +45,9 @@ If all you need is headers, ignore the parts.
 The parts may be either strings of paths.
 In order to define a string use the `message` keyword and for a path `file`.
 
+If the file option is used you can also use the parameter `(int) appendRandomBytes` which will append
+the speified number of brandom bytes at the end of the file.  
+
 When adding a PDF attachment, you can either specify a pre-created file:
 
               {
@@ -53,7 +56,8 @@ When adding a PDF attachment, you can either specify a pre-created file:
                   ["Content-Disposition", "attachment; filename=\"article.pdf\""],
                   ["Content-Transfer-Encoding", "base64"]
                 ],
-                file: "src/test/resources/mime/robin.article.pdf"
+                file: "src/test/resources/mime/robin.article.pdf",
+                appendRandomBytes: 20
               }
 
 or dynamically generate a file using the magic variables:
