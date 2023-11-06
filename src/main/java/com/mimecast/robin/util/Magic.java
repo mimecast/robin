@@ -142,6 +142,8 @@ public class Magic {
                     value = value.toLowerCase();
                 } else if ("toUpperCase".equals(magicfunction)) {
                     value = value.toUpperCase();
+                } else if ("patternQuote".equals(magicfunction)) {
+                    value = Pattern.quote(value);
                 }
             }
 
