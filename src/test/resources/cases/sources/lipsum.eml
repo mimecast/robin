@@ -4,6 +4,7 @@ To: <{$RCPTTO}>
 Date: {$DATE}
 Message-ID: <{$MSGID}{$MAILFROM}>
 Subject: Lipsum
+X-Robin-Filename: lipsum.eml
 Content-Type: multipart/alternative;
 	BoundarY="MCBoundary11505141140170031"
 
