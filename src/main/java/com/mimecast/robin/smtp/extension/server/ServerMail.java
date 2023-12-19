@@ -3,6 +3,7 @@ package com.mimecast.robin.smtp.extension.server;
 import com.mimecast.robin.config.server.ScenarioConfig;
 import com.mimecast.robin.smtp.connection.Connection;
 import com.mimecast.robin.smtp.verb.Verb;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
@@ -104,7 +105,8 @@ public class ServerMail extends ServerProcessor {
     public InternetAddress getAddress() throws IOException {
         if (address == null) {
             try {
-                address = new InternetAddress(verb.getParam("from"));
+                String from = verb.getParam("from").replace("<>", "");
+                address = StringUtils.isNotBlank(from) ? new InternetAddress(from) : new InternetAddress();
             } catch (AddressException e) {
                 throw new IOException(e);
             }

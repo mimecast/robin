@@ -39,6 +39,11 @@ public class LocalStorageClient implements StorageClient {
     protected final boolean enabled = Config.getServer().getStorage().getBooleanProperty("enabled");
 
     /**
+     * Date.
+     */
+    protected String now = new SimpleDateFormat("yyyyMMdd", Config.getProperties().getLocale()).format(new Date());
+
+    /**
      * Connection instance.
      */
     protected Connection connection;
@@ -70,8 +75,6 @@ public class LocalStorageClient implements StorageClient {
      * @return Self.
      */
     public LocalStorageClient setExtension(String extension) {
-        String now = new SimpleDateFormat("yyyyMMdd", Config.getProperties().getLocale()).format(new Date());
-
         if (extension == null) {
             extension = ".dat";
         } else if (!extension.startsWith(".")) {

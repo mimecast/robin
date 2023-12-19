@@ -94,10 +94,19 @@ public class RequestConfig extends ConfigFoundation {
     /**
      * Gets request URL.
      *
-     * @return URL string..
+     * @return URL string.
      */
     public String getUrl() {
         return Magic.magicReplace(getStringProperty("url"), connection.getSession());
+    }
+
+    /**
+     * Gets connection instance.
+     *
+     * @return Connection instance.
+     */
+    public Connection getConnection() {
+        return connection;
     }
 
     /**

@@ -71,7 +71,7 @@ public class HttpClient {
 
             // Add body.
             String body = "";
-            if (response.body() != null) {
+            if (response.body() != null && response.body().contentType() != null) {
                 if (response.body().contentType().toString().equals("application/binary")) {
                     httpResponse.addBody(new Gson().toJson(new ObjectInputStream(response.body().byteStream()).readAllBytes()));
                 } else {
@@ -173,7 +173,7 @@ public class HttpClient {
                 .writeTimeout(config.getLongProperty("writeTimeout", 10L), TimeUnit.SECONDS)
                 .readTimeout(config.getLongProperty("readTimeout", 30L), TimeUnit.SECONDS)
                 .sslSocketFactory(socketFactory, trustManager)
-                .followRedirects(false)
-                .followSslRedirects(false);
+                .followRedirects(true)
+                .followSslRedirects(true);
     }
 }

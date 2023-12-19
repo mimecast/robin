@@ -3,6 +3,7 @@ package com.mimecast.robin.main;
 import com.google.gson.Gson;
 import com.mimecast.robin.assertion.Assert;
 import com.mimecast.robin.assertion.AssertException;
+import com.mimecast.robin.config.client.CaseConfig;
 import com.mimecast.robin.config.client.RequestConfig;
 import com.mimecast.robin.http.HttpResponse;
 import com.mimecast.robin.smtp.connection.Connection;
@@ -53,47 +54,61 @@ public class RequestClient extends RequestBase {
      * Make request with given configuration path.
      *
      * @param casePath Case config path.
+     * @return Self.
      * @throws AssertException Assertion exception.
      * @throws IOException     Unable to communicate.
      */
     @SuppressWarnings("unchecked")
-    public void request(String casePath) throws AssertException, IOException {
-        RequestConfig requestConfig = getConfig(casePath);
+    public RequestClient request(String casePath) throws AssertException, IOException {
+        CaseConfig caseConfig = getConfig(casePath);
 
         HttpResponse httpResponse = null;
-        try {
-            httpResponse = makeRequest(requestConfig);
+        RequestConfig requestConfig = null;
+        if (caseConfig.hasProperty("request")) {
+            requestConfig = new RequestConfig(caseConfig.getMapProperty("request"), session);
+            try {
+                httpResponse = makeRequest(requestConfig);
 
-            // Session.
-            httpResponse.getHeaders().forEach(session::putMagic); // Add headers in magic.
+                // Session.
+                httpResponse.getHeaders().forEach(session::putMagic); // Add headers in magic.
 
-            // Save results.
-            List<String> response = new ArrayList<>();
-            String responseCT = httpResponse.getHeaders().get("Content-Type");
+                // Save results.
+                List<String> response = new ArrayList<>();
+                String responseCT = httpResponse.getHeaders().get("Content-Type");
 
-            if (responseCT != null && responseCT.toLowerCase().contains("/json")) {
-                MapUtils.flattenMap(new Gson().fromJson(httpResponse.getBody(), Map.class), "", response);
-            } else {
-                response.addAll(List.of(httpResponse.getBody().split("\n")));
+                if (responseCT != null && responseCT.toLowerCase().contains("/json")) {
+                    MapUtils.flattenMap(new Gson().fromJson(httpResponse.getBody(), Map.class), "", response);
+                } else {
+                    response.addAll(List.of(httpResponse.getBody().split("\n")));
+                }
+
+                session.saveResults("response", response);
+
+            } catch (GeneralSecurityException | IOException e) {
+                log.error("Request Client: Request failure: {}", e.getMessage());
             }
-
-            session.saveResults("response", response);
-
-        } catch (GeneralSecurityException | IOException e) {
-            log.error("Request Client: Request failure: {}", e.getMessage());
         }
 
         // Assert.
-        if (httpResponse != null && httpResponse.isSuccessfull()) {
-            Connection connection = new Connection(session)
-                    .setServer(getUrlHost(requestConfig.getUrl()));
-            connection.getSession().getSessionTransactionList().addTransaction("HTTP", new Gson().toJson(httpResponse.getHeaders()), !httpResponse.isSuccessfull());
+        Connection connection;
 
-            new Assert(connection).run();
+        // Set values from request if any.
+        if (requestConfig != null) {
+            connection = requestConfig.getConnection();
+            if (requestConfig.getUrl() != null) {
+                connection.setServer(getUrlHost(requestConfig.getUrl()));
+            }
 
+            if (httpResponse != null) {
+                connection.getSession().getSessionTransactionList().addTransaction("HTTP", new Gson().toJson(httpResponse.getHeaders()), !httpResponse.isSuccessfull());
+            }
         } else {
-            throw new AssertException("Request Client: Unable to make request");
+            connection = new Connection(session);
         }
+
+        new Assert(connection).run();
+
+        return this;
     }
 
     protected String getUrlHost(String url) {

@@ -55,7 +55,31 @@ public class ClientData extends ClientProcessor {
         // Evaluate is BDAT enabled.
         boolean bdat = connection.getSession().isEhloBdat() && envelope.getChunkSize() >= 128;
 
-        // Configure data stream.
+        // Get data stream.
+        InputStream inputStream = getStream(connection, bdat);
+
+        boolean result;
+        if (bdat) {
+            result = processBdat(inputStream);
+
+        } else {
+            result = processData("DATA", inputStream);
+        }
+
+        StreamUtils.closeQuietly(inputStream);
+
+        return result;
+    }
+
+    /**
+     * DATA stream selector.
+     *
+     * @param connection Connection instance.
+     * @param bdat       Is binary mode enabled.
+     * @return InputStream instance.
+     * @throws IOException Unable to communicate.
+     */
+    protected InputStream getStream(Connection connection, boolean bdat) throws IOException {
         InputStream inputStream = null;
 
         if (envelope.getMime() != null && !envelope.getMime().isEmpty()) {
@@ -89,17 +113,7 @@ public class ClientData extends ClientProcessor {
             inputStream = new ByteArrayInputStream((envelope.buildHeaders() + "\r\n" + envelope.getMessage()).getBytes());
         }
 
-        boolean result;
-        if (bdat) {
-            result = processBdat(inputStream);
-
-        } else {
-            result = processData("DATA", inputStream);
-        }
-
-        StreamUtils.closeQuietly(inputStream);
-
-        return result;
+        return inputStream;
     }
 
     /**

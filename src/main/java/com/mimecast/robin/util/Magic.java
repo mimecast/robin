@@ -30,7 +30,7 @@ public class Magic {
     /**
      * Magic variable pattern.
      */
-    protected final static Pattern magicVariablePattern = Pattern.compile("\\{([a-z]+)?\\$([a-z0-9-.]+)(\\[([0-9?]+)](\\[([a-z0-9]+)])?)?}", Pattern.CASE_INSENSITIVE);
+    protected final static Pattern magicVariablePattern = Pattern.compile("\\{([a-z]+)?\\$([a-z0-9-_.]+)(\\[([0-9?]+)](\\[([a-z0-9]+)])?)?}", Pattern.CASE_INSENSITIVE);
 
     /**
      * Transaction response pattern.
@@ -45,7 +45,8 @@ public class Magic {
     @SuppressWarnings("unchecked")
     public static void putMagic(Session session) {
         session.putMagic("robinUid", session.getUID());
-        session.putMagic("yymd", new SimpleDateFormat("yyyyMMdd").format(new Date()));
+        session.putMagic("robinYymd", new SimpleDateFormat("yyyyMMdd").format(new Date()));
+        session.putMagic("robinDate", new SimpleDateFormat("E, d MMM yyyy HH:mm:ss Z", Config.getProperties().getLocale()).format(new Date()));
 
         // Add magic properties.
         for (Map.Entry<String, Object> entry : Config.getProperties().getMap().entrySet()) {
@@ -242,10 +243,28 @@ public class Magic {
      * @return Byte array.
      */
     public static String envelopeMagicReplace(String string, MessageEnvelope envelope) {
+        return readLines(new MagicInputStream(new ByteArrayInputStream(string.getBytes()), envelope));
+    }
+
+    /**
+     * Stream magic replace.
+     *
+     * @param string String.
+     * @return Byte array.
+     */
+    public static String streamMagicReplace(String string) {
+        return readLines(new MagicInputStream(new ByteArrayInputStream(string.getBytes())));
+    }
+
+    /**
+     * Read lines from MagicInputStream instance.
+     *
+     * @param magicInputStream MagicInputStream instance.
+     * @return String.
+     */
+    protected static String readLines(MagicInputStream magicInputStream) {
         StringBuilder stringBuilder = new StringBuilder();
         try {
-            MagicInputStream magicInputStream = new MagicInputStream(new ByteArrayInputStream(string.getBytes()), envelope);
-
             byte[] line;
             while ((line = magicInputStream.readLine()) != null) {
                 stringBuilder.append(new String(line));

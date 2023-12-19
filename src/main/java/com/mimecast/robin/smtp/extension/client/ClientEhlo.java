@@ -101,6 +101,7 @@ public class ClientEhlo extends ClientProcessor {
                 Collections.addAll(connection.getSession().getEhloAuth(), line.replace("^auth", "").trim().split("\\s"));
             }
 
+            if (line.contains("smtputf8")) connection.getSession().setSmtpUtf8(true);
             if (line.contains("8bitmime")) connection.getSession().setEhlo8bit(true);
             if (line.contains("binarymime")) connection.getSession().setEhloBinary(true);
             if (line.contains("chunking")) connection.getSession().setEhloBdat(true);

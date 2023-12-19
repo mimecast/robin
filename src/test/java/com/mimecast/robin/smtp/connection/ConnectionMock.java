@@ -6,6 +6,7 @@ import com.mimecast.robin.smtp.io.LineInputStream;
 import com.mimecast.robin.smtp.session.Session;
 import com.mimecast.robin.util.StreamUtils;
 
+import javax.net.ssl.SSLSocket;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -46,12 +47,49 @@ public class ConnectionMock extends Connection {
         // Do nothing.
     }
 
-    public void setSocket(Socket socket) {
+    public ConnectionMock setSocket(Socket socket) {
         this.socket = socket;
+        return this;
     }
 
     public Socket getSocket() {
         return socket;
+    }
+
+    String peerHost;
+
+    public ConnectionMock setPeerHost(String peerHost) {
+        this.peerHost = peerHost;
+        return this;
+    }
+
+    @Override
+    public String getPeerHost() {
+        return socket instanceof SSLSocket ? ((SSLSocket) socket).getSession().getPeerHost() : peerHost;
+    }
+
+    String protocol;
+
+    public ConnectionMock setProtocol(String protocol) {
+        this.protocol = protocol;
+        return this;
+    }
+
+    @Override
+    public String getProtocol() {
+        return socket instanceof SSLSocket ? ((SSLSocket) socket).getSession().getProtocol() : protocol;
+    }
+
+    String cipherSuite;
+
+    public ConnectionMock setCipherSuite(String cipherSuite) {
+        this.cipherSuite = cipherSuite;
+        return this;
+    }
+
+    @Override
+    public String getCipherSuite() {
+        return socket instanceof SSLSocket ? ((SSLSocket) socket).getSession().getCipherSuite() : cipherSuite;
     }
 
     public String getOutput() {

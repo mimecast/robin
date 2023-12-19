@@ -4,6 +4,7 @@ import com.mimecast.robin.main.Extensions;
 import com.mimecast.robin.smtp.MessageEnvelope;
 import com.mimecast.robin.smtp.connection.Connection;
 import com.mimecast.robin.smtp.extension.Extension;
+import com.mimecast.robin.smtp.session.XclientSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -48,6 +49,9 @@ public class CustomBehaviour implements Behaviour {
                 case "EHLO":
                     if (!ehlo()) return;
                     break;
+                case "XCLIENT":
+                    if (!xclient()) return;
+                    break;
                 case "STARTTLS":
                     if (!startTls()) return;
                     break;
@@ -84,6 +88,21 @@ public class CustomBehaviour implements Behaviour {
         // HELO/EHLO
         if (connection.getSession().getEhlo() != null) {
             return process("ehlo", connection);
+        }
+
+        return false;
+    }
+
+    /**
+     * Executes XCLIENT.
+     *
+     * @return Boolean.
+     * @throws IOException Unable to communicate.
+     */
+    boolean xclient() throws IOException {
+        // XCLIENT
+        if (connection.getSession() instanceof XclientSession && ((XclientSession) connection.getSession()).getXclient() != null) {
+            return process("xclient", connection);
         }
 
         return false;

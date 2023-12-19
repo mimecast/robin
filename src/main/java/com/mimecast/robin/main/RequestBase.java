@@ -87,16 +87,16 @@ public abstract class RequestBase extends Foundation {
     }
 
     /**
-     * Gets RequestConfig instance.
+     * Gets CaseConfig instance.
      *
      * @param casePath Case config path.
-     * @return RequestConfig instance.
+     * @return CaseConfig instance.
      * @throws IOException Unable to communicate.
      */
-    protected RequestConfig getConfig(String casePath) throws IOException {
+    protected CaseConfig getConfig(String casePath) throws IOException {
         CaseConfig caseConfig = new CaseConfig(casePath);
         session.map(caseConfig);
-        return new RequestConfig(caseConfig.getMapProperty("request"), session);
+        return caseConfig;
     }
 
     /**

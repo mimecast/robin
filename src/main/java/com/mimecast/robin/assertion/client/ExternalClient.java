@@ -6,6 +6,7 @@ import com.mimecast.robin.config.BasicConfig;
 import com.mimecast.robin.main.Config;
 import com.mimecast.robin.main.Factories;
 import com.mimecast.robin.smtp.connection.Connection;
+import com.mimecast.robin.smtp.session.Session;
 import com.mimecast.robin.util.Magic;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -100,9 +101,13 @@ public abstract class ExternalClient {
      */
     @SuppressWarnings("unchecked")
     protected void magicReplace(Map<String, Object> map) {
+        // Create magic session for this replace to avid replacing saved results as well.
+        Session magicSession = Factories.getSession();
+        connection.getSession().getMagic().forEach(magicSession::putMagic);
+
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             if (entry.getValue() instanceof String) {
-                map.put(entry.getKey(), Magic.magicReplace((String) entry.getValue(), connection.getSession()));
+                map.put(entry.getKey(), Magic.magicReplace((String) entry.getValue(), magicSession));
 
             } else if (entry.getValue() instanceof List) {
                 List<Object> list = new ArrayList<>();
@@ -110,7 +115,7 @@ public abstract class ExternalClient {
                 List<Object> value = (List<Object>) entry.getValue();
                 for (Object object : value) {
                     if (object instanceof String) {
-                        object = Magic.magicReplace((String) object, connection.getSession());
+                        object = Magic.magicReplace((String) object, magicSession);
 
                     } else if (object instanceof Map) {
                         magicReplace((Map<String, Object>) object);

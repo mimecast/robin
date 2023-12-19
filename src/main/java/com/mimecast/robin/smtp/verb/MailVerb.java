@@ -1,5 +1,7 @@
 package com.mimecast.robin.smtp.verb;
 
+import org.apache.commons.lang3.StringUtils;
+
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import java.io.IOException;
@@ -75,7 +77,8 @@ public class MailVerb extends Verb {
         // If MAIL FROM.
         if (parts[0].equalsIgnoreCase("mail")) {
             try {
-                address = new InternetAddress(getParam("from"));
+                String from = getParam("from").replace("<>", "");
+                address = StringUtils.isNotBlank(from) ? new InternetAddress(from) : new InternetAddress();
             } catch (AddressException e) {
                 throw new IOException(e);
             }

@@ -75,6 +75,9 @@ public class EmailBuilder {
             envelope.getMime().getHeaders().forEach(h -> addHeader(h.getName(), Magic.magicReplace(h.getValue(), session)));
 
             for (MimePart part : envelope.getMime().getParts(session, envelope)) {
+                MimeHeader ct = part.getHeader("Content-Type");
+                MimeHeader cd = part.getHeader("Content-Disposition");
+
                 // Related parts.
                 if (part.getHeader("Content-ID") != null) {
                     related.add(part);
@@ -82,7 +85,7 @@ public class EmailBuilder {
                 }
 
                 // Text parts.
-                else if (part.getHeader("Content-Type").getCleanValue().startsWith("text/")) {
+                else if (ct != null && ct.getCleanValue().startsWith("text/") && (cd == null || !cd.getCleanValue().startsWith("attachment"))) {
 
                     // If logging enabled.
                     if (new LoggingConfig(Config.getProperties().getMapProperty("logging"))

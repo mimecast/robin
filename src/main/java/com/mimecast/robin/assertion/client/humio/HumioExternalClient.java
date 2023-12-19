@@ -50,7 +50,7 @@ public class HumioExternalClient extends LogsExternalClient {
         HumioClient humioClient = getClient();
         List<String> data;
 
-        if (connection.getServer().startsWith("127.") || connection.getServer().startsWith("local")) {
+        if (connection.getServer() != null && (connection.getServer().startsWith("127.") || connection.getServer().startsWith("local"))) {
             data = super.getLogs();
 
         } else {

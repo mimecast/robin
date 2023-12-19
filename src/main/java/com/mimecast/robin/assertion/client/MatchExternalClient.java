@@ -193,19 +193,15 @@ public abstract class MatchExternalClient extends ExternalClient {
             if (m.find()) {
                 group.addMatched(pattern);
 
-
-                // Break on first negative match
                 if (!positive) {
                     log.debug("AssertExternal log: {}", entry);
-                    log.error("AssertExternal matched refuse: {}", group.getMatched());
-                    if (!assertVerifyFails) {
-                        skip = true;
-                        log.warn("Skipping");
-                        return;
-                    }
-                    throw new AssertException("Found refuse pattern " + group.getMatched() + " in logs");
+                    log.error("AssertExternal matched refuse: {}", pattern);
                 }
             }
+        }
+
+        if (!positive && group.getMatched().size() == group.getPatterns().size()) {
+            throw new AssertException("Found refuse pattern " + group.getMatched() + " in logs");
         }
     }
 
@@ -235,14 +231,18 @@ public abstract class MatchExternalClient extends ExternalClient {
                 patterns.put(magic.get("name"), Pattern.compile(magic.get("pattern"), Pattern.CASE_INSENSITIVE));
             }
 
-            for (Object line : list) {
-                if (line instanceof String) {
+            for (String line : list) {
+                if (line != null) {
                     for (Map.Entry<String, Pattern> pattern : patterns.entrySet()) {
-                        Matcher m = pattern.getValue().matcher((String) line);
-                        if (m.find()) {
-                            String group = m.groupCount() == 0 ? m.group() : m.group(1);
-                            connection.getSession().putMagic(pattern.getKey(), group);
-                            log.info("AssertExternal matched and saved magic: {} = {}", pattern.getKey(), group);
+                        if (!connection.getSession().hasMagic(pattern.getKey())) {
+                            Matcher m = pattern.getValue().matcher(line);
+                            if (m.find()) {
+                                String group = m.groupCount() == 0 ? m.group() : m.group(1);
+                                if (group != null) {
+                                    connection.getSession().putMagic(pattern.getKey(), group);
+                                    log.info("AssertExternal matched and saved magic: {} = {}", pattern.getKey(), group);
+                                }
+                            }
                         }
                     }
                 }

@@ -2,6 +2,7 @@ package com.mimecast.robin.smtp.session;
 
 import com.mimecast.robin.config.ConfigMapper;
 import com.mimecast.robin.config.client.CaseConfig;
+import com.mimecast.robin.util.Magic;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -80,7 +81,7 @@ public class XclientSession extends Session {
             Map<String, String> client = config.getMapProperty("xclient");
             if (client != null) {
                 for (Map.Entry<String, String> pair : client.entrySet()) {
-                    ((XclientSession) session).getXclient().put(pair.getKey(), pair.getValue());
+                    ((XclientSession) session).getXclient().put(pair.getKey(), Magic.magicReplace(pair.getValue(), session));
                 }
             }
         }

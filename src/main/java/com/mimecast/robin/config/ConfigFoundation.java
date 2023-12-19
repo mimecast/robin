@@ -3,6 +3,7 @@ package com.mimecast.robin.config;
 import com.google.gson.Gson;
 import com.mimecast.robin.config.client.ClientConfig;
 import com.mimecast.robin.config.server.ServerConfig;
+import com.mimecast.robin.util.Magic;
 import com.mimecast.robin.util.PathUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -41,7 +42,7 @@ public abstract class ConfigFoundation {
      */
     public ConfigFoundation(String path) throws IOException {
         if (PathUtils.isFile(path)) {
-            String props = PathUtils.readFile(path, Charset.defaultCharset());
+            String props = Magic.streamMagicReplace(PathUtils.readFile(path, Charset.defaultCharset()));
             map = new Gson().fromJson(props, Map.class);
         } else {
             throw new IOException("File not found: " + path);

@@ -18,6 +18,7 @@ public class UIDExtractor {
      * UID pattern.
      */
     protected static final Pattern uidPattern;
+
     static {
         uidPattern = Pattern.compile(
                 Config.getProperties().getStringProperty("uidPattern", Config.getProperties().getStringProperty("uid.pattern", "\\s\\[([a-z0-9\\-_]+)]")),
@@ -33,7 +34,7 @@ public class UIDExtractor {
     }
 
     /**
-     * Get UID from SMTP command response with given conenction and transaction ID.
+     * Get UID from SMTP command response with given connection and transaction ID.
      *
      * @param connection    Connection instance.
      * @param transactionId Transaction ID.
