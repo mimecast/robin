@@ -1,5 +1,5 @@
 {
-  $schema: "../../../../../main/resources/schema/case.schema.json",
+  $schema: "/schema/case.schema.json",
 
   // How many times to try and establish a connection to remote server. First counts.
   retry: 2,
@@ -26,6 +26,7 @@
           ["Subject", "Robin wrote"],
           ["To", "Sir Robin <robin@example.com>"],
           ["From", "Lady Robin <lady@example.com>"],
+          ["X-Robin-Filename", "the.robins.eml"]
         ],
 
         // List of parts (no multiparts required, multiparts will be crated based on parts defined).

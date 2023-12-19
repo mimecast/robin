@@ -1,5 +1,5 @@
 {
-  $schema: "../../../../../main/resources/schema/case.schema.json",
+  $schema: "/schema/case.schema.json",
 
   request: {
     url: "https://robin.requestcatcher.com/",

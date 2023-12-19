@@ -1,5 +1,5 @@
 {
-  $schema: "../../../../main/resources/schema/case.schema.json",
+  $schema: "/schema/case.schema.json",
 
   // How many times to try and establish a connection to remote server. First counts.
   retry: 2,
