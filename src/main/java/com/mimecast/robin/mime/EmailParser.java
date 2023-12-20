@@ -14,10 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -26,8 +23,6 @@ import java.util.Optional;
 
 /**
  * Basic email MIME parser.
- * Documented here:
- * https://mimecast.jira.com/wiki/spaces/MESSAGINGSERVICES/pages/1990066238/Robin+Mime+Parser
  */
 public class EmailParser {
     private static final Logger log = LogManager.getLogger(EmailParser.class);
@@ -271,15 +266,23 @@ public class EmailParser {
                     MimeHeader ct = optional.get();
 
                     if (ct.getValue().startsWith("multipart/")) {
-                        String currentBoundary = ct.getParameter("boundary");
-                        parsePart(currentBoundary);
+                        part = new MultipartMimePart();
+                        partHeaders.get().forEach(h -> part.addHeader(h.getName(), h.getValue()));
+                        parts.add(part);
 
+                        parsePart(ct.getParameter("boundary"));
+
+                    } else if (ct.getValue().startsWith("message/rfc822")) {
+                        part = parsePartContent(true, partHeaders, boundary);
+
+                        EmailParser rfc822 = new EmailParser(new LineInputStream(new ByteArrayInputStream(part.getBytes())))
+                                .parse();
+
+                        parts.addAll(rfc822.getParts());
                     } else {
                         part = parsePartContent(ct.getValue().startsWith("text/"), partHeaders, boundary);
 
-                        for (MimeHeader hdr : partHeaders.get()) {
-                            part.addHeader(hdr.getName(), hdr.getValue().trim());
-                        }
+                        partHeaders.get().forEach(h -> part.addHeader(h.getName(), h.getValue()));
                         parts.add(part);
 
                         partHeaders = new MimeHeaders();
