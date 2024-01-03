@@ -30,7 +30,7 @@ public class Magic {
     /**
      * Magic variable pattern.
      */
-    protected final static Pattern magicVariablePattern = Pattern.compile("\\{([a-z]+)?(\\([a-z0-9-_.:;]+\\))?\\$([a-z0-9-_.]+)(\\[([0-9?]+)](\\[([a-z0-9]+)])?)?}", Pattern.CASE_INSENSITIVE);
+    protected final static Pattern magicVariablePattern = Pattern.compile("\\{([a-z]+)?(\\([a-z0-9-_.:;|]+\\))?\\$([a-z0-9-_.]+)(\\[([0-9?]+)](\\[([a-z0-9]+)])?)?}", Pattern.CASE_INSENSITIVE);
 
     /**
      * Transaction response pattern.
@@ -99,8 +99,11 @@ public class Magic {
         while (matcher.find()) {
             String magicVariable = matcher.group();
 
-            String magicfunction = matcher.group(1);
-            String magicarg = matcher.group(2);
+            String magicFunction = matcher.group(1);
+            String magicArgs = matcher.group(2);
+            if (magicArgs != null) {
+                magicArgs = magicArgs.replaceAll("[()]", "");
+            }
             String magicName = matcher.group(3);
             String resultColumn = matcher.group(7);
             String value = null;
@@ -135,19 +138,30 @@ public class Magic {
             }
 
             // Magic functions.
-            if (magicfunction != null && value != null) {
-                if ("dateToMillis".equals(magicfunction)) {
+            if (magicFunction != null && value != null) {
+                if ("dateToMillis".equals(magicFunction)) {
                     value = dateToMillis(value);
-                } else if ("millisToDate".equals(magicfunction)) {
+                } else if ("millisToDate".equals(magicFunction)) {
                     value = millisToDate(value);
-                } else if ("toLowerCase".equals(magicfunction)) {
+                } else if ("toLowerCase".equals(magicFunction)) {
                     value = value.toLowerCase();
-                } else if ("toUpperCase".equals(magicfunction)) {
+                } else if ("toUpperCase".equals(magicFunction)) {
                     value = value.toUpperCase();
-                } else if ("patternQuote".equals(magicfunction)) {
+                } else if ("patternQuote".equals(magicFunction)) {
                     value = Pattern.quote(value);
-                } else if ("strip".equals(magicfunction)) {
-                    value = value.replaceAll(magicarg, "");
+                } else if ("strip".equals(magicFunction)) {
+                    if (magicArgs != null) {
+                        value = value.replaceAll(magicArgs, "");
+                    } else {
+                        log.warn("Magic strip function requires an argument got: {}", magicArgs);
+                    }
+                } else if ("replace".equals(magicFunction)) {
+                    if (magicArgs != null && magicArgs.contains("|")) {
+                        String[] replaceArgs = magicArgs.split("\\|", 2);
+                        value = value.replaceAll(replaceArgs[0], replaceArgs[1]);
+                    } else {
+                        log.warn("Magic replace function requires two arguments separated by | but got: {}", magicArgs);
+                    }
                 }
             }
 

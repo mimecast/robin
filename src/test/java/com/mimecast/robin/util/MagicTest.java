@@ -16,4 +16,14 @@ class MagicTest {
 
         assertEquals("https://example.com", test);
     }
+
+    @Test
+    void magicFunctionRepalce() {
+        Session session = new Session();
+        session.putMagic("host", "example.com:8080");
+
+        String test = Magic.magicReplace("https://{replace(:8080|)$host}", session, false);
+
+        assertEquals("https://example.com", test);
+    }
 }
