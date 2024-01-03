@@ -30,7 +30,7 @@ public class Magic {
     /**
      * Magic variable pattern.
      */
-    protected final static Pattern magicVariablePattern = Pattern.compile("\\{([a-z]+)?\\$([a-z0-9-_.]+)(\\[([0-9?]+)](\\[([a-z0-9]+)])?)?}", Pattern.CASE_INSENSITIVE);
+    protected final static Pattern magicVariablePattern = Pattern.compile("\\{([a-z]+)?(\\([a-z0-9-_.:;]+\\))?\\$([a-z0-9-_.]+)(\\[([0-9?]+)](\\[([a-z0-9]+)])?)?}", Pattern.CASE_INSENSITIVE);
 
     /**
      * Transaction response pattern.
@@ -100,8 +100,9 @@ public class Magic {
             String magicVariable = matcher.group();
 
             String magicfunction = matcher.group(1);
-            String magicName = matcher.group(2);
-            String resultColumn = matcher.group(6);
+            String magicarg = matcher.group(2);
+            String magicName = matcher.group(3);
+            String resultColumn = matcher.group(7);
             String value = null;
 
             // Magic variables.
@@ -145,6 +146,8 @@ public class Magic {
                     value = value.toUpperCase();
                 } else if ("patternQuote".equals(magicfunction)) {
                     value = Pattern.quote(value);
+                } else if ("strip".equals(magicfunction)) {
+                    value = value.replaceAll(magicarg, "");
                 }
             }
 
