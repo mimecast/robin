@@ -158,7 +158,7 @@ public class Magic {
                 } else if ("replace".equals(magicFunction)) {
                     if (magicArgs != null && magicArgs.contains("|")) {
                         String[] replaceArgs = magicArgs.split("\\|", 2);
-                        value = value.replaceAll(replaceArgs[0], replaceArgs[1]);
+                        value = value.replaceAll(Pattern.quote(replaceArgs[0]), replaceArgs[1]);
                     } else {
                         log.warn("Magic replace function requires two arguments separated by | but got: {}", magicArgs);
                     }
