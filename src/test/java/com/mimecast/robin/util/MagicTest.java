@@ -21,9 +21,9 @@ class MagicTest {
         assertEquals("example.com", Magic.magicReplace("{$host[0][com]}", session, false));
 
         session.putMagic("date", "20240109000000000");
-        assertEquals("1704754800000", Magic.magicReplace("{dateToMillis$date}", session, false));
+        assertEquals("1704758400000", Magic.magicReplace("{dateToMillis$date}", session, false));
 
-        session.putMagic("milis", "1704754800000");
+        session.putMagic("milis", "1704758400000");
         assertEquals("20240109000000000", Magic.magicReplace("{millisToDate$milis}", session, false));
 
         session.putMagic("upper", "ABC");
