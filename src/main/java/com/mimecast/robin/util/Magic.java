@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 /**
  * Magic processors.
  */
+@SuppressWarnings("unchecked")
 public class Magic {
     private static final Logger log = LogManager.getLogger(Magic.class);
 
@@ -91,7 +92,6 @@ public class Magic {
      * @param nullString  Force null string for null values.
      * @return Map of String, Object.
      */
-    @SuppressWarnings("unchecked")
     public static String magicReplace(String magicString, Session session, boolean nullString) {
 
         Matcher matcher = magicVariablePattern.matcher(magicString);
@@ -110,25 +110,12 @@ public class Magic {
 
             // Magic variables.
             if (session.hasMagic(magicName)) {
-                if (session.getMagic(magicName) instanceof String) {
-                    value = (String) session.getMagic(magicName);
-
-                } else if (session.getMagic(magicName) instanceof List) {
-                    List<String> values = (List<String>) ((List) session.getMagic(magicName)).stream()
-                            .filter(v -> v instanceof String)
-                            .collect(Collectors.toList());
-
-                    int key = "?".equals(matcher.group(4)) ?
-                            Random.no(values.size()) - 1 :
-                            Integer.parseInt(matcher.group(4));
-
-                    value = values.get(key);
-                }
+                value = getMagicValue(magicName, matcher.group(4), session);
             }
 
             // Saved results.
             if (resultColumn != null && session.getSavedResults().containsKey(magicName)) {
-                int resultRow = Integer.parseInt(matcher.group(4));
+                int resultRow = Integer.parseInt(matcher.group(5));
 
                 if (session.getSavedResults().get(magicName) != null &&
                         session.getSavedResults().get(magicName).get(resultRow) != null) {
@@ -139,40 +126,96 @@ public class Magic {
 
             // Magic functions.
             if (magicFunction != null && value != null) {
-                if ("dateToMillis".equals(magicFunction)) {
-                    value = dateToMillis(value);
-                } else if ("millisToDate".equals(magicFunction)) {
-                    value = millisToDate(value);
-                } else if ("toLowerCase".equals(magicFunction)) {
-                    value = value.toLowerCase();
-                } else if ("toUpperCase".equals(magicFunction)) {
-                    value = value.toUpperCase();
-                } else if ("patternQuote".equals(magicFunction)) {
-                    value = Pattern.quote(value);
-                } else if ("strip".equals(magicFunction)) {
-                    if (magicArgs != null) {
-                        value = value.replaceAll(magicArgs, "");
-                    } else {
-                        log.warn("Magic strip function requires an argument got: {}", magicArgs);
-                    }
-                } else if ("replace".equals(magicFunction)) {
-                    if (magicArgs != null && magicArgs.contains("|")) {
-                        String[] replaceArgs = magicArgs.split("\\|", 2);
-                        value = value.replaceAll(Pattern.quote(replaceArgs[0]), replaceArgs[1]);
-                    } else {
-                        log.warn("Magic replace function requires two arguments separated by | but got: {}", magicArgs);
-                    }
-                }
+                value = magicFunction(magicFunction, magicArgs, value);
             }
 
             if (value != null) {
                 magicString = magicString.replace(magicVariable, value);
+
             } else if (nullString) {
                 magicString = magicString.replace(magicVariable, "null");
             }
         }
 
         return magicString;
+    }
+
+    /**
+     * Gets magic value by name.
+     *
+     * @param magicName Magic variable name.
+     * @param row       In some cases
+     * @param session   Session instance.
+     */
+    protected static String getMagicValue(String magicName, String row, Session session) {
+        String value = null;
+
+        if (session.getMagic(magicName) instanceof String) {
+            value = (String) session.getMagic(magicName);
+
+        } else if (session.getMagic(magicName) instanceof List) {
+            List<String> values = (List<String>) ((List) session.getMagic(magicName)).stream()
+                    .filter(v -> v instanceof String)
+                    .collect(Collectors.toList());
+
+            int key = "?".equals(row) ?
+                    Random.no(values.size()) - 1 :
+                    Integer.parseInt(row);
+
+            value = values.get(key);
+        }
+
+        return value;
+    }
+
+    /**
+     * Operate magic function.
+     *
+     * @param magicFunction Magic function.
+     * @param magicArgs     Magic function arguments.
+     * @param value         Input to operate on.
+     */
+    protected static String magicFunction(String magicFunction, String magicArgs, String value) {
+        switch (magicFunction) {
+            case "dateToMillis":
+                value = dateToMillis(value);
+                break;
+
+            case "millisToDate":
+                value = millisToDate(value);
+                break;
+
+            case "toLowerCase":
+                value = value.toLowerCase();
+                break;
+
+            case "toUpperCase":
+                value = value.toUpperCase();
+                break;
+
+            case "patternQuote":
+                value = Pattern.quote(value);
+                break;
+
+            case "strip":
+                if (magicArgs != null) {
+                    value = value.replaceAll(magicArgs, "");
+                } else {
+                    log.warn("Magic strip function requires an argument got none");
+                }
+                break;
+
+            case "replace":
+                if (magicArgs != null && magicArgs.contains("|")) {
+                    String[] replaceArgs = magicArgs.split("\\|", 2);
+                    value = value.replaceAll(Pattern.quote(replaceArgs[0]), replaceArgs[1]);
+                } else {
+                    log.warn("Magic replace function requires two arguments separated by | but got: {}", magicArgs);
+                }
+                break;
+        }
+
+        return value;
     }
 
     /**
