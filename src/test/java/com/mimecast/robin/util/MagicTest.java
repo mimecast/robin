@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class MagicTest {
 
@@ -16,6 +17,12 @@ class MagicTest {
 
         session.putMagic("port", "25");
         assertEquals("25", Magic.magicReplace("{$port}", session, false));
+
+        session.putMagic("hostnames", List.of("example.com"));
+        assertEquals("example.com", Magic.magicReplace("{$hostnames[0]}", session, false));
+
+        session.saveResults("hostnames", List.of("example.com"));
+        assertNotNull(Magic.magicReplace("{$hostnames[?]}", session, false));
 
         session.saveResults("host", List.of(Map.of("com", "example.com")));
         assertEquals("example.com", Magic.magicReplace("{$host[0][com]}", session, false));

@@ -105,17 +105,18 @@ public class Magic {
                 magicArgs = magicArgs.replaceAll("[()]", "");
             }
             String magicName = matcher.group(3);
+            String magicRow = matcher.group(5);
             String resultColumn = matcher.group(7);
             String value = null;
 
             // Magic variables.
             if (session.hasMagic(magicName)) {
-                value = getMagicValue(magicName, matcher.group(4), session);
+                value = getMagicValue(magicName, magicRow, session);
             }
 
             // Saved results.
             if (resultColumn != null && session.getSavedResults().containsKey(magicName)) {
-                int resultRow = Integer.parseInt(matcher.group(5));
+                int resultRow = Integer.parseInt(magicRow);
 
                 if (session.getSavedResults().get(magicName) != null &&
                         session.getSavedResults().get(magicName).get(resultRow) != null) {
