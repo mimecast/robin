@@ -1,5 +1,6 @@
 package com.mimecast.robin.smtp;
 
+import com.mimecast.robin.main.Config;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -8,6 +9,9 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * SMTP socket listener.
@@ -26,6 +30,11 @@ public class SmtpListener {
     private ServerSocket listener;
 
     /**
+     * ThreadPoolExecutor instance.
+     */
+    private final ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
+
+    /**
      * Server shutdown boolean.
      */
     private boolean serverShutdown = false;
@@ -38,6 +47,8 @@ public class SmtpListener {
      * @param bind    Interface to bind to.
      */
     public SmtpListener(int port, int backlog, String bind) {
+        configure();
+
         try (ServerSocket socket = new ServerSocket(port, backlog, InetAddress.getByName(bind))) {
             listener = socket;
             log.info("Started listener.");
@@ -61,6 +72,14 @@ public class SmtpListener {
     }
 
     /**
+     * Configure thread pool.
+     */
+    protected void configure() {
+        executor.setKeepAliveTime(Config.getServer().getThreadKeepAliveTime(), TimeUnit.SECONDS);
+        executor.setMaximumPoolSize(Config.getServer().getMaximumPoolSize());
+    }
+
+    /**
      * Accept incomming connection.
      */
     private void acceptConnection() {
@@ -68,7 +87,11 @@ public class SmtpListener {
             do {
                 Socket sock = listener.accept();
                 log.info("Accepted connection from {}:{}.", sock.getInetAddress().getHostAddress(), sock.getPort());
-                new Thread(new EmailReceipt(sock)).start();
+
+                executor.submit(() -> {
+                    new EmailReceipt(sock).run();
+                    return null;
+                });
             } while (!serverShutdown);
 
         } catch (SocketException e) {

@@ -72,6 +72,24 @@ public class ServerConfig extends ConfigFoundation {
     }
 
     /**
+     * Gets maximum pool size.
+     *
+     * @return Thread pool max size.
+     */
+    public int getMaximumPoolSize() {
+        return Math.toIntExact(getLongProperty("maximumPoolSize", 10L));
+    }
+
+    /**
+     * Gets thread keep alive time.
+     *
+     * @return Time in seconds.
+     */
+    public int getThreadKeepAliveTime() {
+        return Math.toIntExact(getLongProperty("threadKeepAliveTime", 60L));
+    }
+
+    /**
      * Gets transactions limit.
      * <p>This defines how many commands will be processed before breaking receipt loop.
      *
