@@ -29,7 +29,7 @@ class ConfigMapperTest {
         Session session = new Session();
         new ConfigMapper(caseConfig).mapTo(session);
 
-        assertEquals(30, session.getTimeout());
+        assertEquals(60000, session.getTimeout());
         assertEquals("example.net", session.getMx().get(0));
         assertEquals(465, session.getPort());
         assertTrue(session.isTls());
