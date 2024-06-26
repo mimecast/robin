@@ -72,6 +72,15 @@ public class ServerConfig extends ConfigFoundation {
     }
 
     /**
+     * Gets minimum pool size.
+     *
+     * @return Thread pool min size.
+     */
+    public int getMinimumPoolSize() {
+        return Math.toIntExact(getLongProperty("minimumPoolSize", 1L));
+    }
+
+    /**
      * Gets maximum pool size.
      *
      * @return Thread pool max size.

@@ -76,6 +76,7 @@ public class SmtpListener {
      */
     protected void configure() {
         executor.setKeepAliveTime(Config.getServer().getThreadKeepAliveTime(), TimeUnit.SECONDS);
+        executor.setMaximumPoolSize(Config.getServer().getMinimumPoolSize());
         executor.setMaximumPoolSize(Config.getServer().getMaximumPoolSize());
     }
 
