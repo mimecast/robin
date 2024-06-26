@@ -22,7 +22,7 @@ class CaseConfigTest {
 
     @Test
     void getTimeout() {
-        assertEquals(30, caseConfig.getTimeout());
+        assertEquals(60000, caseConfig.getTimeout());
     }
 
     @Test

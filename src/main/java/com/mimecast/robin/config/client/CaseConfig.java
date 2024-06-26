@@ -78,13 +78,12 @@ public class CaseConfig extends ConfigFoundation {
     }
 
     /**
-     * Gets socket timeout.
-     * <p>In seconds.
+     * Gets socket timeout in milliseconds.
      *
      * @return Socket timeout.
      */
     public int getTimeout() {
-        return (int) Math.max(getLongProperty("timeout"), 0);
+        return (int) Math.max(getLongProperty("timeout"), 60000);
     }
 
     /**

@@ -161,6 +161,7 @@ public class LocalStorageClient implements StorageClient {
             try {
                 stream.flush();
                 stream.close();
+                log.info("Storage file saved to: {}", getToken());
 
             } catch (IOException e) {
                 log.error("Storage file not flushed/closed: {}", e.getMessage());
