@@ -65,6 +65,7 @@ public class SmtpListener {
                     listener.close();
                     log.info("Closed listener.");
                 }
+                executor.shutdown();
             } catch (Exception e) {
                 log.info("Listener already closed.");
             }
@@ -76,7 +77,7 @@ public class SmtpListener {
      */
     protected void configure() {
         executor.setKeepAliveTime(Config.getServer().getThreadKeepAliveTime(), TimeUnit.SECONDS);
-        executor.setMaximumPoolSize(Config.getServer().getMinimumPoolSize());
+        executor.setCorePoolSize(Config.getServer().getMinimumPoolSize());
         executor.setMaximumPoolSize(Config.getServer().getMaximumPoolSize());
     }
 
@@ -113,6 +114,7 @@ public class SmtpListener {
         if (listener != null) {
             listener.close();
         }
+        executor.shutdown();
     }
 
     /**
