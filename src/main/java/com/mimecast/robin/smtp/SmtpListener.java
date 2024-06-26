@@ -91,7 +91,11 @@ public class SmtpListener {
                 log.info("Accepted connection from {}:{}.", sock.getInetAddress().getHostAddress(), sock.getPort());
 
                 executor.submit(() -> {
-                    new EmailReceipt(sock).run();
+                    try {
+                        new EmailReceipt(sock).run();
+                    } catch (Exception e) {
+                        log.error("Email receipt unexpected exception: {}", e.getMessage());
+                    }
                     return null;
                 });
             } while (!serverShutdown);
