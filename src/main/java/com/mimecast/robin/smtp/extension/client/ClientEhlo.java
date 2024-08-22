@@ -94,7 +94,7 @@ public class ClientEhlo extends ClientProcessor {
             line = line.replace("250 ", "").replace("250-", "").toLowerCase();
 
             if (line.startsWith("size ")) {
-                connection.getSession().setEhloSize(Integer.parseInt(line.replace("size ", "").trim()));
+                connection.getSession().setEhloSize(Long.parseLong(line.replace("size ", "").trim()));
             }
 
             if (line.startsWith("auth ")) {

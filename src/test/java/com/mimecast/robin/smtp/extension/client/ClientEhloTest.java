@@ -37,7 +37,7 @@ class ClientEhloTest {
     void processSession() throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("250-smtp.example.com at your service, [127.0.0.1]\r\n" +
-                "250-SIZE 35882577\r\n" +
+                "250-SIZE 4294967296\r\n" +
                 "250-STARTTLS\r\n" +
                 "250-AUTH LOGIN PLAIN NTLM CRAM-MD5 DIGEST-MD5 XOAUTH XOAUTH2\r\n" +
                 "250-ENHANCEDSTATUSCODES\r\n" +
@@ -53,7 +53,7 @@ class ClientEhloTest {
         boolean process = ehlo.process(connection);
 
         assertTrue(process);
-        assertEquals(35882577, connection.getSession().getEhloSize());
+        assertEquals(4294967296L, connection.getSession().getEhloSize());
         assertEquals("EHLO example.com", connection.getSession().getSessionTransactionList().getLast("EHLO").getPayload());
         assertTrue(connection.getSession().getEhloAuth().contains("login"));
         assertTrue(connection.getSession().getEhloAuth().contains("plain"));

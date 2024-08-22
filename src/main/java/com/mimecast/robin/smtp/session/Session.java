@@ -113,7 +113,7 @@ public class Session {
     /**
      * [Client] EHLO advertised size.
      */
-    private int ehloSize = -1;
+    private long ehloSize = -1;
 
     /**
      * [Client] EHLO advertised STARTLS.
@@ -590,17 +590,17 @@ public class Session {
      *
      * @return Size.
      */
-    public int getEhloSize() {
+    public Long getEhloSize() {
         return ehloSize;
     }
 
     /**
      * Sets EHLO advertised size.
      *
-     * @param ehloSize EHLO size integer.
+     * @param ehloSize EHLO size long.
      * @return Self.
      */
-    public Session setEhloSize(int ehloSize) {
+    public Session setEhloSize(long ehloSize) {
         this.ehloSize = ehloSize;
         return this;
     }
