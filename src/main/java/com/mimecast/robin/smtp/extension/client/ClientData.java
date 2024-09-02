@@ -13,6 +13,7 @@ import org.apache.commons.io.input.BoundedInputStream;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.*;
 
 /**
  * DATA extension processor.
@@ -111,6 +112,17 @@ public class ClientData extends ClientProcessor {
         } else if (envelope.getMessage() != null && !bdat) {
             log.debug("Sending email from headers and body.");
             inputStream = new ByteArrayInputStream((envelope.buildHeaders() + "\r\n" + envelope.getMessage()).getBytes());
+        }
+
+        if (envelope.isPrependHeaders()) {
+            Map<String, String> headers = envelope.getHeaders();
+            if (!headers.isEmpty()) {
+                List<String> prependHeaders = new ArrayList<>();
+                headers.forEach((name, value) -> {
+                    prependHeaders.add(name + ": " + value + "\r\n");
+                });
+                inputStream = new SequenceInputStream(Collections.enumeration(Arrays.asList(new ByteArrayInputStream(String.join("", prependHeaders).getBytes()), inputStream)));
+            }
         }
 
         return inputStream;

@@ -14,6 +14,14 @@
   envelopes: [
     // Envelope one.
     {
+      // Magic headers.
+      headers: {
+        "X-Prepended-One": "There can be only one!",
+        "X-Prepended-Two": "There's no second place :("
+      },
+      // Auto prepend them to the email.
+      prependHeaders: true,
+
       // Email eml file to transmit.
       file: "src/test/resources/cases/sources/lipsum.eml",
 

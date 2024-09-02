@@ -26,6 +26,7 @@ public class MessageEnvelope {
     private List<String> rcpts = new ArrayList<>();
     private final Map<String, List<String>> params = new HashMap<>();
     private final Map<String, String> headers = new HashMap<>();
+    private boolean prependHeaders = false;
 
     // Set MimeConfig.
     private MimeConfig mime = null;
@@ -248,6 +249,27 @@ public class MessageEnvelope {
      */
     public Map<String, String> getHeaders() {
         return headers;
+    }
+
+    /**
+     * Is prepend headers.
+     * <p>Auto prepend all magic headers to the email.
+     *
+     * @return Boolean.
+     */
+    public boolean isPrependHeaders() {
+        return prependHeaders;
+    }
+
+    /**
+     * Sets prepend headers.
+     *
+     * @param prependHeaders Boolean.
+     * @return Self.
+     */
+    public MessageEnvelope setPrependHeaders(boolean prependHeaders) {
+        this.prependHeaders = prependHeaders;
+        return this;
     }
 
     /**

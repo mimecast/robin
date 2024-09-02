@@ -53,6 +53,18 @@ Use these to program your emails to autocomplete information.
 - `{$HEADERS}` - Add all custom headers.
 - `{$HEADERS[#]}` - Add header value by key (example: `{$HEADERS[FROM]}`).
 
+If you wish to prepend headers to an email you can set `prependHeaders` boolean to `true`.
+_(This can result in duplicate headers when magic headers from above are used with an eml from file.)_  
+
+    envelopes: [
+      headers: {
+        "x-example-one": "1",
+        "x-example-two": "2"
+      },
+      prependHeaders: true,
+      file: "/path/to/eml/file.eml"
+    }
+
 
 Magic eml headers
 =================
