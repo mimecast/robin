@@ -181,7 +181,8 @@ public class ConfigMapper {
 
                 .setSlowBytes(envelopeConfig.getSlowBytes())
                 .setSlowWait(envelopeConfig.getSlowWait())
-                .setRepeat(envelopeConfig.getRepeat());
+                .setRepeat(envelopeConfig.getRepeat())
+                .setPrependHeaders(envelopeConfig.isPrependHeaders());
 
         // Set MIME.
         if (!envelopeConfig.getMime().isEmpty()) {

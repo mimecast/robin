@@ -226,7 +226,7 @@ public class MessageEnvelope {
      * @return Self.
      */
     public MessageEnvelope addHeader(String name, String value) {
-        headers.put(name.toLowerCase(), value);
+        headers.put(name, value);
         return this;
     }
 
@@ -238,7 +238,7 @@ public class MessageEnvelope {
      */
     public MessageEnvelope setHeaders(Map<String, String> headers) {
         this.headers.clear();
-        headers.forEach((k, v) -> this.headers.put(k.toLowerCase(), v));
+        this.headers.putAll(headers);
         return this;
     }
 

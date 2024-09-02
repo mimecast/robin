@@ -70,6 +70,15 @@ public class EnvelopeConfig extends ConfigFoundation {
     }
 
     /**
+     * Is prepend headers.
+     *
+     * @return Boolean.
+     */
+    public boolean isPrependHeaders() {
+        return getBooleanProperty("prependHeaders", false);
+    }
+
+    /**
      * Gets chunk size.
      * <p>Size of how many bytes to write to the socket in one write.
      *
