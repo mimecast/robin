@@ -190,6 +190,7 @@
                 <configuration>
                     <skipTests>false</skipTests>
                     <skip>false</skip>
+                    <argLine>-Dfile.encoding=UTF-8</argLine>
                 </configuration>
             </plugin>
 
