@@ -1,15 +1,22 @@
 package com.mimecast.robin.util;
 
 import com.mimecast.robin.smtp.session.Session;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class MagicTest {
+
+    @BeforeAll
+    static void before() {
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+    }
 
     @Test
     void magicReplace() {
@@ -27,10 +34,12 @@ class MagicTest {
         session.saveResults("host", List.of(Map.of("com", "example.com")));
         assertEquals("example.com", Magic.magicReplace("{$host[0][com]}", session, false));
 
-        session.putMagic("date", "20240109000000000");
-        assertEquals("1704758400000", Magic.magicReplace("{dateToMillis$date}", session, false));
+        int offset = TimeZone.getDefault().getRawOffset();
 
-        session.putMagic("milis", "1704758400000");
+        session.putMagic("date", "20240109000000000");
+        assertEquals(String.valueOf(1704758400000L - offset), Magic.magicReplace("{dateToMillis$date}", session, false));
+
+        session.putMagic("milis", String.valueOf(1704758400000L - offset));
         assertEquals("20240109000000000", Magic.magicReplace("{millisToDate$milis}", session, false));
 
         session.putMagic("upper", "ABC");
