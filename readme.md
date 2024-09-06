@@ -48,6 +48,7 @@ This project makes use of sample password as needed for testing and demonstratio
 
 More...
 -------
+- [Introduction](doc/introduction.md)
 - [CLI usage](doc/cli.md)
 - [Client usage](doc/client.md)
 - [Server configuration](doc/server.md)

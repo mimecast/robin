@@ -34,7 +34,7 @@ Server
      Path to configuration directory
 
     example:
-     java -jar robin.jar --server config/
+     java -jar robin.jar --server cfg/
 
 Common
 ------
@@ -42,9 +42,9 @@ Common
 The Log4j2 XML filename can be configured via properties.json5 or a system property called `log4j2`.
 
     example:
-     java -jar robin.jar --server config/ -Dlog4j2=log4j2custom.xml
+     java -jar robin.jar --server cfg/ -Dlog4j2=log4j2custom.xml
 
 The properties.json5 filename can be configured via a system property called `properties`.
 
     example:
-     java -jar robin.jar --server config/ -Dproperties=properties-new.json5
+     java -jar robin.jar --server cfg/ -Dproperties=properties-new.json5

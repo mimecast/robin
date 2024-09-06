@@ -33,7 +33,6 @@
   // Default EHLO to use.
   ehlo: "mimecast.net",
 
-
   // Default sender and recipients.
   mail: "robin@mimecast.net",
   rcpt: [
