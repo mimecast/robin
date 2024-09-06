@@ -98,7 +98,7 @@
       starttls: {
         response: "220 You will fail",
         protocols: ["TLSv1.0"],
-        ciphers: ["TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA"],
+        ciphers: ["TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA"]
       }
     }
   }
