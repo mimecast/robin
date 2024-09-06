@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 /**
  * Magic processors.
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class Magic {
     private static final Logger log = LogManager.getLogger(Magic.class);
 
@@ -43,7 +43,6 @@ public class Magic {
      *
      * @param session Session instance.
      */
-    @SuppressWarnings("unchecked")
     public static void putMagic(Session session) {
         session.putMagic("robinUid", session.getUID());
         session.putMagic("robinYymd", new SimpleDateFormat("yyyyMMdd").format(new Date()));
@@ -147,6 +146,7 @@ public class Magic {
      * @param magicName Magic variable name.
      * @param row       In some cases
      * @param session   Session instance.
+     * @return String.
      */
     protected static String getMagicValue(String magicName, String row, Session session) {
         String value = null;
@@ -175,6 +175,7 @@ public class Magic {
      * @param magicFunction Magic function.
      * @param magicArgs     Magic function arguments.
      * @param value         Input to operate on.
+     * @return String.
      */
     protected static String magicFunction(String magicFunction, String magicArgs, String value) {
         switch (magicFunction) {
