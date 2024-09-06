@@ -49,6 +49,14 @@
   // Predefined delivery routes to use instead of MX and port.
   routes: [
     {
+      name: "local",
+      mx: [
+        "127.0.0.1"
+      ],
+      port: 25
+    },
+
+    {
       name: "com",
       mx: [
         "example.com"

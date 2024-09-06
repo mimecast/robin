@@ -2,11 +2,19 @@ package cases;
 
 import com.mimecast.robin.assertion.AssertException;
 import com.mimecast.robin.main.Client;
+import com.mimecast.robin.main.Foundation;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import javax.naming.ConfigurationException;
 import java.io.IOException;
 
 public class ExampleSend {
+
+    @BeforeAll
+    static void before() throws ConfigurationException {
+        Foundation.init("cfg/");
+    }
 
     /**
      * JSON example of a basic test that sends an eml file.

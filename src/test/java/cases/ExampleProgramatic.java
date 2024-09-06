@@ -5,14 +5,17 @@ import com.mimecast.robin.assertion.AssertException;
 import com.mimecast.robin.config.assertion.AssertConfig;
 import com.mimecast.robin.config.client.RouteConfig;
 import com.mimecast.robin.main.Config;
+import com.mimecast.robin.main.Foundation;
 import com.mimecast.robin.mime.EmailBuilder;
 import com.mimecast.robin.mime.parts.FileMimePart;
 import com.mimecast.robin.mime.parts.TextMimePart;
 import com.mimecast.robin.smtp.EmailDelivery;
 import com.mimecast.robin.smtp.MessageEnvelope;
 import com.mimecast.robin.smtp.session.Session;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import javax.naming.ConfigurationException;
 import java.io.Closeable;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -22,6 +25,11 @@ import java.nio.file.Path;
 import java.util.*;
 
 public class ExampleProgramatic {
+
+    @BeforeAll
+    static void before() throws ConfigurationException {
+        Foundation.init("cfg/");
+    }
 
     /**
      * Programmatic example of a case.
@@ -65,7 +73,7 @@ public class ExampleProgramatic {
                     .setDelay(5)
                     .setEhlo("dynamic.test");
 
-            RouteConfig route = Config.getClient().getRoute("dev");
+            RouteConfig route = Config.getClient().getRoute("local");
             session.setMx(route.getMx())
                     .setPort(route.getPort())
                     .setAuth(route.isAuth())

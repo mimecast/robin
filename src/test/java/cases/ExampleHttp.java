@@ -1,12 +1,21 @@
 package cases;
 
 import com.mimecast.robin.assertion.AssertException;
+import com.mimecast.robin.main.Foundation;
 import com.mimecast.robin.main.RequestClient;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import javax.naming.ConfigurationException;
 import java.io.IOException;
 
 public class ExampleHttp {
+
+    @BeforeAll
+    static void before() throws ConfigurationException {
+        Foundation.init("cfg/");
+    }
+
     /**
      * JSON example of a test with a DELETE request.
      * <p>Navigate to https://requestcatcher.com to debug.
