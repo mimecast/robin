@@ -92,6 +92,15 @@ public class MessageEnvelope {
     }
 
     /**
+     * Gets current year.
+     *
+     * @return Year string.
+     */
+    public String getYear() {
+        return new SimpleDateFormat("yyyy").format(new Date());
+    }
+
+    /**
      * Gets Message-ID.
      *
      * @return Message-ID string.

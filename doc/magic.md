@@ -39,6 +39,7 @@ Use these to program your emails to autocomplete information.
 
 - `{$DATE}` - RFC compliant current date.
 - `{$YYMD}` - YYYYMMDD date.
+- `{$YEAR}` - Current year.
 - `{$MSGID}` - Random string. Combines with {$MAILFROM} to form a valid Message-ID.
 - `{$MAILFROM}` - Envelope mail address.
 - `{$MAIL}` - Envelope mail address.

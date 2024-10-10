@@ -45,6 +45,7 @@ public class MagicInputStream extends LineInputStream {
         simpleTags.put("{$msgid}", Pattern.compile("\\{\\$msgid}", Pattern.CASE_INSENSITIVE));
         simpleTags.put("{$date}", Pattern.compile("\\{\\$date}", Pattern.CASE_INSENSITIVE));
         simpleTags.put("{$yymd}", Pattern.compile("\\{\\$yymd}", Pattern.CASE_INSENSITIVE));
+        simpleTags.put("{$year}", Pattern.compile("\\{\\$year}", Pattern.CASE_INSENSITIVE));
         simpleTags.put("{$mailfrom}", Pattern.compile("\\{\\$mailfrom}", Pattern.CASE_INSENSITIVE));
         simpleTags.put("{$mail}", Pattern.compile("\\{\\$mail}", Pattern.CASE_INSENSITIVE));
         simpleTags.put("{$rcptto}", Pattern.compile("\\{\\$rcptto}", Pattern.CASE_INSENSITIVE));
@@ -171,6 +172,9 @@ public class MagicInputStream extends LineInputStream {
 
                 case "{$yymd}":
                     return envelope.getYymd();
+
+                case "{$year}":
+                    return envelope.getYear();
 
                 case "{$mailfrom}":
                 case "{$mail}":
