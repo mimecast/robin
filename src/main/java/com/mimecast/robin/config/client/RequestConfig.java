@@ -238,9 +238,7 @@ public class RequestConfig extends ConfigFoundation {
     public String getFile(String path) {
         StringBuilder stringBuilder = new StringBuilder();
 
-        try {
-            LineInputStream stream = new LineInputStream(new MagicInputStream(new FileInputStream(path)));
-
+        try (LineInputStream stream = new LineInputStream(new MagicInputStream(new FileInputStream(path)))) {
             byte[] bytes;
             while ((bytes = stream.readLine()) != null) {
                 stringBuilder.append(Magic.magicReplace(new String(bytes), connection.getSession()));

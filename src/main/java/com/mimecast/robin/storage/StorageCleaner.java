@@ -58,8 +58,9 @@ public class StorageCleaner {
                     } else {
                         for (Pattern p : patterns) {
                             if (p.matcher(file.getName()).find()) {
-                                file.delete();
-                                log.trace("Removed file: {}", file.getAbsolutePath());
+                                if (file.delete()) {
+                                    log.trace("Removed file: {}", file.getAbsolutePath());
+                                }
                                 break;
                             }
                         }
@@ -72,8 +73,9 @@ public class StorageCleaner {
 
             files = directory.listFiles();
             if (remove && files != null && files.length == 0) {
-                directory.delete();
-                log.debug("Removed folder: {}", directory.getAbsolutePath());
+                if (directory.delete()) {
+                    log.debug("Removed folder: {}", directory.getAbsolutePath());
+                }
             }
 
         } catch (Exception e) {
