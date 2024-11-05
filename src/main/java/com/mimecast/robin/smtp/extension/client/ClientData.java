@@ -118,9 +118,7 @@ public class ClientData extends ClientProcessor {
             Map<String, String> headers = envelope.getHeaders();
             if (!headers.isEmpty()) {
                 List<String> prependHeaders = new ArrayList<>();
-                headers.forEach((name, value) -> {
-                    prependHeaders.add(name + ": " + value + "\r\n");
-                });
+                headers.forEach((name, value) -> prependHeaders.add(name + ": " + value + "\r\n"));
                 inputStream = new SequenceInputStream(Collections.enumeration(Arrays.asList(new ByteArrayInputStream(String.join("", prependHeaders).getBytes()), inputStream)));
             }
         }
@@ -153,7 +151,10 @@ public class ClientData extends ClientProcessor {
             if (envelope.getTerminateAfterBytes() > 0) {
                 log.debug("Terminating after {} bytes.", envelope.getTerminateAfterBytes());
                 envelope.setTerminateBeforeDot(true);
-                inputStream = new BoundedInputStream(inputStream, envelope.getTerminateAfterBytes());
+                inputStream = BoundedInputStream.builder()
+                        .setInputStream(inputStream)
+                        .setMaxCount(envelope.getTerminateAfterBytes())
+                        .get();
             }
 
             connection.stream(
