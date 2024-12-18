@@ -21,12 +21,12 @@ public class Client extends Foundation {
     /**
      * Session instance.
      */
-    private Session session;
+    protected Session session;
 
     /**
      * Connection instance.
      */
-    private Connection connection;
+    protected Connection connection;
 
     /**
      * Have assertions been skipped?
@@ -34,7 +34,7 @@ public class Client extends Foundation {
     protected Boolean skipped = false;
 
     /**
-     * Constructs a new RequestClient instance with given Session instance.
+     * Constructs a new Client instance with given Session instance.
      *
      * @param session Session instance.
      */
@@ -85,12 +85,19 @@ public class Client extends Foundation {
         session.map(caseConfig);
 
         // Send.
-        EmailDelivery emailDelivery = new EmailDelivery(session).send();
-        connection = emailDelivery.getConnection();
+        deliver();
 
         // Assert.
         assertion(connection);
         return this;
+    }
+
+    /**
+     * Deliver email.
+     */
+    protected void deliver() {
+        EmailDelivery emailDelivery = new EmailDelivery(session).send();
+        connection = emailDelivery.getConnection();
     }
 
     /**
