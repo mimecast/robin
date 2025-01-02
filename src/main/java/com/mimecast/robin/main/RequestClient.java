@@ -111,7 +111,13 @@ public class RequestClient extends RequestBase {
         return this;
     }
 
-    protected String getUrlHost(String url) {
+    /**
+     * Gets host from URL.
+     *
+     * @param url URL string.
+     * @return hostname string.
+     */
+    public static String getUrlHost(String url) {
         try {
             return new URI(url).getHost();
         } catch (URISyntaxException e) {
