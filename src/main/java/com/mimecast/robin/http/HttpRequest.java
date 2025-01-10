@@ -213,6 +213,6 @@ public class HttpRequest {
                 new AbstractMap.SimpleEntry<>("headers", safeHeaders),
                 new AbstractMap.SimpleEntry<>("params", params),
                 new AbstractMap.SimpleEntry<>("files", files)
-        ).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))).toString();
+        ).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))) + "\r\n" + content;
     }
 }

@@ -106,48 +106,39 @@ public class HttpClient {
 
         // HTTP/S POST/PUT
         else if (request.getMethod().equals(HttpMethod.POST) || request.getMethod().equals(HttpMethod.PUT)) {
-            // JSON.
-            if (request.getContent() != null) {
-                if (request.getMethod().equals(HttpMethod.PUT)) {
-                    builder.put(RequestBody.create(request.getContent().getKey(), MediaType.parse(request.getContent().getValue())));
-                } else {
-                    builder.post(RequestBody.create(request.getContent().getKey(), MediaType.parse(request.getContent().getValue())));
-                }
-            }
+            RequestBody requestBody;
 
-            // Object
+            if (request.getContent() != null) {
+                // String content.
+                requestBody = RequestBody.create(request.getContent().getKey(), MediaType.parse(request.getContent().getValue()));
+            }
             else if (request.getObject() != null) {
-                if (request.getMethod().equals(HttpMethod.PUT)) {
-                    builder.put(RequestBody.create(request.getObject().getKey(), MediaType.parse(request.getObject().getValue())));
-                } else {
-                    builder.post(RequestBody.create(request.getObject().getKey(), MediaType.parse(request.getObject().getValue())));
-                }
+                // Java binary object.
+                requestBody = RequestBody.create(request.getObject().getKey(), MediaType.parse(request.getObject().getValue()));
+            } else {
+                // Simple form data.
+                requestBody = form.build();
             }
 
             // Multipart request if files provided.
-            else if (!request.getFiles().isEmpty()) {
+            if (!request.getFiles().isEmpty()) {
                 MultipartBody.Builder multipart = new MultipartBody.Builder();
                 multipart.setType(MultipartBody.FORM);
 
-                request.getFiles().forEach((key, value) -> multipart.addFormDataPart(key, FilenameUtils.getName(value.getValue()),
+                request.getFiles().forEach((key, value) -> multipart.addFormDataPart(key, FilenameUtils.getName(value.getKey()),
                         RequestBody.create(new File(value.getKey()), MediaType.parse(value.getValue()))));
 
                 request.getParams().forEach(multipart::addFormDataPart); // Add multipart data params.
+                multipart.addPart(requestBody);
 
-                if (request.getMethod().equals(HttpMethod.PUT)) {
-                    builder.put(multipart.build());
-                } else {
-                    builder.post(multipart.build());
-                }
+                requestBody = multipart.build();
             }
 
-            // Simple form data.
-            else {
-                if (request.getMethod().equals(HttpMethod.PUT)) {
-                    builder.put(form.build());
-                } else {
-                    builder.post(form.build());
-                }
+            // Add PUT / POST to request builder.
+            if (request.getMethod().equals(HttpMethod.PUT)) {
+                builder.put(requestBody);
+            } else {
+                builder.post(requestBody);
             }
         }
 
