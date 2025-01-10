@@ -28,7 +28,7 @@
       "default": 0
     },
     "timeout": {
-      "description": "Socket timeout in seconds",
+      "description": "Socket timeout in milliseconds",
       "type": "integer",
       "default": 30
     },

@@ -2,7 +2,7 @@
   "$schema": "/schema/case.schema.json",
 
   "route": "net",
-  "timeout": 30,
+  "timeout": 30000,
 
   "envelopes": [
     {

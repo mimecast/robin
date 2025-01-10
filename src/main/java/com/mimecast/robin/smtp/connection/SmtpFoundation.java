@@ -31,12 +31,12 @@ public abstract class SmtpFoundation {
     private static final Logger log = LogManager.getLogger(SmtpFoundation.class);
 
     /**
-     * Socket default timeout.
+     * Socket default timeout in milliseconds.
      */
     public static final int DEFAULTTIMEOUT = 30000;
 
     /**
-     * Socket extended timeout.
+     * Socket extended timeout in milliseconds.
      * <p>Used for extendedRead().
      * <p>Handy for SMTP DATA and BDAT extensions.
      */

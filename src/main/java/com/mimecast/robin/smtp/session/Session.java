@@ -56,17 +56,17 @@ public class Session {
     private int delay;
 
     /**
-     * [Client] Socket timeout.
+     * [Client] Socket timeout in milliseconds.
      */
     private int timeout = SmtpFoundation.DEFAULTTIMEOUT;
 
     /**
-     * [Client] Extended socket timeout.
+     * [Client] Extended socket timeout in milliseconds.
      */
     private int extendedtimeout = SmtpFoundation.EXTENDEDTIMEOUT;
 
     /**
-     * [Client] Connect socket timeout.
+     * [Client] Connect socket timeout in milliseconds.
      */
     private int connectTimeout = SmtpFoundation.DEFAULTTIMEOUT;
 
@@ -360,19 +360,18 @@ public class Session {
     }
 
     /**
-     * Gets socket timeout.
+     * Gets socket timeout in milliseconds.
      *
-     * @return Socket timeout.
+     * @return Socket timeout in milliseconds.
      */
     public int getTimeout() {
         return timeout;
     }
 
     /**
-     * Sets socket timeout.
-     * <p>In seconds.
+     * Sets socket timeout in milliseconds.
      *
-     * @param timeout Socket timeout.
+     * @param timeout Socket timeout in milliseconds.
      * @return Self.
      */
     public Session setTimeout(int timeout) {
@@ -381,21 +380,21 @@ public class Session {
     }
 
     /**
-     * Gets extended socket timeout.
+     * Gets extended socket timeout in milliseconds.
      * <p>Used for extendedRead().
      * <p>Handy for SMTP DATA and BDAT extensions.
      *
-     * @return Socket timeout.
+     * @return Socket timeout in milliseconds.
      */
     public int getExtendedTimeout() {
         return extendedtimeout;
     }
 
     /**
-     * Sets extended socket timeout.
+     * Sets extended socket timeout in milliseconds.
      * <p>In seconds.
      *
-     * @param extendedtimeout Socket timeout.
+     * @param extendedtimeout Socket timeout in milliseconds.
      * @return Self.
      */
     public Session setExtendedTimeout(int extendedtimeout) {
@@ -404,20 +403,20 @@ public class Session {
     }
 
     /**
-     * Gets connect socket timeout.
+     * Gets connect socket timeout in milliseconds.
      * <p>Used for initial connection.
      *
-     * @return Socket timeout.
+     * @return Socket timeout in milliseconds.
      */
     public int getConnectTimeout() {
         return connectTimeout;
     }
 
     /**
-     * Sets cinnect socket timeout.
+     * Sets connect socket timeout in milliseconds.
      * <p>In seconds.
      *
-     * @param connectTimeout Socket timeout.
+     * @param connectTimeout Socket timeout in milliseconds.
      * @return Self.
      */
     public Session setConnectTimeout(int connectTimeout) {
