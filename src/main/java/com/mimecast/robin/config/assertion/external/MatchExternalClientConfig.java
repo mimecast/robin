@@ -1,5 +1,6 @@
 package com.mimecast.robin.config.assertion.external;
 
+import com.mimecast.robin.smtp.connection.Connection;
 import com.mimecast.robin.smtp.session.Session;
 import com.mimecast.robin.util.Magic;
 
@@ -82,5 +83,33 @@ public class MatchExternalClientConfig extends ExternalConfig {
         }
 
         return results;
+    }
+
+    /**
+     * Evaluates execution condition.
+     *
+     * @param connection    Connection instance.
+     * @return Boolean.
+     */
+    public boolean checkCondition(Connection connection) {
+        String condition = getStringProperty("condition");
+
+        if (condition != null) {
+            condition = Magic.magicReplace(condition, connection.getSession(), true);
+
+            if (condition.contains("==")) {
+                String[] splits = condition.split("==", 2);
+                return splits.length == 2 && splits[0].trim().equals(splits[1].trim());
+            }
+
+            if (condition.contains("!=")) {
+                String[] splits = condition.split("!=", 2);
+                return splits.length == 2 && !splits[0].trim().equals(splits[1].trim());
+            }
+
+            return false;
+        }
+
+        return true;
     }
 }

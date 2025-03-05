@@ -73,6 +73,11 @@ public class LogsExternalClient extends MatchExternalClient {
     @Override
     public void run() throws AssertException {
         if (!config.isEmpty()) {
+            if (!config.checkCondition(connection)) {
+                log.info("Condition not met, skipping: {}", config.getStringProperty("condition"));
+                return;
+            }
+
             try {
                 if (!verifyNone) {
                     compileVerify(); // Precompile verify patterns for performance.

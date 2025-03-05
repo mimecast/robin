@@ -83,6 +83,11 @@ public class RequestExternalClient extends MatchExternalClient {
     @Override
     @SuppressWarnings("unchecked")
     public void run() throws AssertException {
+        if (!config.checkCondition(connection)) {
+            log.info("Condition not met, skipping: {}", config.getStringProperty("condition"));
+            return;
+        }
+
         List<String> data = new ArrayList<>();
         HttpResponse httpResponse = makeRequest();
 
