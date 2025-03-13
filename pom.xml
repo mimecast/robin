@@ -10,7 +10,7 @@
     <description>Debug and development tool for MTA architects.</description>
 
     <properties>
-        <jdk.version>11</jdk.version>
+        <jdk.version>21</jdk.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <javamail.version>1.6.2</javamail.version>
         <guava.version>33.4.0-jre</guava.version>
