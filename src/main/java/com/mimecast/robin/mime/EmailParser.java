@@ -44,12 +44,25 @@ public class EmailParser {
 
     /**
      * Constructs new EmailParser instance with given path.
+     * <p>Uses a 1024 buffer size for pushback.
      *
      * @param path Path to email.
      * @throws FileNotFoundException File not found.
      */
     public EmailParser(String path) throws FileNotFoundException {
-        this.stream = new LineInputStream(new FileInputStream(path));
+        this(path, 1024);
+    }
+
+    /**
+     * Constructs new EmailParser instance with given path.
+     * <p>Uses a 1024 buffer size for pushback.
+     *
+     * @param path Path to email.
+     * @param size Pushback buffer Size.
+     * @throws FileNotFoundException File not found.
+     */
+    public EmailParser(String path, int size) throws FileNotFoundException {
+        this.stream = new LineInputStream(new FileInputStream(path), size);
     }
 
     /**
@@ -169,7 +182,7 @@ public class EmailParser {
             // Add part.
             parts.add(part);
 
-            if (boundary == null || boundary.length() == 0) {
+            if (boundary == null || boundary.isEmpty()) {
                 parsePartContent(true, headers, "");
             } else {
                 parsePart(boundary);
@@ -237,23 +250,33 @@ public class EmailParser {
 
             String line = new String(bytes);
 
+            // Break on end boundaries.
+            if (line.contains(boundary + "--")) {
+                break;
+            }
+
+            // Skip boundaries.
+            if (line.contains(boundary)) {
+                continue;
+            }
+
             // If line doens't start with a whitespace
             // we need to produce a header from what we got so far
             // if any.
-            if (!Character.isWhitespace(bytes[0]) && header.length() > 0) {
-                if (header.toString().trim().length() > 0) {
+            if ((!Character.isWhitespace(bytes[0]) || line.trim().isEmpty()) && header.length() > 0) {
+                if (!header.toString().trim().isEmpty()) {
                     partHeaders.put(new MimeHeader(header.toString().trim()));
                 }
                 header = new StringBuilder();
             }
 
             // Break if found end of headers.
-            if (StringUtils.isBlank(line.trim())) {
+            if (partHeaders.size() > 0 && StringUtils.isBlank(line.trim())) {
 
                 // If line doens't start with a whitespace
                 // we need to produce a header from what we got so far
                 // if any.
-                if (header.toString().trim().length() > 0) {
+                if (!header.toString().trim().isEmpty()) {
                     partHeaders.put(new MimeHeader(header.toString().trim()));
                 }
 
@@ -269,28 +292,30 @@ public class EmailParser {
                         part = new MultipartMimePart();
                         partHeaders.get().forEach(h -> part.addHeader(h.getName(), h.getValue()));
                         parts.add(part);
-
                         parsePart(ct.getParameter("boundary"));
 
                     } else if (ct.getValue().startsWith("message/rfc822")) {
                         part = parsePartContent(true, partHeaders, boundary);
 
-                        EmailParser rfc822 = new EmailParser(new LineInputStream(new ByteArrayInputStream(part.getBytes())))
+                        EmailParser rfc822 = new EmailParser(new LineInputStream(new ByteArrayInputStream(part.getBytes()), 1024))
                                 .parse();
 
                         parts.addAll(rfc822.getParts());
+
                     } else {
-                        part = parsePartContent(ct.getValue().startsWith("text/"), partHeaders, boundary);
+                        part = parsePartContent(ct.getValue().startsWith("text/") || ct.getValue().startsWith("message/"), partHeaders, boundary);
 
                         partHeaders.get().forEach(h -> part.addHeader(h.getName(), h.getValue()));
                         parts.add(part);
-
-                        partHeaders = new MimeHeaders();
                     }
+
+                    partHeaders = new MimeHeaders();
                 }
             }
 
-            header.append(line);
+            if (!line.trim().isEmpty()) {
+                header.append(line);
+            }
         }
 
         // Last header.
@@ -332,7 +357,10 @@ public class EmailParser {
             byte[] bytes;
             while ((bytes = stream.readLine()) != null) {
                 String line = new String(bytes);
-                if (boundary != null && boundary.length() > 0 && line.contains(boundary)) {
+                if (boundary != null && !boundary.isEmpty() && line.contains(boundary)) {
+                    if (line.contains(boundary + "--")) {
+                        stream.unread(bytes);
+                    }
                     break;
                 }
 

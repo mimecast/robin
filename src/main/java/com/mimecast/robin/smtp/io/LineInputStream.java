@@ -41,6 +41,16 @@ public class LineInputStream extends PushbackInputStream {
     }
 
     /**
+     * Constructs a new LineInputStream instance with given pushback buffer size.
+     *
+     * @param stream InputStream instance.
+     * @param size   Pushback buffer size.
+     */
+    public LineInputStream(InputStream stream, int size) {
+        super(stream, size);
+    }
+
+    /**
      * Gets line number.
      *
      * @return Line number.

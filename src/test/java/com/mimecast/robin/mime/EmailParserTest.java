@@ -30,7 +30,7 @@ class EmailParserTest {
                 "Subject: Robin likes\r\n" +
                 "Content-Type: text/plain; charset=\"ISO-8859-1\",\r\n\tname=robin.txt,\r\n\tlanguage='en_UK';\r\n" +
                 "Content-Disposition: inline charset='ISO-8859-1'\r\n\tfilename=robin.txt;\r\n\tlanguage=en_UK,";
-        EmailParser parser = new EmailParser(new LineInputStream(new ByteArrayInputStream(mime.getBytes())))
+        EmailParser parser = new EmailParser(new LineInputStream(new ByteArrayInputStream(mime.getBytes()), 1024))
                 .parse(true);
 
         assertEquals("1.0", parser.getHeaders().get("MIME-Version").get().getValue());
@@ -58,7 +58,7 @@ class EmailParserTest {
     @Test
     @DisplayName("Parse lipsum.eml gives 2 parts")
     void parseLipsum() throws IOException {
-        EmailParser parser = new EmailParser(new LineInputStream(new FileInputStream(dir + "lipsum.eml")))
+        EmailParser parser = new EmailParser(new LineInputStream(new FileInputStream(dir + "lipsum.eml"), 1024))
                 .parse();
 
         assertEquals(3, parser.getParts().size(), "Unexpected number of parts");
@@ -74,7 +74,7 @@ class EmailParserTest {
     @Test
     @DisplayName("Parse lipsum.plain.eml gives 1 part")
     void parseLipsumPlain() throws IOException {
-        EmailParser parser = new EmailParser(new LineInputStream(new FileInputStream(dir + "lipsum.plain.eml")))
+        EmailParser parser = new EmailParser(new LineInputStream(new FileInputStream(dir + "lipsum.plain.eml"), 1024))
                 .parse();
 
         assertEquals(1, parser.getParts().size(), "Unexpected number of parts");
@@ -89,18 +89,18 @@ class EmailParserTest {
     @Test
     @DisplayName("Parse lipsum.822.eml gives 7 parts")
     void parseLipsum822() throws IOException {
-        EmailParser parser = new EmailParser(new LineInputStream(new FileInputStream(dir + "lipsum.822.eml")))
+        EmailParser parser = new EmailParser(new LineInputStream(new FileInputStream(dir + "lipsum.822.eml"), 1024))
                 .parse();
 
         assertEquals(7, parser.getParts().size(), "Unexpected number of parts");
 
         assertEquals("uSdGze9aOjGMKP/QLtT9szHfcNV5K9DoaP12xlasxeU=", parser.getParts().get(2).getHash(HashType.SHA_256), "unexpected hash");
         assertEquals(780, parser.getParts().get(2).getSize(), "Unexpected file size");
-        assertEquals(3, parser.getParts().get(2).getHeaders().size(), "Unexpected part headers size");
+        assertEquals(2, parser.getParts().get(2).getHeaders().size(), "Unexpected part headers size");
 
         assertEquals("uSdGze9aOjGMKP/QLtT9szHfcNV5K9DoaP12xlasxeU=", parser.getParts().get(5).getHash(HashType.SHA_256), "unexpected hash");
         assertEquals(780, parser.getParts().get(5).getSize(), "Unexpected file size");
-        assertEquals(3, parser.getParts().get(5).getHeaders().size(), "Unexpected part headers size");
+        assertEquals(2, parser.getParts().get(5).getHeaders().size(), "Unexpected part headers size");
     }
 
     @SuppressWarnings("SameParameterValue")

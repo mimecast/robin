@@ -21,7 +21,7 @@ public class EmailParserBench {
 
     @State(Scope.Thread)
     public static class Input {
-        public LineInputStream inputStream = new LineInputStream(new ByteArrayInputStream(mime.getBytes()));
+        public LineInputStream inputStream = new LineInputStream(new ByteArrayInputStream(mime.getBytes()), 1024);
     }
 
     @TearDown(Level.Iteration)
