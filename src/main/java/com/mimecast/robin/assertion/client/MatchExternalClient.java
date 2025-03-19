@@ -4,6 +4,7 @@ import com.mimecast.robin.assertion.AssertException;
 import com.mimecast.robin.assertion.AssertExternalGroup;
 import com.mimecast.robin.config.BasicConfig;
 import com.mimecast.robin.config.assertion.external.MatchExternalClientConfig;
+import com.mimecast.robin.util.Magic;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -73,7 +74,7 @@ public abstract class MatchExternalClient extends ExternalClient {
      */
     protected void compileVerify() {
         for (String assertion : config.getVerify()) {
-            verifyPatterns.add(Pattern.compile(assertion, Pattern.CASE_INSENSITIVE));
+            verifyPatterns.add(Pattern.compile(Magic.magicReplace(assertion, connection.getSession()), Pattern.CASE_INSENSITIVE));
         }
     }
 
