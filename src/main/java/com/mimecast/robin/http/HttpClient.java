@@ -58,30 +58,14 @@ public class HttpClient {
         SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
         sslContext.init(null, new TrustManager[]{trustManager}, null);
 
-        try (Response response = getBuilder(sslContext.getSocketFactory())
-                .build()
+        try (Response response = getClient(sslContext.getSocketFactory())
                 .newCall(getRequest(request))
                 .execute()) {
 
-            HttpResponse httpResponse = new HttpResponse()
-                    .setSuccess(response.isSuccessful()); // Set success.
-
-            // Add headers.
-            response.headers().toMultimap().forEach((key, value) -> value.forEach(v -> httpResponse.addHeader(key, v)));
-
-            // Add body.
-            String body = "";
-            if (response.body() != null && response.body().contentType() != null) {
-                if (response.body().contentType().toString().equals("application/binary")) {
-                    httpResponse.addBody(new Gson().toJson(new ObjectInputStream(response.body().byteStream()).readAllBytes()));
-                } else {
-                    httpResponse.addBody(response.body().string());
-                }
-            }
-
-            return httpResponse;
+            return getResponse(response);
         }
     }
+
 
     /**
      * Gets Request.
@@ -111,8 +95,7 @@ public class HttpClient {
             if (request.getContent() != null) {
                 // String content.
                 requestBody = RequestBody.create(request.getContent().getKey(), MediaType.parse(request.getContent().getValue()));
-            }
-            else if (request.getObject() != null) {
+            } else if (request.getObject() != null) {
                 // Java binary object.
                 requestBody = RequestBody.create(request.getObject().getKey(), MediaType.parse(request.getObject().getValue()));
             } else {
@@ -158,13 +141,41 @@ public class HttpClient {
      * @param socketFactory SSLSocketFactory instance.
      * @return OkHttpClient.Builder instance.
      */
-    private OkHttpClient.Builder getBuilder(SSLSocketFactory socketFactory) {
+    protected OkHttpClient getClient(SSLSocketFactory socketFactory) {
         return new OkHttpClient.Builder()
                 .connectTimeout(config.getLongProperty("connectTimeout", 10L), TimeUnit.SECONDS)
                 .writeTimeout(config.getLongProperty("writeTimeout", 10L), TimeUnit.SECONDS)
                 .readTimeout(config.getLongProperty("readTimeout", 30L), TimeUnit.SECONDS)
                 .sslSocketFactory(socketFactory, trustManager)
                 .followRedirects(true)
-                .followSslRedirects(true);
+                .followSslRedirects(true)
+                .build();
+    }
+
+    /**
+     * Gets Response.
+     *
+     * @param response Response instance.
+     * @return HttpResponse instance.
+     * @throws IOException Unable to communicate.
+     */
+    @SuppressWarnings("ConstantConditions")
+    private static HttpResponse getResponse(Response response) throws IOException {
+        HttpResponse httpResponse = new HttpResponse()
+                .setSuccess(response.isSuccessful()); // Set success.
+
+        // Add headers.
+        response.headers().toMultimap().forEach((key, value) -> value.forEach(v -> httpResponse.addHeader(key, v)));
+
+        // Add body.
+        if (response.body() != null && response.body().contentType() != null) {
+            if (response.body().contentType().toString().equals("application/binary")) {
+                httpResponse.addBody(new Gson().toJson(new ObjectInputStream(response.body().byteStream()).readAllBytes()));
+            } else {
+                httpResponse.addBody(response.body().string());
+            }
+        }
+
+        return httpResponse;
     }
 }
